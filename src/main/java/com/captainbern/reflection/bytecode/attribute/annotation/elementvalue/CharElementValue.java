@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;

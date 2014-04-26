@@ -29,6 +29,6 @@ import java.io.IOException;
 public class RuntimeInvisibleParameterAnnotations extends ParameterAnnotation implements Opcode {
 
     public RuntimeInvisibleParameterAnnotations(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException {
-        super(ATTR_RUNTIME_IN_VISIBLE_PARAMETER_ANNOTATIONS, index, length, codeStream, constantPool);
+        super(ATTR_RUNTIME_INVISIBLE_PARAMETER_ANNOTATIONS, index, length, codeStream, constantPool);
     }
 }

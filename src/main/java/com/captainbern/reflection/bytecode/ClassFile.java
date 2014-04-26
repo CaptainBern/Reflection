@@ -77,11 +77,8 @@ public class ClassFile implements Opcode {
             }
         }
 
-        // And their names
-        this.interfaceNames = new String[this.interfaces.length];
-        for (int i = 0; i < interfaces.length; i++) {
-            this.interfaceNames[i] = this.constantPool.getConstantString(interfaces[i], Opcode.CONSTANT_Class);
-        }
+        if(true)
+            return;
 
         // Fields
         int fieldCount = codeStream.readUnsignedShort();

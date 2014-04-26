@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
@@ -25,20 +25,20 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class BooleanElementValue extends ElementValue {
+public class StringElementValue extends ElementValue {
 
     private int index;
 
-    public BooleanElementValue(BooleanElementValue elementValue) {
-        this(elementValue.getIndex(), elementValue.getConstantPool());
+    public StringElementValue(StringElementValue stringElementValue) {
+        this(stringElementValue.getIndex(), stringElementValue.getConstantPool());
     }
 
-    public BooleanElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
+    public StringElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
         this(codeStream.readUnsignedShort(), constantPool);
     }
 
-    public BooleanElementValue(int index, ConstantPool constantPool) {
-        super(TYPE_BOOLEAN, constantPool);
+    public StringElementValue(int index, ConstantPool constantPool) {
+        super(TYPE_STRING, constantPool);
         this.index = index;
     }
 
@@ -46,11 +46,11 @@ public class BooleanElementValue extends ElementValue {
         return this.index;
     }
 
-    public final void setIndex(int index) {
-        this.index = index;
+    public final void setIndex(int stringIndex) {
+        this.index = stringIndex;
     }
 
-    public final boolean getBoolean() throws ClassFormatException {
-        return getConstantPool().getIntegerConstant(this.index) != 0;
+    public final String getString() throws ClassFormatException {
+        return getConstantPool().getUtf8StringConstant(this.index);
     }
 }

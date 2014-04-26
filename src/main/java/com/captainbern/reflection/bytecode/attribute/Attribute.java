@@ -82,12 +82,56 @@ public class Attribute implements Opcode {
 
         int length = codeStream.readInt();
 
-        // switch (tag) {
-        // Do stuff
-        /**
-         * Unknown
-         */
-        // }
+         switch (tag) {
+             case ATTR_SOURCE_FILE:
+                 return new SourceFile(index, length, codeStream, constantPool);
+             case ATTR_SOURCE_DEBUG_EXTENSION:
+                 return new SourceDebugExtension(index, length, codeStream, constantPool);
+             case ATTR_CONSTANT_VALUE:
+                 return new ConstantValue(index, length, codeStream, constantPool);
+             case ATTR_CODE:
+                 return new Code(index, length, codeStream, constantPool);
+             case ATTR_EXCEPTIONS:
+                 return new Exceptions(index, length, codeStream, constantPool);
+             case ATTR_LINE_NUMBER_TABLE:
+                 return new LineNumberTable(index, length, codeStream, constantPool);
+             case ATTR_LOCAL_VARIABLE_TABLE:
+                 return new LocalVariableTable(index, length, codeStream, constantPool);
+             case ATTR_INNER_CLASSES:
+                 return new InnerClasses(index, length, codeStream, constantPool);
+             case ATTR_SYNTHETIC:
+                 return new Synthetic(index, length, codeStream, constantPool);
+             case ATTR_DEPRECATED:
+                 return new Deprecated(index, length, codeStream, constantPool);
+             /**
+              * case ATTR_PMG:
+              * ?
+              */
+             case ATTR_SIGNATURE:
+                 return new Signature(index, length, codeStream, constantPool);
+             /**
+              * case ATTR_STACKMAP
+              */
+             case ATTR_RUNTIME_VISIBLE_ANNOTATIONS:
+                 return new RuntimeVisibleAnnotations(index, length, codeStream, constantPool, true);
+             case ATTR_RUNTIME_INVISIBLE_ANNOTATIONS:
+                 return new RuntimeInvisibleAnnotations(index, length, codeStream, constantPool, true);
+             case ATTR_RUNTIME_VISIBLE_PARAMETER_ANNOTATIONS:
+                 return new RuntimeInvisibleParameterAnnotations(index, length, codeStream, constantPool);
+             case ATTR_RUNTIME_INVISIBLE_PARAMETER_ANNOTATIONS:
+                 return new RuntimeInvisibleParameterAnnotations(index, length, codeStream, constantPool);
+             case ATTR_ANNOTATION_DEFAULT:
+                 return new AnnotationDefault(index, length, codeStream, constantPool);
+             case ATTR_LOCAL_VARIABLE_TYPE_TABLE:
+                 return new LocalVariableTypeTable(index, length, codeStream, constantPool);
+             case ATTR_ENCLOSING_METHOD:
+                 return new EnclosingMethod(index, length, codeStream, constantPool);
+             case ATTR_BOOTSTRAP_METHODS:
+                 return new BootstrapMethods(index, length, codeStream, constantPool);
+             /**
+              * case ATTR_STACK_MAP_TABLE
+              */
+         }
 
         return null;
     }

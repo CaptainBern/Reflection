@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
 
@@ -38,7 +38,7 @@ public class EnumElementValue extends ElementValue {
     }
 
     public EnumElementValue(int typeIndex, int valueIndex, ConstantPool constantPool) {
-        super(ElementValue.TYPE_ENUM, constantPool);
+        super(TYPE_ENUM, constantPool);
         this.typeIndex = typeIndex;
         this.valueIndex = valueIndex;
     }

@@ -319,7 +319,7 @@ public interface Opcode {
      */
     public static final String ATTR_UNKNOWN                       			= "UNKNOWN";
     public static final String ATTR_SOURCE_FILE                   			= "SourceFile";
-    public static final String ATTR_SOURCE_DEBUG_EXTENSION                   = "SourceDebugExtension";
+    public static final String ATTR_SOURCE_DEBUG_EXTENSION                  = "SourceDebugExtension";
     public static final String ATTR_CONSTANT_VALUE                			= "ConstantValue";
     public static final String ATTR_CODE                          			= "Code";
     public static final String ATTR_EXCEPTIONS                    			= "Exceptions";
@@ -332,9 +332,9 @@ public interface Opcode {
     public static final String ATTR_SIGNATURE                     			= "Signature";
     public static final String ATTR_STACK_MAP                     			= "StackMap";
     public static final String ATTR_RUNTIME_VISIBLE_ANNOTATIONS    			= "RuntimeVisibleAnnotations";
-    public static final String ATTR_RUNTIME_IN_VISIBLE_ANNOTATIONS  		= "RuntimeInvisibleAnnotations";
+    public static final String ATTR_RUNTIME_INVISIBLE_ANNOTATIONS           = "RuntimeInvisibleAnnotations";
     public static final String ATTR_RUNTIME_VISIBLE_PARAMETER_ANNOTATIONS 	= "RuntimeVisibleParameterAnnotations";
-    public static final String ATTR_RUNTIME_IN_VISIBLE_PARAMETER_ANNOTATIONS = "RuntimeInvisibleParameterAnnotations";
+    public static final String ATTR_RUNTIME_INVISIBLE_PARAMETER_ANNOTATIONS = "RuntimeInvisibleParameterAnnotations";
     public static final String ATTR_ANNOTATION_DEFAULT                      = "AnnotationDefault";
     public static final String ATTR_LOCAL_VARIABLE_TYPE_TABLE               = "LocalVariableTypeTable";
     public static final String ATTR_ENCLOSING_METHOD                      	= "EnclosingMethod";

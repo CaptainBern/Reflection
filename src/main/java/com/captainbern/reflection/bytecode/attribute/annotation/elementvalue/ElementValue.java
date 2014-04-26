@@ -17,10 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.Opcode;
+import com.captainbern.reflection.bytecode.attribute.annotation.AnnotationEntry;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class ElementValue implements Opcode {
             case TYPE_CLASS:
                 return new ClassElementValue(codeStream, constantPool);
             case TYPE_ANNOTATION:
-                return new AnnotationElementValue(AnnotationElementValue.read(codeStream, constantPool, false), constantPool);
+                return new AnnotationElementValue(AnnotationEntry.read(codeStream, constantPool, false), constantPool);
             case TYPE_BYTE:
                 return new ByteElementValue(codeStream, constantPool);
             case TYPE_CHAR:

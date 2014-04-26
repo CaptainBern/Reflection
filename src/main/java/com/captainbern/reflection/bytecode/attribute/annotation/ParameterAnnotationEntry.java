@@ -27,14 +27,14 @@ import java.io.IOException;
 public class ParameterAnnotationEntry {
 
     private int tableLength;
-    private AnnotationElementValue[] annotationElementValues;
+    private AnnotationEntry[] entries;
 
     public ParameterAnnotationEntry(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
         this.tableLength = codeStream.readUnsignedShort();
-        this.annotationElementValues = new AnnotationElementValue[this.tableLength];
+        this.entries = new AnnotationEntry[this.tableLength];
         for (int i = 0; i < this.tableLength; i++) {
             // TODO isRuntimeVisible
-            this.annotationElementValues[i] = AnnotationElementValue.read(codeStream, constantPool, false);
+            this.entries[i] = AnnotationEntry.read(codeStream, constantPool, false);
         }
     }
 
@@ -42,7 +42,7 @@ public class ParameterAnnotationEntry {
         return this.tableLength;
     }
 
-    public final AnnotationElementValue[] getAnnotations() {
-        return this.annotationElementValues;
+    public final AnnotationEntry[] getAnnotations() {
+        return this.entries;
     }
 }

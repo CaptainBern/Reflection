@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
@@ -25,20 +25,20 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class IntegerElementValue extends ElementValue {
+public class FloatElementValue extends ElementValue {
 
     private int index;
 
-    public IntegerElementValue(IntegerElementValue elementValue) {
+    public FloatElementValue(FloatElementValue elementValue) {
         this(elementValue.getIndex(), elementValue.getConstantPool());
     }
 
-    public IntegerElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
+    public FloatElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
         this(codeStream.readUnsignedShort(), constantPool);
     }
 
-    public IntegerElementValue(int index, ConstantPool constantPool) {
-        super(TYPE_INT, constantPool);
+    public FloatElementValue(int index, ConstantPool constantPool) {
+        super(TYPE_FLOAT, constantPool);
         this.index = index;
     }
 
@@ -50,7 +50,7 @@ public class IntegerElementValue extends ElementValue {
         this.index = index;
     }
 
-    public final int getInteger() throws ClassFormatException {
-        return getConstantPool().getIntegerConstant(this.index);
+    public final float getFloat() throws ClassFormatException {
+        return getConstantPool().getFloatConstant(this.index);
     }
 }

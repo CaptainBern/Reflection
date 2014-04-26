@@ -20,12 +20,40 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
+import com.captainbern.reflection.bytecode.attribute.annotation.AnnotationEntry;
+
+import java.io.DataInputStream;
+import java.io.IOException;
 
 public class Annotation extends Attribute {
 
-    private Annotation annotation;
+    private AnnotationEntry[] entries;
+    private boolean isRuntimeVisible;
 
-    public Annotation(String tag, int index, int length, ConstantPool constantPool) {
+    public Annotation(String tag, int index, int length, DataInputStream codeStream, ConstantPool constantPool, boolean isRuntimeVisible) throws IOException {
         super(tag, index, length, constantPool);
+        final int tableSize = codeStream.readUnsignedShort();
+        this.entries = new AnnotationEntry[tableSize];
+        for(int i = 0; i < tableSize; i++) {
+            this.entries[i] = AnnotationEntry.read(codeStream, constantPool, isRuntimeVisible);
+        }
+    }
+
+    public Annotation(String tag, int index, int length, AnnotationEntry[] entries, ConstantPool constantPool, boolean isRuntimeVisible) {
+        super(tag, index, length, constantPool);
+        this.isRuntimeVisible = isRuntimeVisible;
+        setEntryTable(entries);
+    }
+
+    public final void setEntryTable(AnnotationEntry[] entries) {
+        this.entries = entries;
+    }
+
+    public final AnnotationEntry[] getEntryTable() {
+        return this.entries;
+    }
+
+    public final boolean isRuntimeVisible() {
+        return this.isRuntimeVisible;
     }
 }

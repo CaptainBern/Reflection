@@ -17,35 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
+import com.captainbern.reflection.bytecode.attribute.annotation.AnnotationEntry;
 
-import java.io.DataInputStream;
-import java.io.IOException;
+public class AnnotationElementValue extends ElementValue {
 
-public class ClassElementValue extends ElementValue {
+    private AnnotationEntry annotationEntry;
 
-    private int classIndex;
-
-    public ClassElementValue(ClassElementValue classElementValue) {
-        this(classElementValue.getIndex(), classElementValue.getConstantPool());
+    public AnnotationElementValue(AnnotationEntry entry, ConstantPool constantPool) {
+        super(TYPE_ANNOTATION, constantPool);
+        this.annotationEntry = entry;
     }
 
-    public ClassElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
-        this(codeStream.readUnsignedShort(), constantPool);
-    }
-
-    public ClassElementValue(int classIndex, ConstantPool constantPool) {
-        super(ElementValue.TYPE_CLASS, constantPool);
-        this.classIndex = classIndex;
-    }
-
-    public final int getIndex() {
-        return this.classIndex;
-    }
-
-    public final void setIndex(int classIndex) {
-        this.classIndex = classIndex;
+    public final AnnotationEntry getAnnotationEntry() {
+        return this.annotationEntry;
     }
 }

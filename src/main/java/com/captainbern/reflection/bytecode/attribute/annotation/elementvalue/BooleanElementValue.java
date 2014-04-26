@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
@@ -25,20 +25,20 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class ShortElementValue extends ElementValue {
+public class BooleanElementValue extends ElementValue {
 
     private int index;
 
-    public ShortElementValue(ShortElementValue elementValue) {
+    public BooleanElementValue(BooleanElementValue elementValue) {
         this(elementValue.getIndex(), elementValue.getConstantPool());
     }
 
-    public ShortElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
+    public BooleanElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
         this(codeStream.readUnsignedShort(), constantPool);
     }
 
-    public ShortElementValue(int index, ConstantPool constantPool) {
-        super(TYPE_SHORT, constantPool);
+    public BooleanElementValue(int index, ConstantPool constantPool) {
+        super(TYPE_BOOLEAN, constantPool);
         this.index = index;
     }
 
@@ -50,7 +50,7 @@ public class ShortElementValue extends ElementValue {
         this.index = index;
     }
 
-    public final short getShort() throws ClassFormatException {
-        return (short) getConstantPool().getIntegerConstant(this.index);
+    public final boolean getBoolean() throws ClassFormatException {
+        return getConstantPool().getIntegerConstant(this.index) != 0;
     }
 }

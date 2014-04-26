@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
@@ -25,20 +25,20 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class DoubleElementValue extends ElementValue {
+public class LongElementValue extends ElementValue {
 
     private int index;
 
-    public DoubleElementValue(DoubleElementValue elementValue) {
+    public LongElementValue(LongElementValue elementValue) {
         this(elementValue.getIndex(), elementValue.getConstantPool());
     }
 
-    public DoubleElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
+    public LongElementValue(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
         this(codeStream.readUnsignedShort(), constantPool);
     }
 
-    public DoubleElementValue(int index, ConstantPool constantPool) {
-        super(TYPE_DOUBLE, constantPool);
+    public LongElementValue(int index, ConstantPool constantPool) {
+        super(TYPE_LONG, constantPool);
         this.index = index;
     }
 
@@ -50,7 +50,7 @@ public class DoubleElementValue extends ElementValue {
         this.index = index;
     }
 
-    public final double getDouble() throws ClassFormatException {
-        return getConstantPool().getDoubleConstant(this.index);
+    public final long getLong() throws ClassFormatException {
+        return getConstantPool().getLongConstant(this.index);
     }
 }

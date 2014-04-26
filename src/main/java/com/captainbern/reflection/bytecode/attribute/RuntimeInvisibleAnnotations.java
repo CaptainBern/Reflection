@@ -20,11 +20,13 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
-import com.captainbern.reflection.bytecode.attribute.annotation.AnnotationElementValue;
 
-public class RuntimeInvisibleAnnotations extends AnnotationElementValue {
+import java.io.DataInputStream;
+import java.io.IOException;
 
-    public RuntimeInvisibleAnnotations(int index, ConstantPool constantPool) {
-        super(index, constantPool, false);
+public class RuntimeInvisibleAnnotations extends Annotation {
+
+    public RuntimeInvisibleAnnotations(int index, int length, DataInputStream codeStream, ConstantPool constantPool, boolean isRuntimeVisible) throws IOException {
+        super(ATTR_RUNTIME_INVISIBLE_ANNOTATIONS, index, length, codeStream, constantPool, isRuntimeVisible);
     }
 }

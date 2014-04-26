@@ -20,6 +20,7 @@
 package com.captainbern.reflection;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -141,6 +142,26 @@ public class AbstractAccess<T> implements Access<T> {
     @Override
     public int modifiers() {
         return this.getReflectedClass().getModifiers();
+    }
+
+    @Override
+    public boolean isPublic() {
+        return Modifier.isPublic(modifiers());
+    }
+
+    @Override
+    public boolean isPrivate() {
+        return Modifier.isPrivate(modifiers());
+    }
+
+    @Override
+    public boolean isProtected() {
+        return Modifier.isProtected(modifiers());
+    }
+
+    @Override
+    public boolean isStatic() {
+        return Modifier.isStatic(modifiers());
     }
 
     @Override

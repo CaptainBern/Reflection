@@ -111,6 +111,30 @@ public interface Access<T> {
     public int modifiers();
 
     /**
+     * Returns whether or not this Class is public
+     * @return
+     */
+    public boolean isPublic();
+
+    /**
+     * Returns whether or not this Class is private
+     * @return
+     */
+    public boolean isPrivate();
+
+    /**
+     * Returns whether or not this Class is protected
+     * @return
+     */
+    public boolean isProtected();
+
+    /**
+     * Returns whether or not this Class is static
+     * @return
+     */
+    public boolean isStatic();
+
+    /**
      * Returns the name of this class.
      * @return
      */

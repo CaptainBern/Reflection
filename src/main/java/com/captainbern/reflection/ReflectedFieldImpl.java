@@ -53,6 +53,12 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
             @Override
             public T get(Object instance) {
                 try {
+                    if(ReflectedFieldImpl.this.field == null)
+                       throw new RuntimeException("Field is NULL!");
+
+                    if(instance == null && !Modifier.isStatic(ReflectedFieldImpl.this.field.getModifiers()))
+                        throw new IllegalArgumentException("Non-static fields require a valid instance passed in!");
+
                     return (T) field.get(instance);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
@@ -62,6 +68,9 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
             @Override
             public void set(Object instance, T value) {
                 try {
+                    if(ReflectedFieldImpl.this.field == null)
+                        throw new RuntimeException("Field is NULL!");
+
                     if(!Modifier.isStatic(getModifiers()) && value == null)
                         throw new IllegalArgumentException("Non-static fields require a valid instance passed-in!");
 
@@ -76,7 +85,6 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
                 if(field == null)
                     throw new IllegalStateException("Field is NULL!");
 
-                T old = get(to);
                 set(to, get(from));
             }
 

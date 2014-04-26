@@ -22,6 +22,7 @@ package com.captainbern.reflection;
 import com.captainbern.reflection.accessor.ConstructorAccessor;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 public class ReflectedConstructorImpl implements ReflectedConstructor {
@@ -64,5 +65,25 @@ public class ReflectedConstructorImpl implements ReflectedConstructor {
     @Override
     public int getModifiers() {
         return 0;
+    }
+
+    @Override
+    public boolean isPublic() {
+        return Modifier.isPublic(getModifiers());
+    }
+
+    @Override
+    public boolean isPrivate() {
+        return Modifier.isPrivate(getModifiers());
+    }
+
+    @Override
+    public boolean isProtected() {
+        return Modifier.isProtected(getModifiers());
+    }
+
+    @Override
+    public boolean isStatic() {
+        return Modifier.isStatic(getModifiers());
     }
 }

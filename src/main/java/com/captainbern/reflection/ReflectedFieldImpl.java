@@ -124,4 +124,24 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
     public int getModifiers() {
         return this.field.getModifiers();
     }
+
+    @Override
+    public boolean isPublic() {
+        return Modifier.isPublic(getModifiers());
+    }
+
+    @Override
+    public boolean isPrivate() {
+        return Modifier.isPrivate(getModifiers());
+    }
+
+    @Override
+    public boolean isProtected() {
+        return Modifier.isProtected(getModifiers());
+    }
+
+    @Override
+    public boolean isStatic() {
+        return Modifier.isStatic(getModifiers());
+    }
 }

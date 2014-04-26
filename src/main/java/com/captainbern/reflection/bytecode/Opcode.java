@@ -317,7 +317,6 @@ public interface Opcode {
     /**
      * Attribute tags
      */
-    public static final String ATTR_UNKNOWN                       			= "UNKNOWN";
     public static final String ATTR_SOURCE_FILE                   			= "SourceFile";
     public static final String ATTR_SOURCE_DEBUG_EXTENSION                  = "SourceDebugExtension";
     public static final String ATTR_CONSTANT_VALUE                			= "ConstantValue";
@@ -328,7 +327,6 @@ public interface Opcode {
     public static final String ATTR_INNER_CLASSES                 			= "InnerClasses";
     public static final String ATTR_SYNTHETIC                     			= "Synthetic";
     public static final String ATTR_DEPRECATED                    			= "Deprecated";
-    public static final String ATTR_PMG                           			= "PMGClass";
     public static final String ATTR_SIGNATURE                     			= "Signature";
     public static final String ATTR_STACK_MAP                     			= "StackMap";
     public static final String ATTR_RUNTIME_VISIBLE_ANNOTATIONS    			= "RuntimeVisibleAnnotations";
@@ -340,7 +338,6 @@ public interface Opcode {
     public static final String ATTR_ENCLOSING_METHOD                      	= "EnclosingMethod";
     public static final String ATTR_BOOTSTRAP_METHODS                       = "BootstrapMethods";
     public static final String ATTR_STACK_MAP_TABLE                         = "StackMapTable";
-    public static final short KNOWN_ATTRIBUTES                              = 21;
 
 
     //For invokedynamic opcodes

@@ -28,6 +28,11 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents an EnclosingMethod attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.7">EnclosingMethod</a>
+ */
 public class EnclosingMethod extends Attribute implements Opcode {
 
     private int classIndex;

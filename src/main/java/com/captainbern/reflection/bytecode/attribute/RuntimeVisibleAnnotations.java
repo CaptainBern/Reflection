@@ -24,6 +24,11 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a RuntimeVisibleAnnotations attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.16">RuntimeVisibleAnnotations</a>
+ */
 public class RuntimeVisibleAnnotations extends Annotation {
 
     public RuntimeVisibleAnnotations(int index, int length, DataInputStream codeStream, ConstantPool constantPool, boolean isRuntimeVisible) throws IOException {

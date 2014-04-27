@@ -26,6 +26,11 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a Signature attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.9">Signature</a>
+ */
 public class Signature extends Attribute {
 
     private int signatureIndex;

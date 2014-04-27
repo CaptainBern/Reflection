@@ -25,6 +25,11 @@ import com.captainbern.reflection.bytecode.Opcode;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a SourceDebugExtension attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.11">SourceDebugExtension</a>
+ */
 public class SourceDebugExtension extends Attribute implements Opcode {
 
     private int sourceDebugExtensionsCount;

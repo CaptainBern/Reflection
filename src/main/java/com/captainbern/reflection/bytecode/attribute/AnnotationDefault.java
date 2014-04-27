@@ -26,6 +26,11 @@ import com.captainbern.reflection.bytecode.attribute.annotation.elementvalue.Ele
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents an AnnotationDefault attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.20">AnnotationDefault</a>
+ */
 public class AnnotationDefault extends Attribute implements Opcode {
 
     private ElementValue defaultValue;

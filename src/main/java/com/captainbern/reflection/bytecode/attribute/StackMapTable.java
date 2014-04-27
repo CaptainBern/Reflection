@@ -20,12 +20,45 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
+import com.captainbern.reflection.bytecode.attribute.stackmap.StackMapFrame;
+import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
+/**
+ * Represents a StackMapTable attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.4">StackMapTable</a>
+ */
 public class StackMapTable extends Attribute {
 
     private int mapLength;
+    private StackMapFrame[] entries;
 
-    public StackMapTable(String tag, int index, int length, ConstantPool constantPool) {
-        super(tag, index, length, constantPool);
+    public StackMapTable(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
+        this(index, length, (StackMapFrame[]) null, constantPool);
+        this.mapLength = codeStream.readUnsignedShort();
+        for(int i = 0; i < this.mapLength; i++) {
+            this.entries[i] = new StackMapFrame(codeStream, constantPool);
+        }
+    }
+
+    public StackMapTable(int index, int length, StackMapFrame[] entries, ConstantPool constantPool) {
+        super(ATTR_STACK_MAP_TABLE, index, length, constantPool);
+        setEntries(entries);
+    }
+
+    public final int getMapSize() {
+        return this.mapLength;
+    }
+
+    public final StackMapFrame[] getEntries() {
+        return this.entries;
+    }
+
+    public final void setEntries(StackMapFrame[] entries) {
+        this.entries = entries;
+        this.mapLength = entries == null ? 0 : entries.length;
     }
 }

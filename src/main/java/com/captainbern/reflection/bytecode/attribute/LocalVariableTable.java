@@ -25,6 +25,11 @@ import com.captainbern.reflection.bytecode.Opcode;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a LocalVariableTable attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.13">LocalVariableTable</a>
+ */
 public class LocalVariableTable extends Attribute implements Opcode {
 
     private int localVariableTableLength;

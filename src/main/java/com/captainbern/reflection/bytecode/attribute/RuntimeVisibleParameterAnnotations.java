@@ -25,6 +25,11 @@ import com.captainbern.reflection.bytecode.attribute.annotation.ParameterAnnotat
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a RuntimeVisibleParameterAnnotations attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.18">RuntimeVisibleParameterAnnotations</a>
+ */
 public class RuntimeVisibleParameterAnnotations extends ParameterAnnotation {
 
     public RuntimeVisibleParameterAnnotations(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException {

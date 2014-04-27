@@ -25,6 +25,11 @@ import com.captainbern.reflection.bytecode.Opcode;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents an InnerClasses attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.6">InnerClasses</a>
+ */
 public class InnerClasses extends Attribute implements Opcode {
 
     private int numberOfInnerClasses;

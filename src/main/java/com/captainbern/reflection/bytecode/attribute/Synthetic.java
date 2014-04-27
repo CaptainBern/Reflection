@@ -25,6 +25,11 @@ import com.captainbern.reflection.bytecode.Opcode;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a Synthetic attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.8">Synthetic</a>
+ */
 public class Synthetic extends Attribute implements Opcode {
 
     private byte[] bytes;

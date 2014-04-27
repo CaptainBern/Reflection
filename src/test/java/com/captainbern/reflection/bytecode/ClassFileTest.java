@@ -11,9 +11,10 @@ public class ClassFileTest {
     @Test
     public void testBytecode() throws IOException, ClassFormatException {
         ClassFile classFile = new ClassFile(ClassUtils.classToBytes(ClassFileTest.class.getCanonicalName()));
-        log("Class name = " + classFile.getClassName());
-        log("Super class = " + classFile.getSuperClassName());
-        log("Access flags = 0x" + Integer.toHexString(classFile.getAccessFlags()));
+        log("Class name: " + classFile.getClassName());
+        log("Super class: " + classFile.getSuperClassName());
+        log("Access flags: 0x" + Integer.toHexString(classFile.getAccessFlags()));
+        log("Source file: " + classFile.getSourceFile());
     }
 
     private void log(Object message) {

@@ -58,7 +58,7 @@ public class ConstantPool implements Opcode {
 
     public Constant getConstant(int index) {
         if (index >= constantPool.length || index < 0) {
-            throw new IndexOutOfBoundsException("Pool size: \'" + this.constantPool.length + "\'. Referenced index: \'" + index);
+            throw new IndexOutOfBoundsException("Pool size: \'" + this.constantPool.length + "\'. Referenced index: \'" + index + "\'");
         }
         return constantPool[index];
     }

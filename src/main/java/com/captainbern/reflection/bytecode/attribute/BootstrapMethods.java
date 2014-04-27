@@ -25,6 +25,11 @@ import com.captainbern.reflection.bytecode.Opcode;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a BootstrapMethods attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.21">BootstrapMethods</a>
+ */
 public class BootstrapMethods extends Attribute implements Opcode {
 
     private int bootstrapMethodCount;

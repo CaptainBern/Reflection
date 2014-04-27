@@ -27,6 +27,11 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a SourceFile attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.10">SourceFile</a>
+ */
 public class SourceFile extends Attribute implements Opcode {
 
     private int sourceFileIndex;

@@ -26,6 +26,11 @@ import com.captainbern.reflection.bytecode.attribute.annotation.ParameterAnnotat
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a RuntimeInvisibleParameterAnnotations attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.19">RuntimeInvisbleParameterAnnotations</a>
+ */
 public class RuntimeInvisibleParameterAnnotations extends ParameterAnnotation implements Opcode {
 
     public RuntimeInvisibleParameterAnnotations(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException {

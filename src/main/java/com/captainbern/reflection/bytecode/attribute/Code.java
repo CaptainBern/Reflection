@@ -21,9 +21,16 @@ package com.captainbern.reflection.bytecode.attribute;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.Opcode;
+import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 
+/**
+ * Represents a Code attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.3">Code</a>
+ */
 public class Code extends Attribute implements Opcode {
 
     private int maxStack;
@@ -35,8 +42,26 @@ public class Code extends Attribute implements Opcode {
     private int attributeCount;
     private Attribute[] attributes;
 
-    public Code(int index, int length, DataInputStream codeStream, ConstantPool constantPool) {
-        super(ATTR_CODE, index, length, constantPool);
+    public Code(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
+        this(index, length, codeStream.readUnsignedShort(), codeStream.readUnsignedShort(), null, null, null, constantPool);
+        this.codeLength = codeStream.readInt();
+        this.code = new byte[this.codeLength];
+
+        codeStream.readFully(this.code);
+
+        this.exceptionTableLength = codeStream.readUnsignedShort();
+        this.exceptionTable = new Exception[this.exceptionTableLength];
+        for(int i = 0; i < this.exceptionTableLength; i++) {
+             this.exceptionTable[i] = new Exception(codeStream);
+        }
+
+        this.attributeCount = codeStream.readUnsignedShort();
+        this.attributes = new Attribute[this.attributeCount];
+        for(int i = 0; i < this.attributeCount; i++) {
+            this.attributes[i] = Attribute.readAttribute(codeStream, constantPool);
+        }
+
+        this.length = length;
     }
 
     public Code(int index, int length, int maxStack, int maxLocals, byte[] code, Exception[] exceptionTable, Attribute[] attributes, ConstantPool constantPool) {

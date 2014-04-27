@@ -24,6 +24,11 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Represents a ConstantValue attribute.
+ *
+ * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.2">ConstantValue</a>
+ */
 public class ConstantValue extends Attribute {
 
     private int constantValueIndex;

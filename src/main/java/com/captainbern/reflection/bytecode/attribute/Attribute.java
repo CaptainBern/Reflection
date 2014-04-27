@@ -77,9 +77,7 @@ public class Attribute implements Opcode {
 
     public static Attribute readAttribute(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         int index = codeStream.readUnsignedShort();
-        Utf8Constant constant = (Utf8Constant) constantPool.getConstant(index, CONSTANT_Utf8);
-        String tag = constant.getString();
-
+        String tag = constantPool.getUtf8StringConstant(index);
         int length = codeStream.readInt();
 
          switch (tag) {
@@ -103,15 +101,10 @@ public class Attribute implements Opcode {
                  return new Synthetic(index, length, codeStream, constantPool);
              case ATTR_DEPRECATED:
                  return new Deprecated(index, length, codeStream, constantPool);
-             /**
-              * case ATTR_PMG:
-              * ?
-              */
              case ATTR_SIGNATURE:
                  return new Signature(index, length, codeStream, constantPool);
-             /**
-              * case ATTR_STACKMAP
-              */
+             case ATTR_STACK_MAP:
+                 return new StackMap(index, length, codeStream, constantPool);
              case ATTR_RUNTIME_VISIBLE_ANNOTATIONS:
                  return new RuntimeVisibleAnnotations(index, length, codeStream, constantPool, true);
              case ATTR_RUNTIME_INVISIBLE_ANNOTATIONS:
@@ -128,9 +121,10 @@ public class Attribute implements Opcode {
                  return new EnclosingMethod(index, length, codeStream, constantPool);
              case ATTR_BOOTSTRAP_METHODS:
                  return new BootstrapMethods(index, length, codeStream, constantPool);
-             /**
-              * case ATTR_STACK_MAP_TABLE
-              */
+             case ATTR_STACK_MAP_TABLE:
+                 return new StackMapTable(index, length, codeStream, constantPool);
+             case ATTR_METHOD_PARAMETERS:
+                 return new MethodParameters(index, length, codeStream, constantPool);
          }
 
         return null;

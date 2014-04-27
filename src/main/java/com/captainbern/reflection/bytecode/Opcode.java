@@ -320,7 +320,7 @@ public interface Opcode {
     public static final String ATTR_SOURCE_FILE                             = "SourceFile";
     public static final String ATTR_SOURCE_DEBUG_EXTENSION                  = "SourceDebugExtension";
     public static final String ATTR_CONSTANT_VALUE                		    = "ConstantValue";
-    public static final String ATTR_CODE                          		    = "Code";
+    public static final String ATTR_CODE                                    = "Code";
     public static final String ATTR_EXCEPTIONS                    		    = "Exceptions";
     public static final String ATTR_LINE_NUMBER_TABLE             		    = "LineNumberTable";
     public static final String ATTR_LOCAL_VARIABLE_TABLE          		    = "LocalVariableTable";
@@ -338,6 +338,45 @@ public interface Opcode {
     public static final String ATTR_ENCLOSING_METHOD                        = "EnclosingMethod";
     public static final String ATTR_BOOTSTRAP_METHODS                       = "BootstrapMethods";
     public static final String ATTR_STACK_MAP_TABLE                         = "StackMapTable";
+    public static final String ATTR_METHOD_PARAMETERS                       = "MethodParameters";
+
+    /**
+     * StackMap types
+     *
+     * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.4">StackMap</a>
+     */
+    public static final byte ITEM_Top               = 0;
+    public static final byte ITEM_Integer           = 1;
+    public static final byte ITEM_Float             = 2;
+    public static final byte ITEM_Double            = 3;
+    public static final byte ITEM_Long              = 4;
+    public static final byte ITEM_Null              = 5;
+    public static final byte ITEM_UninitializedThis = 6;
+    public static final byte ITEM_Object            = 7;
+    public static final byte ITEM_Uninitialized     = 8;
+
+    /**
+     * Values to detect Frame growth
+     *
+     * @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.4">StackMap</a>
+     */
+    public static final int SAME_FRAME = 0;
+    public static final int SAME_FRAME_MAX = 63;
+
+    public static final int SAME_LOCALS_1_STACK_ITEM = 64;
+    public static final int SAME_LOCALS_1_STACK_ITEM_MAX = 127;
+
+    public static final int SAME_LOCALS_1_STACK_ITEM_EXTENDED = 247;
+
+    public static final int CHOP_FRAME = 248;
+    public static final int CHOP_FRAME_MAX = 250;
+
+    public static final int SAME_FRAME_EXTENDED = 251;
+
+    public static final int APPEND_FRAME = 252;
+    public static final int APPEND_FRAME_MAX = 254;
+
+    public static final int FULL_FRAME = 255;
 
 
     //For invokedynamic opcodes

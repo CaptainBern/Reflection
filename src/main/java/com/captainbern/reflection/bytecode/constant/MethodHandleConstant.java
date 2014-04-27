@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.constant;
 
 import java.io.DataInput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class MethodHandleConstant extends Constant {
@@ -47,5 +48,12 @@ public class MethodHandleConstant extends Constant {
 
     public int getMethodIndex() {
         return this.cindex;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeByte(this.tag);
+        codeStream.writeByte(this.ckind);
+        codeStream.writeShort(this.cindex);
     }
 }

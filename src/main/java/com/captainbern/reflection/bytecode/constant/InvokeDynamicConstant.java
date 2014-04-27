@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.constant;
 
 import java.io.DataInput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class InvokeDynamicConstant extends Constant {
@@ -47,5 +48,12 @@ public class InvokeDynamicConstant extends Constant {
 
     public int getNameAndType() {
         return this.nameAndType;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeByte(this.tag);
+        codeStream.writeShort(this.bootstrap);
+        codeStream.writeShort(this.nameAndType);
     }
 }

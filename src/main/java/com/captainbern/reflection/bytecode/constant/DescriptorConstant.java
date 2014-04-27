@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.constant;
 
 import java.io.DataInput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class DescriptorConstant extends Constant {
@@ -47,5 +48,12 @@ public class DescriptorConstant extends Constant {
 
     public int getTypeDescriptor() {
         return this.typeDescriptor;
+    }
+
+    @Override
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeByte(this.tag);
+        codeStream.writeShort(this.memberName);
+        codeStream.writeShort(this.typeDescriptor);
     }
 }

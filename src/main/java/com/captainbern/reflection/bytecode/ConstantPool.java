@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.constant.*;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ConstantPool implements Opcode {
@@ -81,7 +82,7 @@ public class ConstantPool implements Opcode {
         int stringIndex;
         switch (tag) {
             case CONSTANT_Class:
-               stringIndex = ((ClassConstant) constant).getNameIndex();
+                stringIndex = ((ClassConstant) constant).getNameIndex();
                 break;
             case CONSTANT_String:
                 stringIndex = ((StringConstant) constant).getStringIndex();
@@ -122,5 +123,15 @@ public class ConstantPool implements Opcode {
     public String getStringConstant(int index) throws ClassFormatException {
         StringConstant constant = (StringConstant) getConstant(index, CONSTANT_String);
         return getUtf8StringConstant(constant.getStringIndex());
+    }
+
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.size);
+        for(int i = 0; i < this.constantPool.length; i++) {
+            if(this.constantPool[i] == null)
+                continue;
+
+            this.constantPool[i].write(codeStream);
+        }
     }
 }

@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.constant;
 
 import java.io.DataInput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Utf8Constant extends Constant {
@@ -41,5 +42,11 @@ public class Utf8Constant extends Constant {
 
     public String getString() {
         return this.cstring;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeByte(this.tag);
+        codeStream.writeUTF(this.cstring);
     }
 }

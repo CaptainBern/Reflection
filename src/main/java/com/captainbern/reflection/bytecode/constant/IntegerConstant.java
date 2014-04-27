@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.constant;
 
 import java.io.DataInput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class IntegerConstant extends Constant {
@@ -41,5 +42,11 @@ public class IntegerConstant extends Constant {
 
     public int getInt() {
         return this.cint;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeByte(this.tag);
+        codeStream.writeInt(this.cint);
     }
 }

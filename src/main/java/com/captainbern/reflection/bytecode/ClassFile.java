@@ -20,18 +20,14 @@
 package com.captainbern.reflection.bytecode;
 
 import com.captainbern.reflection.bytecode.attribute.Attribute;
-import com.captainbern.reflection.bytecode.attribute.SourceFile;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import com.captainbern.reflection.bytecode.field.Field;
 import com.captainbern.reflection.bytecode.method.Method;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class ClassFile implements Opcode {
 
-    protected byte[] bytes;
     protected DataInputStream codeStream;
     private int magic;
     private int minor;
@@ -44,8 +40,6 @@ public class ClassFile implements Opcode {
     private Field[] fields;
     private Method[] methods;
     private Attribute[] attributes;
-
-    private String sourceFile = "<Unknown>";
 
     public ClassFile(final byte[] bytes) throws IOException, ClassFormatException {
         DataInputStream codeStream = new DataInputStream(new ByteArrayInputStream(bytes));
@@ -94,14 +88,96 @@ public class ClassFile implements Opcode {
         this.attributes = new Attribute[attributeCount];
         for(int i = 0; i < attributeCount; i++) {
             this.attributes[i] = Attribute.readAttribute(codeStream, this.constantPool);
-            if(this.attributes[i] instanceof SourceFile) {
-                this.sourceFile = ((SourceFile) this.attributes[i]).getSourceFile();
-            }
         }
     }
 
     public byte[] getByteCode() {
-        return this.bytes;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+
+        try {
+            write(dataOutputStream);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            try {
+                dataOutputStream.close();
+            } catch (IOException ioe1) {
+                ioe1.printStackTrace();
+            }
+        }
+
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    public void write(File file) throws IOException {
+        if(file.getParent() != null) {
+            File parent = new File(file.getParent());
+            parent.mkdirs();
+        }
+
+        DataOutputStream dataStream = null;
+
+        try {
+            dataStream = new DataOutputStream(new FileOutputStream(file));
+            write(dataStream);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } finally {
+            if(dataStream == null)
+                return;
+            dataStream.close();
+        }
+    }
+
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeInt(0xCAFEBABE);
+
+        codeStream.writeShort(this.minor);
+        codeStream.writeShort(this.major);
+
+        this.constantPool.write(codeStream);
+
+        /**
+         * Class info
+         */
+        codeStream.writeShort(this.accessFlags);
+        codeStream.writeShort(this.thisClass);
+        codeStream.writeShort(this.superClass);
+
+        /**
+         * Interfaces
+         */
+        codeStream.writeShort(this.interfaces.length);
+        for (int i : this.interfaces) {
+            codeStream.writeShort(i);
+        }
+
+        /**
+         * Fields
+         */
+        codeStream.writeShort(this.fields.length);
+        for (Field field : this.fields) {
+            field.write(codeStream);
+        }
+
+        /**
+         * Methods
+         */
+        codeStream.writeShort(this.methods.length);
+        for (Method method : this.methods) {
+            method.write(codeStream);
+        }
+
+        if (this.attributes != null) {
+            codeStream.writeShort(this.attributes.length);
+            for (Attribute attribute : this.attributes) {
+                attribute.write(codeStream);
+            }
+        } else {
+            codeStream.writeShort(0);
+        }
+
+        codeStream.flush();
     }
 
     public int getMagic() {
@@ -140,10 +216,6 @@ public class ClassFile implements Opcode {
             e.printStackTrace();
         }
         return "<Unknown>";
-    }
-
-    public String getSourceFile() {
-       return this.sourceFile;
     }
 
     public int[] getInterfaces() {

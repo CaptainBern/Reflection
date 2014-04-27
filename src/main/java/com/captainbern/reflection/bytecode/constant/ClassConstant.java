@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.constant;
 
 import java.io.DataInput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ClassConstant extends Constant {
@@ -41,5 +42,11 @@ public class ClassConstant extends Constant {
 
     public int getNameIndex() {
         return this.name;
+    }
+
+    @Override
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeByte(this.tag);
+        codeStream.write(this.name);
     }
 }

@@ -24,6 +24,7 @@ import com.captainbern.reflection.bytecode.constant.Utf8Constant;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -55,8 +56,7 @@ public class Member implements Opcode {
         this.accessFlags = accessFlags;
         this.nameIndex = nameIndex;
         this.descriptorIndex = descriptorIndex;
-        this.attributeCount = attributes == null ? 0 : attributes.length;
-        this.attributes = attributes;
+        setAttributes(attributes);
         this.constantPool = constantPool;
     }
 
@@ -109,5 +109,15 @@ public class Member implements Opcode {
     public final String getSignature() throws ClassFormatException {
         Utf8Constant constant = (Utf8Constant) this.constantPool.getConstant(this.descriptorIndex, CONSTANT_Utf8);
         return constant.getString();
+    }
+
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.accessFlags);
+        codeStream.writeShort(this.nameIndex);
+        codeStream.writeShort(this.descriptorIndex);
+        codeStream.writeShort(this.attributeCount);
+        for(int i = 0; i < this.attributeCount; i++) {
+            this.attributes[i].write(codeStream);
+        }
     }
 }

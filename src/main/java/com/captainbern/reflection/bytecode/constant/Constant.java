@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.Opcode;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public abstract class Constant implements Opcode {
@@ -72,4 +73,6 @@ public abstract class Constant implements Opcode {
                 throw new ClassFormatException("Invalid tag type: " + tag);
         }
     }
+
+    public abstract void write(DataOutputStream codeStream) throws IOException;
 }

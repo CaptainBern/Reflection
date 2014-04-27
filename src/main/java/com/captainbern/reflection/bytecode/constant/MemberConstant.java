@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.constant;
 
 import java.io.DataInput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public abstract class MemberConstant extends Constant {
@@ -50,4 +51,11 @@ public abstract class MemberConstant extends Constant {
     }
 
     public abstract String getTagName();
+
+    @Override
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeByte(this.tag);
+        codeStream.writeShort(this.classIndex);
+        codeStream.writeShort(this.nameAndType);
+    }
 }

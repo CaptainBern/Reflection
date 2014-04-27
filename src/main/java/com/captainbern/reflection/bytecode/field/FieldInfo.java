@@ -28,16 +28,17 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class Field extends Member implements Opcode {
-    public Field(Field field) {
-        super(field);
+public class FieldInfo extends Member implements Opcode {
+
+    public FieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
-    public Field(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
+    public FieldInfo(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         super(codeStream, constantPool);
     }
 
-    public Field(int accessFlags, int index, int signatureIndex, Attribute[] attributes, ConstantPool constantPool) {
+    public FieldInfo(int accessFlags, int index, int signatureIndex, Attribute[] attributes, ConstantPool constantPool) {
         super(accessFlags, index, signatureIndex, attributes, constantPool);
     }
 }

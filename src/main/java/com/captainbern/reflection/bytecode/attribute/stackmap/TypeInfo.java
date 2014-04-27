@@ -16,6 +16,7 @@ public final class TypeInfo implements Opcode {
         this(codeStream.readByte(), -1, constantPool);
         if(hasIndex())
             setIndex(codeStream.readShort());
+        setConstantPool(constantPool);
     }
 
     public TypeInfo(byte type, int index, ConstantPool constantPool) {

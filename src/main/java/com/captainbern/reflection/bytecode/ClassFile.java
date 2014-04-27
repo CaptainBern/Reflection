@@ -21,8 +21,8 @@ package com.captainbern.reflection.bytecode;
 
 import com.captainbern.reflection.bytecode.attribute.Attribute;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
-import com.captainbern.reflection.bytecode.field.Field;
-import com.captainbern.reflection.bytecode.method.Method;
+import com.captainbern.reflection.bytecode.field.FieldInfo;
+import com.captainbern.reflection.bytecode.method.MethodInfo;
 
 import java.io.*;
 
@@ -37,8 +37,8 @@ public class ClassFile implements Opcode {
     private int thisClass;
     private int superClass;
     private int[] interfaces;
-    private Field[] fields;
-    private Method[] methods;
+    private FieldInfo[] fields;
+    private MethodInfo[] methods;
     private Attribute[] attributes;
 
     public ClassFile(final byte[] bytes) throws IOException, ClassFormatException {
@@ -71,16 +71,16 @@ public class ClassFile implements Opcode {
 
         // Fields
         int fieldCount = codeStream.readUnsignedShort();
-        this.fields = new Field[interfacesCount];
+        this.fields = new FieldInfo[fieldCount];
         for(int i = 0; i < fieldCount; i++) {
-            this.fields[i] = new Field(codeStream, this.constantPool);
+            this.fields[i] = new FieldInfo(codeStream, this.constantPool);
         }
 
         // Methods
         int methodCount = codeStream.readUnsignedShort();
-        this.methods = new Method[methodCount];
+        this.methods = new MethodInfo[methodCount];
         for(int i = 0; i < methodCount; i++) {
-            this.methods[i] = new Method(codeStream, this.constantPool);
+            this.methods[i] = new MethodInfo(codeStream, this.constantPool);
         }
 
         // Attributes
@@ -156,16 +156,16 @@ public class ClassFile implements Opcode {
          * Fields
          */
         codeStream.writeShort(this.fields.length);
-        for (Field field : this.fields) {
-            field.write(codeStream);
+        for (FieldInfo fieldInfo : this.fields) {
+            fieldInfo.write(codeStream);
         }
 
         /**
          * Methods
          */
         codeStream.writeShort(this.methods.length);
-        for (Method method : this.methods) {
-            method.write(codeStream);
+        for (MethodInfo methodInfo : this.methods) {
+            methodInfo.write(codeStream);
         }
 
         if (this.attributes != null) {
@@ -178,6 +178,14 @@ public class ClassFile implements Opcode {
         }
 
         codeStream.flush();
+    }
+
+    public Class defineClass() {
+        return new ClassLoader() {
+            public Class defineClass(byte[] bytes) {
+                return super.defineClass(ClassFile.this.getClassName(), bytes, 0, bytes.length);
+            }
+        }.defineClass(getByteCode());
     }
 
     public int getMagic() {
@@ -222,11 +230,11 @@ public class ClassFile implements Opcode {
         return this.interfaces;
     }
 
-    public Field[] getFields() {
+    public FieldInfo[] getFields() {
         return this.fields;
     }
 
-    public Method[] getMethods() {
+    public MethodInfo[] getMethods() {
         return this.methods;
     }
 

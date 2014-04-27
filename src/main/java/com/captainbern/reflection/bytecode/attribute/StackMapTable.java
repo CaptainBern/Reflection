@@ -39,6 +39,7 @@ public class StackMapTable extends Attribute {
     public StackMapTable(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         this(index, length, (StackMapFrame[]) null, constantPool);
         this.mapLength = codeStream.readUnsignedShort();
+        this.entries = new StackMapFrame[this.mapLength];
         for(int i = 0; i < this.mapLength; i++) {
             this.entries[i] = new StackMapFrame(codeStream, constantPool);
         }

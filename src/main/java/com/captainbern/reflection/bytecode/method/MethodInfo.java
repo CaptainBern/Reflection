@@ -28,17 +28,17 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class Method extends Member implements Opcode {
+public class MethodInfo extends Member implements Opcode {
 
-    public Method(Method method) {
-        super(method);
+    public MethodInfo(MethodInfo methodInfo) {
+        super(methodInfo);
     }
 
-    public Method(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
+    public MethodInfo(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         super(codeStream, constantPool);
     }
 
-    public Method(int accessFlags, int index, int signatureIndex, Attribute[] attributes, ConstantPool constantPool) {
+    public MethodInfo(int accessFlags, int index, int signatureIndex, Attribute[] attributes, ConstantPool constantPool) {
         super(accessFlags, index, signatureIndex, attributes, constantPool);
     }
 }

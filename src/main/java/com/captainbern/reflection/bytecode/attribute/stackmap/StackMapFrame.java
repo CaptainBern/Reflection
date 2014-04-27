@@ -52,11 +52,13 @@ public final class StackMapFrame implements Opcode {
             }
         } else if(this.frameType == FULL_FRAME) {
             this.offset = codeStream.readShort();
-            this.numberOfLocals = this.frameType - 251;
+
+            this.numberOfLocals = codeStream.readShort();
             this.localFrames = new TypeInfo[this.numberOfLocals];
             for(int i = 0; i < this.numberOfLocals; i++) {
                 this.localFrames[i] = new TypeInfo(codeStream, constantPool);
             }
+
             this.numberOfStackItems = codeStream.readShort();
             this.stack = new TypeInfo[this.numberOfStackItems];
             for(int i = 0; i < this.numberOfStackItems; i++) {

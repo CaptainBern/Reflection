@@ -11,7 +11,8 @@ import java.io.IOException;
 
 public class ClassReaderTest implements Opcode {
 
-    private static String CLASS_PREFIX = "$JBLGeneratedClass";
+    private String interfaceName = "Test";
+    private static String CLASS_SUFFIX = "$JBLGeneratedClass";
     private static Object object = new Object();
 
     @Test
@@ -47,6 +48,11 @@ public class ClassReaderTest implements Opcode {
         for(Attribute attribute : classReader.getAttributes()) {
             log("\t" + attribute.getName());
         }
+        log("-------------------------------------------------------");
+
+        log("Creating new class:");
+        Class<?> test = classReader.defineClass();
+        log("New class name: " + test.getCanonicalName());
     }
 
     private void log(Object message) {

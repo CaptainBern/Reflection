@@ -24,6 +24,7 @@ import com.captainbern.reflection.bytecode.Opcode;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -164,5 +165,25 @@ public class Code extends Attribute implements Opcode {
             }
         }
         return null;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+
+        codeStream.writeShort(this.maxStack);
+        codeStream.writeShort(this.maxLocals);
+        codeStream.writeInt(this.codeLength);
+        codeStream.write(this.code, 0, this.codeLength);
+
+        codeStream.write(this.exceptionTableLength);
+        for(int i = 0; i < this.exceptionTableLength; i++) {
+            this.exceptionTable[i].write(codeStream);
+        }
+
+        codeStream.writeShort(this.attributeCount);
+        for(int i = 0; i < this.attributeCount; i++) {
+            this.attributes[i].write(codeStream);
+        }
     }
 }

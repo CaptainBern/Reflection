@@ -24,6 +24,7 @@ import com.captainbern.reflection.bytecode.Opcode;
 import com.captainbern.reflection.bytecode.attribute.annotation.AnnotationEntry;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -103,5 +104,9 @@ public class ElementValue implements Opcode {
            default:
                throw new RuntimeException("Wrong tag-type: " + tag);
         }
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeByte(this.tag);
     }
 }

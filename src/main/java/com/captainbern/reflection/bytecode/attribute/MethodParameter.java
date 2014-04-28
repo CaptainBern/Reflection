@@ -1,6 +1,7 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class MethodParameter {
@@ -31,5 +32,10 @@ public class MethodParameter {
 
     public final void setAccessFlags(int accessFlags) {
         this.accessFlags = accessFlags;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.nameIndex);
+        codeStream.writeShort(this.accessFlags);
     }
 }

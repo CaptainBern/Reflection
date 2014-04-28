@@ -17,12 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.attribute.annotation;
+package com.captainbern.reflection.bytecode.attribute;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
-import com.captainbern.reflection.bytecode.attribute.Attribute;
+import com.captainbern.reflection.bytecode.attribute.annotation.ParameterAnnotationEntry;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ParameterAnnotation extends Attribute {
@@ -55,5 +56,14 @@ public class ParameterAnnotation extends Attribute {
 
     public final int getParamTableLength() {
         return this.paramTableLength;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.paramTableLength);
+        for(int i = 0; i < this.paramTableLength; i++) {
+            this.parameterAnnotationEntries[i].write(codeStream);
+        }
     }
 }

@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class DoubleElementValue extends ElementValue {
@@ -52,5 +53,11 @@ public class DoubleElementValue extends ElementValue {
 
     public final double getDouble() throws ClassFormatException {
         return getConstantPool().getDoubleConstant(this.index);
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.index);
     }
 }

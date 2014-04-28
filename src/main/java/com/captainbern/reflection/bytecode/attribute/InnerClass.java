@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class InnerClass {
@@ -74,5 +75,12 @@ public class InnerClass {
 
     public final void setInnerClassAccessFlags(int innerClassAccessFlags) {
         this.innerClassAccessFlags = innerClassAccessFlags;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.innerClassInfoIndex);
+        codeStream.writeShort(this.outerClassInfoIndex);
+        codeStream.writeShort(this.innerNameIndex);
+        codeStream.writeShort(this.innerClassAccessFlags);
     }
 }

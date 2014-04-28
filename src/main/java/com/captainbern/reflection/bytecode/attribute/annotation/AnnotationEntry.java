@@ -26,6 +26,7 @@ import com.captainbern.reflection.bytecode.attribute.annotation.elementvalue.Ele
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -33,12 +34,13 @@ public class AnnotationEntry implements Opcode {
 
     private final int index;
     private final ConstantPool constantPool;
-    private LinkedList<ElementValuePair> elementValuePairs;
+    private LinkedList<ElementValuePair> elementValuePairs = null;
 
     private final boolean runtimeVisible;
 
     public static AnnotationEntry read(DataInputStream codeStream, ConstantPool constantPool, boolean visible) throws IOException {
         final AnnotationEntry annotationEntry = new AnnotationEntry(codeStream.readUnsignedShort(), constantPool, visible);
+        annotationEntry.elementValuePairs = new LinkedList<>();
         final int valuePairs = codeStream.readUnsignedShort();
 
         for(int i = 0; i < valuePairs; i++) {
@@ -76,5 +78,13 @@ public class AnnotationEntry implements Opcode {
 
     public final void addElementValue(ElementValuePair elementValuePair) {
         this.elementValuePairs.add(elementValuePair);
+    }
+
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.index);
+        codeStream.writeShort(this.elementValuePairs.size());
+        for(ElementValuePair pair : this.elementValuePairs) {
+            pair.write(codeStream);
+        }
     }
 }

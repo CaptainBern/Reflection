@@ -24,6 +24,7 @@ import com.captainbern.reflection.bytecode.Opcode;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -73,5 +74,13 @@ public class Exceptions extends Attribute implements Opcode {
             names[i] = this.constantPool.getConstantString(exceptions[i], CONSTANT_Class);
         }
         return names;
+    }
+
+    @Override
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.exceptionCount);
+        for(int i = 0; i < this.exceptionCount; i++) {
+            codeStream.writeShort(this.exceptions[i]);
+        }
     }
 }

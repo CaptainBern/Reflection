@@ -1,3 +1,22 @@
+/*
+ *  CaptainBern-Reflection-Framework contains several utils and tools
+ *  to make Reflection easier.
+ *  Copyright (C) 2014  CaptainBern
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.captainbern.reflection.bytecode.attribute.stackmap;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
@@ -5,6 +24,7 @@ import com.captainbern.reflection.bytecode.Opcode;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -133,6 +153,42 @@ public final class StackMapFrame implements Opcode {
 
     public final void setConstantPool(ConstantPool constantPool) {
         this.constantPool = constantPool;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException, ClassFormatException {
+        codeStream.write(this.frameType);
+
+        if(isWithinBounds(this.frameType, SAME_FRAME, SAME_FRAME_MAX)) {
+            // Do nothing
+        } else if(isWithinBounds(this.frameType, SAME_LOCALS_1_STACK_ITEM, SAME_LOCALS_1_STACK_ITEM_MAX)) {
+            this.stack[0].write(codeStream);
+        } else if(this.frameType == SAME_LOCALS_1_STACK_ITEM_EXTENDED) {
+            codeStream.writeShort(this.offset);
+            this.stack[0].write(codeStream);
+        } else if(isWithinBounds(this.frameType, CHOP_FRAME, CHOP_FRAME_MAX)) {
+            codeStream.writeShort(this.offset);
+        } else if(this.frameType == SAME_FRAME_EXTENDED) {
+            codeStream.writeShort(this.offset);
+        } else if(isWithinBounds(this.frameType, APPEND_FRAME, APPEND_FRAME_MAX)) {
+            codeStream.writeShort(this.offset);
+            for(int i = 0; i < this.numberOfLocals; i++) {
+                this.localFrames[i].write(codeStream);
+            }
+        } else if(this.frameType == FULL_FRAME) {
+            codeStream.writeShort(this.offset);
+
+            codeStream.writeShort(this.numberOfLocals);
+            for(int i = 0; i < this.numberOfLocals; i++) {
+                this.localFrames[i].write(codeStream);
+            }
+
+            codeStream.writeShort(this.numberOfStackItems);
+            for(int i = 0; i < this.numberOfStackItems; i++) {
+                this.stack[i].write(codeStream);
+            }
+        } else {
+            throw new ClassFormatException("Invalid Class-format! Failed to parse frame-type: " + this.frameType);
+        }
     }
 
     /**

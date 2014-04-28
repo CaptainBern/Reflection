@@ -22,11 +22,14 @@ package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class ElementValuePair {
 
+    private int nameIndex;
     private ElementValue elementValue;
     private ConstantPool constantPool;
-    private int nameIndex;
 
     public ElementValuePair(int nameIndex, ElementValue elementValue, ConstantPool constantPool) {
         this.nameIndex = nameIndex;
@@ -60,6 +63,11 @@ public class ElementValuePair {
 
     public final void setConstantPool(ConstantPool constantPool) {
         this.constantPool = constantPool;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.nameIndex);
+        this.elementValue.write(codeStream);
     }
 }
 

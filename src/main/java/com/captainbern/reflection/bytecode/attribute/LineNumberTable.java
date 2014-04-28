@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.Opcode;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -60,5 +61,14 @@ public class LineNumberTable extends Attribute implements Opcode {
     public final void setLineNumbers(LineNumber[] lineNumbers) {
         this.lineNumberTableLength = lineNumbers == null ? 0 : lineNumbers.length;
         this.lineNumbers = lineNumbers;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.lineNumberTableLength);
+        for(int i = 0; i < this.lineNumberTableLength; i++) {
+            this.lineNumbers[i].write(codeStream);
+        }
     }
 }

@@ -22,6 +22,7 @@ package com.captainbern.reflection.bytecode.attribute;
 import com.captainbern.reflection.bytecode.ConstantPool;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -33,5 +34,11 @@ public class RuntimeInvisibleAnnotations extends Annotation {
 
     public RuntimeInvisibleAnnotations(int index, int length, DataInputStream codeStream, ConstantPool constantPool, boolean isRuntimeVisible) throws IOException {
         super(ATTR_RUNTIME_INVISIBLE_ANNOTATIONS, index, length, codeStream, constantPool, isRuntimeVisible);
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        super.writeAnnotations(codeStream);
     }
 }

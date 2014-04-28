@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class DebugExtension {
@@ -44,5 +45,9 @@ public class DebugExtension {
 
     public final void setIndex(int index) {
         this.index = index;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.index);
     }
 }

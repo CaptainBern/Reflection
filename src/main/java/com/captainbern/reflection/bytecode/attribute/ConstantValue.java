@@ -22,6 +22,7 @@ package com.captainbern.reflection.bytecode.attribute;
 import com.captainbern.reflection.bytecode.ConstantPool;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -52,6 +53,12 @@ public class ConstantValue extends Attribute {
 
     public final void setConstantValueIndex(int index) {
         this.constantValueIndex = index;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.constantValueIndex);
     }
 }
 

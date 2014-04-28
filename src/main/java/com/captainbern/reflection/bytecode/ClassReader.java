@@ -53,7 +53,7 @@ public class ClassReader implements Opcode {
         DataInputStream codeStream = null;
 
         try {
-            codeStream = new DataInputStream(new ByteArrayInputStream(newBytes));
+            codeStream = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(newBytes), 8192));
             this.magic = codeStream.readInt();
 
             if (magic != 0xCAFEBABE) {
@@ -148,8 +148,8 @@ public class ClassReader implements Opcode {
     }
 
     public byte[] getByteCode() {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(8192);
+        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(byteArrayOutputStream, 8192));
 
         try {
             write(dataOutputStream);

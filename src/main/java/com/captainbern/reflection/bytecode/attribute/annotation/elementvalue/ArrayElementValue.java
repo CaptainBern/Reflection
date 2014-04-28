@@ -22,6 +22,7 @@ package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 import com.captainbern.reflection.bytecode.ConstantPool;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ArrayElementValue extends ElementValue {
@@ -52,5 +53,14 @@ public class ArrayElementValue extends ElementValue {
             array[i] = ElementValue.read(codeStream, constantPool);
         }
         return new ArrayElementValue(array, constantPool);
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.values.length);
+        for(int i = 0; i < this.values.length; i++) {
+            this.values[i].write(codeStream);
+        }
     }
 }

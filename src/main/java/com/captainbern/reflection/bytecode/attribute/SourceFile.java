@@ -25,6 +25,7 @@ import com.captainbern.reflection.bytecode.constant.Utf8Constant;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -60,5 +61,11 @@ public class SourceFile extends Attribute implements Opcode {
     public String getSourceFile() throws ClassFormatException {
         Utf8Constant constant = (Utf8Constant) this.constantPool.getConstant(this.sourceFileIndex, CONSTANT_Utf8);
         return constant.getString();
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.sourceFileIndex);
     }
 }

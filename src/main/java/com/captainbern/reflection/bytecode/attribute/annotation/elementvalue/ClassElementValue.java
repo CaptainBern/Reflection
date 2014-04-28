@@ -22,6 +22,7 @@ package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 import com.captainbern.reflection.bytecode.ConstantPool;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ClassElementValue extends ElementValue {
@@ -47,5 +48,11 @@ public class ClassElementValue extends ElementValue {
 
     public final void setIndex(int classIndex) {
         this.classIndex = classIndex;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.classIndex);
     }
 }

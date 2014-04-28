@@ -26,6 +26,7 @@ import com.captainbern.reflection.bytecode.constant.DescriptorConstant;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -76,5 +77,12 @@ public class EnclosingMethod extends Attribute implements Opcode {
     public final DescriptorConstant getMethodNameAndTypeConstant() throws ClassFormatException {
         DescriptorConstant constant = (DescriptorConstant) this.constantPool.getConstant(this.methodIndex, CONSTANT_NameAndType);
         return constant;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.classIndex);
+        codeStream.writeShort(this.methodIndex);
     }
 }

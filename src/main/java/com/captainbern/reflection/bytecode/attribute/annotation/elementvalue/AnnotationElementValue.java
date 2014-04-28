@@ -22,6 +22,9 @@ package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.attribute.annotation.AnnotationEntry;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class AnnotationElementValue extends ElementValue {
 
     private AnnotationEntry annotationEntry;
@@ -33,5 +36,11 @@ public class AnnotationElementValue extends ElementValue {
 
     public final AnnotationEntry getAnnotationEntry() {
         return this.annotationEntry;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        this.annotationEntry.write(codeStream);
     }
 }

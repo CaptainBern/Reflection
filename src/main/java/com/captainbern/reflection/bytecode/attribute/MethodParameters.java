@@ -3,6 +3,7 @@ package com.captainbern.reflection.bytecode.attribute;
 import com.captainbern.reflection.bytecode.ConstantPool;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class MethodParameters extends Attribute {
@@ -35,5 +36,14 @@ public class MethodParameters extends Attribute {
     public final void setParameters(MethodParameter[] parameters) {
         this.parameters = parameters;
         this.parameterCount = parameters == null ? 0 : parameters.length;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.parameterCount);
+        for(int i = 0; i < this.parameterCount; i++) {
+            this.parameters[i].write(codeStream);
+        }
     }
 }

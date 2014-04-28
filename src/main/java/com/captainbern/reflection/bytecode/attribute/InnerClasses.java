@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.Opcode;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -64,5 +65,14 @@ public class InnerClasses extends Attribute implements Opcode {
     public final void setInnerClasses(InnerClass[] innerClasses) {
         this.numberOfInnerClasses = innerClasses == null ? 0 : innerClasses.length;
         this.innerClasses = innerClasses;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.numberOfInnerClasses);
+        for(int i = 0; i < this.numberOfInnerClasses; i++) {
+            this.innerClasses[i].write(codeStream);
+        }
     }
 }

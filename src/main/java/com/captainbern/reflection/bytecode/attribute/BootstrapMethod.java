@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class BootstrapMethod {
@@ -62,5 +63,13 @@ public class BootstrapMethod {
     public final void setArguments(int[] arguments) {
         this.numberOfArguments = arguments == null ? 0 : arguments.length;
         this.arguments = arguments;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.methodIndex);
+        codeStream.writeShort(this.numberOfArguments);
+        for(int i = 0; i < this.numberOfArguments; i++) {
+            codeStream.writeShort(this.arguments[i]);
+        }
     }
 }

@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class LocalVariable {
@@ -84,5 +85,13 @@ public class LocalVariable {
 
     public final void setIndex(int index) {
         this.index = index;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.startPC);
+        codeStream.writeShort(this.length);
+        codeStream.writeShort(this.nameIndex);
+        codeStream.writeShort(this.signatureIndex);
+        codeStream.writeShort(this.index);
     }
 }

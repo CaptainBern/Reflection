@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.Opcode;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -64,5 +65,14 @@ public class LocalVariableTypeTable extends Attribute implements Opcode {
     public final void setVariables(LocalVariable[] variables) {
         this.localVariableTypeTableLength = variables == null ? 0: variables.length;
         this.variables = variables;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.localVariableTypeTableLength);
+        for(int i = 0; i < this.localVariableTypeTableLength; i++) {
+            this.variables[i].write(codeStream);
+        }
     }
 }

@@ -24,6 +24,7 @@ import com.captainbern.reflection.bytecode.Opcode;
 import com.captainbern.reflection.bytecode.attribute.annotation.elementvalue.ElementValue;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -51,5 +52,11 @@ public class AnnotationDefault extends Attribute implements Opcode {
 
     public final void setDefaultValue(ElementValue defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        this.defaultValue.write(codeStream);
     }
 }

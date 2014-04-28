@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class LineNumber {
@@ -54,5 +55,10 @@ public class LineNumber {
 
     public final void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.startPC);
+        codeStream.writeShort(this.lineNumber);
     }
 }

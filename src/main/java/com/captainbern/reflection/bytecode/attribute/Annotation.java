@@ -23,16 +23,18 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.attribute.annotation.AnnotationEntry;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Annotation extends Attribute {
 
+    private int tableSize;
     private AnnotationEntry[] entries;
     private boolean isRuntimeVisible;
 
     public Annotation(String tag, int index, int length, DataInputStream codeStream, ConstantPool constantPool, boolean isRuntimeVisible) throws IOException {
         super(tag, index, length, constantPool);
-        final int tableSize = codeStream.readUnsignedShort();
+        tableSize = codeStream.readUnsignedShort();
         this.entries = new AnnotationEntry[tableSize];
         for(int i = 0; i < tableSize; i++) {
             this.entries[i] = AnnotationEntry.read(codeStream, constantPool, isRuntimeVisible);
@@ -55,5 +57,15 @@ public class Annotation extends Attribute {
 
     public final boolean isRuntimeVisible() {
         return this.isRuntimeVisible;
+    }
+
+    protected void writeAnnotations(DataOutputStream codeStream) throws IOException {
+        if(this.entries == null)
+            return;
+
+        codeStream.writeShort(this.tableSize);
+        for(int i = 0; i < this.tableSize; i++) {
+            this.entries[i].write(codeStream);
+        }
     }
 }

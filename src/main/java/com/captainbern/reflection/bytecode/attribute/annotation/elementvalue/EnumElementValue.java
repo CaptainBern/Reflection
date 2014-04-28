@@ -22,6 +22,7 @@ package com.captainbern.reflection.bytecode.attribute.annotation.elementvalue;
 import com.captainbern.reflection.bytecode.ConstantPool;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class EnumElementValue extends ElementValue {
@@ -57,5 +58,12 @@ public class EnumElementValue extends ElementValue {
 
     public final void setValueIndex(int valueIndex) {
         this.valueIndex = valueIndex;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.typeIndex);
+        codeStream.writeShort(this.valueIndex);
     }
 }

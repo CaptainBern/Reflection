@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.Opcode;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -59,5 +60,14 @@ public class BootstrapMethods extends Attribute implements Opcode {
     public final void setBootstrapMethods(BootstrapMethod[] bootstrapMethods) {
         this.bootstrapMethodCount = bootstrapMethods == null ? 0 : bootstrapMethods.length;
         this.bootstrapMethods = bootstrapMethods;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.bootstrapMethodCount);
+        for(int i = 0; i < this.bootstrapMethodCount; i++) {
+            this.bootstrapMethods[i].write(codeStream);
+        }
     }
 }

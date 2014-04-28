@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.Opcode;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -60,5 +61,14 @@ public class SourceDebugExtension extends Attribute implements Opcode {
     public final void setDebugExtensions(DebugExtension[] debugExtensions) {
         this.sourceDebugExtensionsCount = debugExtensions == null ? 0 : debugExtensions.length;
         this.debugExtensions = debugExtensions;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.sourceDebugExtensionsCount);
+        for(int i = 0; i < this.sourceDebugExtensionsCount; i++) {
+            this.debugExtensions[i].write(codeStream);
+        }
     }
 }

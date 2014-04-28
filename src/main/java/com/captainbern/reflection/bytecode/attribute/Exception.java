@@ -20,6 +20,7 @@
 package com.captainbern.reflection.bytecode.attribute;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Exception {
@@ -70,5 +71,12 @@ public class Exception {
 
     public final void setCatchType(int catchType) {
         this.catchType = catchType;
+    }
+
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.startPc);
+        codeStream.writeShort(this.endPc);
+        codeStream.writeShort(this.handlerPc);
+        codeStream.writeShort(this.catchType);
     }
 }

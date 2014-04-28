@@ -23,6 +23,7 @@ import com.captainbern.reflection.bytecode.ConstantPool;
 import com.captainbern.reflection.bytecode.Opcode;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -57,5 +58,13 @@ public class Deprecated extends Attribute implements Opcode {
 
     public final void setBytes(byte[] bytes) {
         this.bytes = bytes;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        if(this.length > 0) {
+            codeStream.write(this.bytes, 0, this.length);
+        }
     }
 }

@@ -25,6 +25,7 @@ import com.captainbern.reflection.bytecode.attribute.stackmap.StackMapFrame;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class StackMap extends Attribute implements Opcode {
@@ -56,5 +57,18 @@ public class StackMap extends Attribute implements Opcode {
     public final void setEntries(StackMapFrame[] entries) {
         this.entries = entries;
         this.mapLength = entries == null ? 0 : entries.length;
+    }
+
+    @Override
+    public void write(DataOutputStream codeStream) throws IOException {
+        super.write(codeStream);
+        codeStream.writeShort(this.mapLength);
+        for(int i = 0; i < this.mapLength; i++) {
+            try {
+                this.entries[i].write(codeStream);
+            } catch (ClassFormatException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ package com.captainbern.reflection.bytecode.attribute.annotation;
 import com.captainbern.reflection.bytecode.ConstantPool;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ParameterAnnotationEntry {
@@ -44,5 +45,12 @@ public class ParameterAnnotationEntry {
 
     public final AnnotationEntry[] getAnnotations() {
         return this.entries;
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.tableLength);
+        for(int i = 0; i < this.tableLength; i++) {
+            this.entries[i].write(codeStream);
+        }
     }
 }

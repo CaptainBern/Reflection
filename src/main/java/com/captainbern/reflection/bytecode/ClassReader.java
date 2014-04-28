@@ -21,14 +21,14 @@ package com.captainbern.reflection.bytecode;
 
 import com.captainbern.reflection.bytecode.attribute.Attribute;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
-import com.captainbern.reflection.bytecode.field.FieldInfo;
-import com.captainbern.reflection.bytecode.method.MethodInfo;
+import com.captainbern.reflection.bytecode.member.Interface;
+import com.captainbern.reflection.bytecode.member.field.FieldInfo;
+import com.captainbern.reflection.bytecode.member.method.MethodInfo;
 
 import java.io.*;
 
-public class ClassFile implements Opcode {
+public class ClassReader implements Opcode {
 
-    protected DataInputStream codeStream;
     private int magic;
     private int minor;
     private int major;
@@ -36,59 +36,115 @@ public class ClassFile implements Opcode {
     private int accessFlags;
     private int thisClass;
     private int superClass;
-    private int[] interfaces;
+    private Interface[] interfaces;
     private FieldInfo[] fields;
     private MethodInfo[] methods;
     private Attribute[] attributes;
 
-    public ClassFile(final byte[] bytes) throws IOException, ClassFormatException {
-        DataInputStream codeStream = new DataInputStream(new ByteArrayInputStream(bytes));
-        this.magic = codeStream.readInt();
+    public ClassReader(final byte[] bytes) throws IOException, ClassFormatException {
+        this(bytes, 0, bytes.length);
+    }
 
-        if(magic != 0xCAFEBABE) {
-            throw new IOException("Invalid ClassFile! Magic returned: \'" + Integer.toHexString(magic) + "\'");
+    public ClassReader(final byte[] bytes, final int offset, final int length) throws IOException, ClassFormatException {
+
+        byte[] newBytes = new byte[length];
+        System.arraycopy(bytes, offset, newBytes, 0, length);
+
+        DataInputStream codeStream = null;
+
+        try {
+            codeStream = new DataInputStream(new ByteArrayInputStream(newBytes));
+            this.magic = codeStream.readInt();
+
+            if (magic != 0xCAFEBABE) {
+                throw new IOException("Invalid ClassFile! Magic returned: \'" + Integer.toHexString(magic) + "\'");
+            }
+
+            this.minor = codeStream.readUnsignedShort();
+            this.major = codeStream.readUnsignedShort();
+
+            if (major > JDK_8) {
+                throw new IllegalArgumentException("Unsupported ClassFile!");
+            }
+
+            this.constantPool = new ConstantPool(codeStream);
+
+            this.accessFlags = codeStream.readUnsignedShort();
+            this.thisClass = codeStream.readUnsignedShort();
+            this.superClass = codeStream.readUnsignedShort();
+
+            // Interfaces
+            int interfacesCount = codeStream.readUnsignedShort();
+            this.interfaces = new Interface[interfacesCount];
+            for (int i = 0; i < interfacesCount; i++) {
+                this.interfaces[i] = new Interface(codeStream.readUnsignedShort(), this.constantPool);
+            }
+
+            // Fields
+            int fieldCount = codeStream.readUnsignedShort();
+            this.fields = new FieldInfo[fieldCount];
+            for (int i = 0; i < fieldCount; i++) {
+                this.fields[i] = new FieldInfo(codeStream, this.constantPool);
+            }
+
+            // Methods
+            int methodCount = codeStream.readUnsignedShort();
+            this.methods = new MethodInfo[methodCount];
+            for (int i = 0; i < methodCount; i++) {
+                this.methods[i] = new MethodInfo(codeStream, this.constantPool);
+            }
+
+            // Attributes
+            int attributeCount = codeStream.readUnsignedShort();
+            this.attributes = new Attribute[attributeCount];
+            for (int i = 0; i < attributeCount; i++) {
+                this.attributes[i] = Attribute.readAttribute(codeStream, this.constantPool);
+            }
+
+        } finally {
+            try {
+                if(codeStream != null) {
+                    codeStream.close();
+                }
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
         }
+    }
 
-        this.minor = codeStream.readUnsignedShort();
-        this.major = codeStream.readUnsignedShort();
+    public ClassReader(final String source) throws IOException, ClassFormatException {
+        this(toBytes(ClassLoader.getSystemResourceAsStream(source.replace(".", "/") + ".class"), true));
+    }
 
-        if(major > JDK_8) {
-            throw new IllegalArgumentException("Unsupported ClassFile!");
+    public ClassReader(final InputStream inputStream) throws IOException, ClassFormatException {
+        this(toBytes(inputStream, false));
+    }
+
+    private static byte[] toBytes(final InputStream inputStream, boolean close) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[inputStream.available()];
+
+            int n;
+            while (-1 != (n = inputStream.read(buffer))) {
+                outputStream.write(buffer, 0, n);
+            }
+
+            return buffer;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(close) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        this.constantPool = new ConstantPool(codeStream);
-
-        this.accessFlags = codeStream.readUnsignedShort();
-        this.thisClass = codeStream.readUnsignedShort();
-        this.superClass = codeStream.readUnsignedShort();
-
-        // Interfaces
-        int interfacesCount = codeStream.readUnsignedShort();
-        this.interfaces = new int[interfacesCount];
-        for(int i = 0; i < interfacesCount; i++) {
-            this.interfaces[i] = codeStream.readUnsignedShort();
-        }
-
-        // Fields
-        int fieldCount = codeStream.readUnsignedShort();
-        this.fields = new FieldInfo[fieldCount];
-        for(int i = 0; i < fieldCount; i++) {
-            this.fields[i] = new FieldInfo(codeStream, this.constantPool);
-        }
-
-        // Methods
-        int methodCount = codeStream.readUnsignedShort();
-        this.methods = new MethodInfo[methodCount];
-        for(int i = 0; i < methodCount; i++) {
-            this.methods[i] = new MethodInfo(codeStream, this.constantPool);
-        }
-
-        // Attributes
-        int attributeCount = codeStream.readUnsignedShort();
-        this.attributes = new Attribute[attributeCount];
-        for(int i = 0; i < attributeCount; i++) {
-            this.attributes[i] = Attribute.readAttribute(codeStream, this.constantPool);
-        }
+        return null;
     }
 
     public byte[] getByteCode() {
@@ -148,8 +204,8 @@ public class ClassFile implements Opcode {
          * Interfaces
          */
         codeStream.writeShort(this.interfaces.length);
-        for (int i : this.interfaces) {
-            codeStream.writeShort(i);
+        for (Interface iface : this.interfaces) {
+            codeStream.writeShort(iface.getIndex());
         }
 
         /**
@@ -183,7 +239,7 @@ public class ClassFile implements Opcode {
     public Class defineClass() {
         return new ClassLoader() {
             public Class defineClass(byte[] bytes) {
-                return super.defineClass(ClassFile.this.getClassName(), bytes, 0, bytes.length);
+                return super.defineClass(ClassReader.this.getClassName(), bytes, 0, bytes.length);
             }
         }.defineClass(getByteCode());
     }
@@ -226,7 +282,7 @@ public class ClassFile implements Opcode {
         return "<Unknown>";
     }
 
-    public int[] getInterfaces() {
+    public Interface[] getInterfaces() {
         return this.interfaces;
     }
 

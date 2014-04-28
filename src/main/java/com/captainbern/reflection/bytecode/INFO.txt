@@ -1,7 +1,5 @@
-This is a small bytecode library. It is not designed to be used in major applications
+This is a small bytecode library (based of Apache BCEL). It is not designed to be used in major applications
 and is made to be used as a "debug" tool (e.g. get class info on runtime and print this)
 
 For more info about the ClassFile-format: http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html
 
-
-The attribute stuff is currently pretty messed up and probably needs some rewriting :/

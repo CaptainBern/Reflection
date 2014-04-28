@@ -100,8 +100,7 @@ public class ConstantPool implements Opcode {
                 throw new IllegalArgumentException("Invalid tag: " + tag);
         }
 
-        constant = getConstant(stringIndex, CONSTANT_Utf8);
-        return ((Utf8Constant) constant).getString();
+        return getUtf8StringConstant(stringIndex);
     }
 
     public String getUtf8StringConstant(int index) throws ClassFormatException {

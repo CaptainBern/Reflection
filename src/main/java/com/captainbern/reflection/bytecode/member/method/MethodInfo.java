@@ -17,10 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode.field;
+package com.captainbern.reflection.bytecode.member.method;
 
 import com.captainbern.reflection.bytecode.ConstantPool;
-import com.captainbern.reflection.bytecode.Member;
+import com.captainbern.reflection.bytecode.member.Member;
 import com.captainbern.reflection.bytecode.Opcode;
 import com.captainbern.reflection.bytecode.attribute.Attribute;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;
@@ -28,17 +28,17 @@ import com.captainbern.reflection.bytecode.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class FieldInfo extends Member implements Opcode {
+public class MethodInfo extends Member implements Opcode {
 
-    public FieldInfo(FieldInfo fieldInfo) {
-        super(fieldInfo);
+    public MethodInfo(MethodInfo methodInfo) {
+        super(methodInfo);
     }
 
-    public FieldInfo(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
+    public MethodInfo(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         super(codeStream, constantPool);
     }
 
-    public FieldInfo(int accessFlags, int index, int signatureIndex, Attribute[] attributes, ConstantPool constantPool) {
+    public MethodInfo(int accessFlags, int index, int signatureIndex, Attribute[] attributes, ConstantPool constantPool) {
         super(accessFlags, index, signatureIndex, attributes, constantPool);
     }
 }

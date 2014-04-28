@@ -17,8 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.bytecode;
+package com.captainbern.reflection.bytecode.member;
 
+import com.captainbern.reflection.bytecode.ConstantPool;
+import com.captainbern.reflection.bytecode.Opcode;
 import com.captainbern.reflection.bytecode.attribute.Attribute;
 import com.captainbern.reflection.bytecode.constant.Utf8Constant;
 import com.captainbern.reflection.bytecode.exception.ClassFormatException;

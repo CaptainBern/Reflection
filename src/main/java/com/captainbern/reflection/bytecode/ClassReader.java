@@ -224,6 +224,9 @@ public class ClassReader implements Opcode {
             methodInfo.write(codeStream);
         }
 
+        /**
+         * Attributes
+         */
         if (this.attributes != null) {
             codeStream.writeShort(this.attributes.length);
             for (Attribute attribute : this.attributes) {

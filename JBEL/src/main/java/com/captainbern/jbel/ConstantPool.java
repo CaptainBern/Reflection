@@ -19,7 +19,8 @@
 
 package com.captainbern.jbel;
 
-import com.captainbern.jbel.exception.ClassFormatException;
+import com.captainbern.jbel.commons.constant.*;
+import com.captainbern.jbel.commons.exception.ClassFormatException;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -65,6 +66,20 @@ public class ConstantPool implements Opcode {
         this.constantPool[index] = constant;
     }
 
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.size);
+        for(int i = 0; i < this.constantPool.length; i++) {
+            if(this.constantPool[i] == null)
+                continue;
+
+            this.constantPool[i].write(codeStream);
+        }
+    }
+
+    public byte getTag(int index) {
+        return getConstant(index).getTag();
+    }
+
     public Constant getConstant(int index) {
         if (index >= constantPool.length || index < 0) {
             throw new IndexOutOfBoundsException("Pool size: \'" + this.constantPool.length + "\'. Referenced index: \'" + index + "\'");
@@ -85,60 +100,115 @@ public class ConstantPool implements Opcode {
         return constant;
     }
 
-    public String getConstantString(int index, byte tag) throws ClassFormatException {
-        Constant constant = getConstant(index, tag);
-        int stringIndex;
-        switch (tag) {
-            case CONSTANT_Class:
-                stringIndex = ((ClassConstant) constant).getNameIndex();
-                break;
-            case CONSTANT_String:
-                stringIndex = ((StringConstant) constant).getStringIndex();
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid tag: " + tag);
-        }
-
-        return getUtf8StringConstant(stringIndex);
+    public ClassConstant getClass(int index) throws ClassFormatException {
+        return (ClassConstant) getConstant(index, CONSTANT_Class);
     }
 
-    public String getUtf8StringConstant(int index) throws ClassFormatException {
-        Utf8Constant constant = (Utf8Constant) getConstant(index, CONSTANT_Utf8);
-        return constant.getString();
+    public void setClass(int index, ClassConstant classConstant) {
+        this.setConstant(index, classConstant);
     }
 
-    public double getDoubleConstant(int index) throws ClassFormatException {
-        DoubleConstant constant = (DoubleConstant) getConstant(index, CONSTANT_Double);
-        return constant.getDouble();
+    public DescriptorConstant getDescriptor(int index) throws ClassFormatException {
+        return (DescriptorConstant) getConstant(index, CONSTANT_NameAndType);
     }
 
-    public float getFloatConstant(int index) throws ClassFormatException {
-        FloatConstant constant = (FloatConstant) getConstant(index, CONSTANT_Float);
-        return constant.getFloat();
+    public void setDescriptor(int index, DescriptorConstant constant) {
+        this.setConstant(index, constant);
     }
 
-    public int getIntegerConstant(int index) throws ClassFormatException {
-        IntegerConstant constant = (IntegerConstant) getConstant(index, CONSTANT_Integer);
-        return constant.getInt();
+    public DoubleConstant getDouble(int index) throws ClassFormatException {
+        return (DoubleConstant) getConstant(index, CONSTANT_Double);
     }
 
-    public long getLongConstant(int index) throws ClassFormatException {
-        LongConstant constant = (LongConstant) getConstant(index, CONSTANT_Long);
-        return constant.getLong();
+    public void setDouble(int index, DoubleConstant constant) {
+        this.setConstant(index, constant);
     }
 
-    public String getStringConstant(int index) throws ClassFormatException {
-        StringConstant constant = (StringConstant) getConstant(index, CONSTANT_String);
-        return getUtf8StringConstant(constant.getStringIndex());
+    public FloatConstant getFloat(int index) throws ClassFormatException {
+        return (FloatConstant) getConstant(index, CONSTANT_Float);
     }
 
-    public final void write(DataOutputStream codeStream) throws IOException {
-        codeStream.writeShort(this.size);
-        for(int i = 0; i < this.constantPool.length; i++) {
-            if(this.constantPool[i] == null)
-                continue;
+    public void setFloat(int index, FloatConstant constant) {
+        this.setConstant(index, constant);
+    }
 
-            this.constantPool[i].write(codeStream);
-        }
+    public IntegerConstant getInteger(int index) throws ClassFormatException {
+        return (IntegerConstant) getConstant(index, CONSTANT_Integer);
+    }
+
+    public void setInteger(int index, IntegerConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public LongConstant getLong(int index) throws ClassFormatException {
+         return (LongConstant) getConstant(index, CONSTANT_Long);
+    }
+
+    public void setLong(int index, LongConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public FieldConstant getFieldref(int index) throws ClassFormatException {
+        return (FieldConstant) getConstant(index, CONSTANT_Fieldref);
+    }
+
+    public void setFieldref(int index, FieldConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public MethodConstant getMethodref(int index) throws ClassFormatException {
+        return (MethodConstant) getConstant(index, CONSTANT_Methodref);
+    }
+
+    public void setMethodref(int index, MethodConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public MethodHandleConstant getMethodHandle(int index) throws ClassFormatException {
+        return (MethodHandleConstant) getConstant(index, CONSTANT_MethodHandle);
+    }
+
+    public void setMethodHandle(int index, MethodHandleConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public MethodTypeConstant getMethodType(int index) throws ClassFormatException {
+        return (MethodTypeConstant) getConstant(index, CONSTANT_MethodType);
+    }
+
+    public void setMethodType(int index, MethodTypeConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public InterfaceMethodConstant getInterfaceMethodref(int index) throws ClassFormatException {
+        return (InterfaceMethodConstant) getConstant(index, CONSTANT_InterfaceMethodref);
+    }
+
+    public void setInterfaceMethodref(int index, InterfaceMethodConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public InvokeDynamicConstant getInvokeDynamic(int index) throws ClassFormatException {
+        return (InvokeDynamicConstant) getConstant(index, CONSTANT_InvokeDynamic);
+    }
+
+    public void setInvokeDynamic(int index, InvokeDynamicConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public StringConstant getString(int index) throws ClassFormatException {
+        return (StringConstant) getConstant(index, CONSTANT_String);
+    }
+
+    public void setString(int index, StringConstant constant) {
+        this.setConstant(index, constant);
+    }
+
+    public Utf8Constant getUtf8(int index) throws ClassFormatException {
+        return (Utf8Constant) getConstant(index, CONSTANT_Utf8);
+    }
+
+    public void setUtf8(int index, Utf8Constant constant) {
+        this.setConstant(index, constant);
     }
 }

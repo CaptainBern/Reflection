@@ -19,11 +19,11 @@
 
 package com.captainbern.jbel;
 
-import com.captainbern.jbel.attribute.Attribute;
-import com.captainbern.jbel.exception.ClassFormatException;
-import com.captainbern.jbel.member.Interface;
-import com.captainbern.jbel.member.field.FieldInfo;
-import com.captainbern.jbel.member.method.MethodInfo;
+import com.captainbern.jbel.commons.attribute.Attribute;
+import com.captainbern.jbel.commons.exception.ClassFormatException;
+import com.captainbern.jbel.commons.member.Interface;
+import com.captainbern.jbel.commons.member.field.FieldInfo;
+import com.captainbern.jbel.commons.member.method.MethodInfo;
 
 import java.io.*;
 
@@ -269,7 +269,7 @@ public class ClassReader implements Opcode {
 
     public String getClassName() {
         try {
-            return this.constantPool.getConstantString(this.thisClass, CONSTANT_Class);
+            return this.constantPool.getUtf8(this.constantPool.getClass(this.thisClass).getNameIndex()).getString();
         } catch (ClassFormatException e) {
             e.printStackTrace();
         }
@@ -278,7 +278,7 @@ public class ClassReader implements Opcode {
 
     public String getSuperClassName() {
         try {
-            return this.constantPool.getConstantString(this.superClass, CONSTANT_Class);
+            return this.constantPool.getUtf8(this.constantPool.getClass(this.superClass).getNameIndex()).getString();
         } catch (ClassFormatException e) {
             e.printStackTrace();
         }

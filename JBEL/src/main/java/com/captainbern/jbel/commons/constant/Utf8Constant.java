@@ -44,6 +44,10 @@ public class Utf8Constant extends Constant {
         return this.cstring;
     }
 
+    public void setString(String cstring) {
+        this.cstring = cstring;
+    }
+
     @Override
     public void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeByte(this.tag);

@@ -242,7 +242,7 @@ public class ClassReader implements Opcode {
     public Class defineClass() {
         return new ClassLoader() {
             public Class defineClass(byte[] bytes) {
-                return super.defineClass(ClassReader.this.getClassName(), bytes, 0, bytes.length);
+                return super.defineClass(ClassReader.this.getClassName().replace('/', '.'), bytes, 0, bytes.length);
             }
         }.defineClass(getByteCode());
     }
@@ -276,6 +276,10 @@ public class ClassReader implements Opcode {
         return "<Unknown>";
     }
 
+    public int getClassNameIndex() {
+        return this.thisClass;
+    }
+
     public String getSuperClassName() {
         try {
             return this.constantPool.getUtf8(this.constantPool.getClass(this.superClass).getNameIndex()).getString();
@@ -283,6 +287,10 @@ public class ClassReader implements Opcode {
             e.printStackTrace();
         }
         return "<Unknown>";
+    }
+
+    public int getSuperClassNameIndex() {
+        return this.superClass;
     }
 
     public Interface[] getInterfaces() {

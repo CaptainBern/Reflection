@@ -1,46 +1,31 @@
 package com.captainbern.jbel.visitor;
 
-import com.captainbern.jbel.ClassReader;
-import com.captainbern.jbel.ConstantPool;
-import com.captainbern.jbel.commons.attribute.Attribute;
-import com.captainbern.jbel.commons.constant.Constant;
-import com.captainbern.jbel.commons.member.Interface;
-import com.captainbern.jbel.commons.member.field.FieldInfo;
-import com.captainbern.jbel.commons.member.method.MethodInfo;
+import com.captainbern.jbel.Opcode;
 
-public interface ClassVisitor {
+/**
+ * An ASM-like visitor system.
+ */
+public abstract class ClassVisitor {
 
-    public void visitClass(ClassReader classReader);
+    protected int api;
 
-    public int visitMinor(int minorVersion);
+    protected ClassVisitor classVisitor;
 
-    public int visitMajor(int majorVersion);
+    public ClassVisitor(int api) {
+        this(api, null);
+    }
 
-    public void visitConstantPool(ConstantPool constantPool);
+    public ClassVisitor(int api, ClassVisitor visitor) {
+         if(api != Opcode.JBEL_1) {
+             throw new IllegalArgumentException();
+         }
+         this.api = api;
+        this.classVisitor = visitor;
+    }
 
-    public void visitConstant(Constant constant);
-
-    public int visitAccessFags(int flags);
-
-    public String visitName(String name);
-
-    public String visitSuperClassName(String name);
-
-    public void visitInterfaces(Interface[] interfaces);
-
-    public void visitInterface(Interface iface);
-
-    public void visitFields(FieldInfo[] fields);
-
-    public void visitField(FieldInfo field);
-
-    public void visitMethods(MethodInfo[] methods);
-
-    public void visitMethod(MethodInfo method);
-
-    public void visitAttributes(Attribute[] attributes);
-
-    public void visitAttribute(Attribute attribute);
-
-    public void visitEnd();
+    public void visit(int access, String className, String superClassName, String[] interfaces) {
+        if(this.classVisitor != null) {
+            this.classVisitor.visit(access, className, superClassName, interfaces);
+        }
+    }
 }

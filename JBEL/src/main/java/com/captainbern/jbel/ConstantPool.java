@@ -37,11 +37,11 @@ public class ConstantPool implements Opcode {
 
     protected void read(DataInputStream inputStream) throws IOException, ClassFormatException {
         byte tag;
-        size = inputStream.readUnsignedShort();
-        constantPool = new Constant[size];
+        this.size = inputStream.readUnsignedShort();
+        this.constantPool = new Constant[this.size];
 
-        for (int i = 1; i < size; i++) {
-            constantPool[i] = Constant.readConstant(inputStream);
+        for (int i = 1; i < this.size; i++) {
+            this.constantPool[i] = Constant.readConstant(inputStream);
             tag = constantPool[i].getTag();
             if ((tag == CONSTANT_Double) || (tag == CONSTANT_Long)) {
                 i++;
@@ -68,11 +68,10 @@ public class ConstantPool implements Opcode {
 
     public final void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeShort(this.size);
-        for(int i = 0; i < this.constantPool.length; i++) {
-            if(this.constantPool[i] == null)
-                continue;
-
-            this.constantPool[i].write(codeStream);
+        for(int i = 1; i < this.size; i++) {
+            if(this.constantPool[i] != null) {
+                this.constantPool[i].write(codeStream);
+            }
         }
     }
 

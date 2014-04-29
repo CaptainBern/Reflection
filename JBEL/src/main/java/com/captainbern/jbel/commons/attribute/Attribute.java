@@ -72,7 +72,7 @@ public class Attribute implements Opcode {
     }
 
     public String getName() throws ClassFormatException {
-        Utf8Constant constant = (Utf8Constant) this.constantPool.getConstant(this.nameIndex, CONSTANT_Utf8 );
+        Utf8Constant constant = this.constantPool.getUtf8(this.nameIndex);
         return constant.getString();
     }
 
@@ -131,8 +131,8 @@ public class Attribute implements Opcode {
                 return new StackMapTable(index, length, codeStream, constantPool);
             case ATTR_METHOD_PARAMETERS:
                 return new MethodParameters(index, length, codeStream, constantPool);
+            default:
+                throw new ClassFormatException("Unknown attribute type: " + tag);
         }
-
-        return null;
     }
 }

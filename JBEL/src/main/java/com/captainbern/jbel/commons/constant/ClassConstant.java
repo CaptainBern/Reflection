@@ -47,6 +47,6 @@ public class ClassConstant extends Constant {
     @Override
     public void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeByte(this.tag);
-        codeStream.write(this.name);
+        codeStream.writeShort(this.name);
     }
 }

@@ -176,7 +176,7 @@ public class Code extends Attribute implements Opcode {
         codeStream.writeInt(this.codeLength);
         codeStream.write(this.code, 0, this.codeLength);
 
-        codeStream.write(this.exceptionTableLength);
+        codeStream.writeShort(this.exceptionTableLength);
         for(int i = 0; i < this.exceptionTableLength; i++) {
             this.exceptionTable[i].write(codeStream);
         }

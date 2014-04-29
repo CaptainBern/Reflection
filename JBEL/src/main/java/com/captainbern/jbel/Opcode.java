@@ -21,6 +21,8 @@ package com.captainbern.jbel;
 
 public interface Opcode {
 
+    public static final int JBEL_1 = 1 << 1;
+
     /**
      * JDK versions
      */

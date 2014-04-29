@@ -1,6 +1,9 @@
 package com.captainbern.jbel;
 
 import com.captainbern.jbel.commons.attribute.Attribute;
+import com.captainbern.jbel.commons.attribute.SourceFile;
+import com.captainbern.jbel.commons.constant.Constant;
+import com.captainbern.jbel.commons.constant.Utf8Constant;
 import com.captainbern.jbel.commons.exception.ClassFormatException;
 import com.captainbern.jbel.commons.member.Interface;
 import com.captainbern.jbel.commons.member.field.FieldInfo;
@@ -15,13 +18,36 @@ public class ClassReaderTest implements Opcode {
 
     @Test
     public void test() throws IOException, ClassFormatException {
-        ClassReader reader = new ClassReader(ClassReaderTest.class.getCanonicalName());
-        log("Magic: " + reader.getMagic());
-        log("Minor: " + reader.getMinor());
-        log("Major: " + reader.getMajor());
-        log("AccessFlags: " + reader.getAccessFlags());
+        ClassReader reader = new ClassReader(HelloWorld.class.getCanonicalName());
+        log("");
+        print(reader);
+        Class<?> testClass = reader.defineClass();
+        reader = new ClassReader(reader.getByteCode());
+        print(reader);
+        log("TestClass: " + testClass.getCanonicalName());
+    }
+
+    public static void print(ClassReader reader) throws ClassFormatException {
+        log("Magic: " + Integer.toHexString(reader.getMagic()));
+        log("Compiler version: " + reader.getMajor() + "." + reader.getMinor());
+        log("AccessFlags: " + Integer.toHexString(reader.getAccessFlags()));
         log("ClassName: " + reader.getClassName());
         log("SuperClassName: " + reader.getSuperClassName());
+        for(Attribute attribute : reader.getAttributes()) {
+            if(attribute instanceof SourceFile) {
+                log("Compiled from: " + ((SourceFile) attribute).getSourceFile());
+            }
+        }
+
+        log("");
+
+        log("ConstantPool:");
+        for(int i = 0; i < reader.getConstantPool().getSize(); i++) {
+            Constant constant = reader.getConstantPool().getConstant(i);
+            if(constant instanceof Utf8Constant) {
+                log("\t" + ((Utf8Constant) constant).getString() + " index: " + i);
+            }
+        }
 
         log("");
 

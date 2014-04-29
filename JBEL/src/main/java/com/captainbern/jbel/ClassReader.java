@@ -20,10 +20,13 @@
 package com.captainbern.jbel;
 
 import com.captainbern.jbel.commons.attribute.Attribute;
+import com.captainbern.jbel.commons.attribute.Signature;
+import com.captainbern.jbel.commons.attribute.SourceFile;
 import com.captainbern.jbel.commons.exception.ClassFormatException;
 import com.captainbern.jbel.commons.member.Interface;
 import com.captainbern.jbel.commons.member.field.FieldInfo;
 import com.captainbern.jbel.commons.member.method.MethodInfo;
+import com.captainbern.jbel.visitor.ClassVisitor;
 
 import java.io.*;
 
@@ -41,6 +44,12 @@ public class ClassReader implements Opcode {
     private MethodInfo[] methods;
     private Attribute[] attributes;
 
+    /**
+     * Constructs a new ClassReader with the given bytes.
+     * @param bytes
+     * @throws IOException
+     * @throws ClassFormatException
+     */
     public ClassReader(final byte[] bytes) throws IOException, ClassFormatException {
         this(bytes, 0, bytes.length);
     }
@@ -103,7 +112,7 @@ public class ClassReader implements Opcode {
 
         } finally {
             try {
-                if(codeStream != null) {
+                if (codeStream != null) {
                     codeStream.close();
                 }
             } catch (IOException ioe) {
@@ -112,14 +121,34 @@ public class ClassReader implements Opcode {
         }
     }
 
+    /**
+     * Constructs a new ClassReader with the given source location.
+     * eg: ClassReader reader = new ClassReader(ClassReader.class.getCanonicalName());
+     *
+     * @param source
+     * @throws IOException
+     * @throws ClassFormatException
+     */
     public ClassReader(final String source) throws IOException, ClassFormatException {
         this(toBytes(ClassLoader.getSystemResourceAsStream(source.replace(".", "/") + ".class"), true));
     }
 
+    /**
+     * Constructs a new ClassReader from the given InputStream.
+     * @param inputStream
+     * @throws IOException
+     * @throws ClassFormatException
+     */
     public ClassReader(final InputStream inputStream) throws IOException, ClassFormatException {
         this(toBytes(inputStream, false));
     }
 
+    /**
+     * Converts a given InputStream to a byte-array. (or pure bytecode)
+     * @param inputStream
+     * @param close
+     * @return
+     */
     private static byte[] toBytes(final InputStream inputStream, boolean close) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -137,7 +166,7 @@ public class ClassReader implements Opcode {
             e.printStackTrace();
         } finally {
             try {
-                if(close) {
+                if (close) {
                     inputStream.close();
                 }
             } catch (IOException e) {
@@ -147,6 +176,11 @@ public class ClassReader implements Opcode {
         return null;
     }
 
+    /**
+     * Returns the bytecode of this ClassReader. This allows one to easily edit a specific value and create a
+     * new class with the given bytes.
+     * @return
+     */
     public byte[] getByteCode() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(8192);
         DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(byteArrayOutputStream, 8192));
@@ -165,8 +199,13 @@ public class ClassReader implements Opcode {
         return byteArrayOutputStream.toByteArray();
     }
 
+    /**
+     * Writes this class to a file.
+     * @param file
+     * @throws IOException
+     */
     public void write(File file) throws IOException {
-        if(file.getParent() != null) {
+        if (file.getParent() != null) {
             File parent = new File(file.getParent());
             parent.mkdirs();
         }
@@ -179,12 +218,17 @@ public class ClassReader implements Opcode {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {
-            if(dataStream == null)
+            if (dataStream == null)
                 return;
             dataStream.close();
         }
     }
 
+    /**
+     * Writes this class to the given DataOutputStream
+     * @param codeStream
+     * @throws IOException
+     */
     public final void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeInt(0xCAFEBABE);
 
@@ -239,6 +283,10 @@ public class ClassReader implements Opcode {
         codeStream.flush();
     }
 
+    /**
+     * Defines a new class. Editing classes has never been this easy (and unsafe you moron)!
+     * @return
+     */
     public Class defineClass() {
         return new ClassLoader() {
             public Class defineClass(byte[] bytes) {
@@ -247,26 +295,50 @@ public class ClassReader implements Opcode {
         }.defineClass(getByteCode());
     }
 
+    /**
+     * Returns the magic of this class. This is always 0xCAFEBABE.
+     * @return
+     */
     public int getMagic() {
         return this.magic;
     }
 
+    /**
+     * Returns the minor version of this class.
+     * @return
+     */
     public int getMinor() {
         return this.minor;
     }
 
+    /**
+     * Returns the major version of this class.
+     * @return
+     */
     public int getMajor() {
         return this.major;
     }
 
+    /**
+     * Returns a ConstantPool object of this class.
+     * @return
+     */
     public ConstantPool getConstantPool() {
         return this.constantPool;
     }
 
+    /**
+     * Returns the access-flags of this class.
+     * @return
+     */
     public int getAccessFlags() {
         return this.accessFlags;
     }
 
+    /**
+     * Returns the name of this class.
+     * @return
+     */
     public String getClassName() {
         try {
             return this.constantPool.getUtf8(this.constantPool.getClass(this.thisClass).getNameIndex()).getString();
@@ -276,10 +348,18 @@ public class ClassReader implements Opcode {
         return "<Unknown>";
     }
 
+    /**
+     * Returns the location of the name in the ConstantPool.
+     * @return
+     */
     public int getClassNameIndex() {
         return this.thisClass;
     }
 
+    /**
+     * returns the name of the SuperClass of this class.
+     * @return
+     */
     public String getSuperClassName() {
         try {
             return this.constantPool.getUtf8(this.constantPool.getClass(this.superClass).getNameIndex()).getString();
@@ -289,23 +369,99 @@ public class ClassReader implements Opcode {
         return "<Unknown>";
     }
 
+    /**
+     * Returns the location of the SuperClassName in the ConstantPool.
+     * @return
+     */
     public int getSuperClassNameIndex() {
         return this.superClass;
     }
 
+    /**
+     * Returns an array of interfaces of this class.
+     * @return
+     */
     public Interface[] getInterfaces() {
         return this.interfaces;
     }
 
+    /**
+     * Returns an array of fields of this class.
+     * @return
+     */
     public FieldInfo[] getFields() {
         return this.fields;
     }
 
+    /**
+     * Returns an array of methods of this class.
+     * @return
+     */
     public MethodInfo[] getMethods() {
         return this.methods;
     }
 
+    /**
+     * Returns an array of attributes of this class.
+     * @return
+     */
     public Attribute[] getAttributes() {
         return this.attributes;
+    }
+
+    /**
+     * Visitor system. You can easily create your own visitors and make them visit a class and edit values etc.
+     */
+    public void accept(ClassVisitor visitor) throws ClassFormatException {
+
+        int version = this.getMajor();
+        int accessFlags = this.getAccessFlags();
+        String className = this.getClassName();
+        String superClassName = this.getSuperClassName();
+
+        String signature = null;
+        String sourceFile = null;
+
+        for (Attribute attribute : this.attributes) {
+
+            if (attribute instanceof SourceFile) {
+                sourceFile = ((SourceFile) attribute).getSourceFile();
+            } else if (attribute instanceof Signature) {
+                signature = ((Signature) attribute).getSignature();
+            }
+
+            visitor.visit(version, accessFlags, className, superClassName, signature);
+
+           visitor.visitSource(sourceFile);
+        }
+
+        for(Interface iface : this.interfaces) {
+            visitor.visitInterface(iface);
+        }
+
+        for(FieldInfo field : this.fields) {
+            visitField(visitor, field);
+        }
+    }
+
+    /**
+     * Visits a specific field.
+     * @param visitor
+     * @param field
+     * @throws ClassFormatException
+     */
+    protected void visitField(ClassVisitor visitor, FieldInfo field) throws ClassFormatException {
+        int access = field.getAccessFlags();
+        String name = field.getName();
+        String descriptor = field.getDescriptor();
+        String signature = null;
+
+        for(Attribute attribute : field.getAttributes()) {
+            if(attribute instanceof Signature) {
+                signature = ((Signature) attribute).getSignature();
+            }
+        }
+
+        visitor.visitField(access, name, descriptor, signature);
     }
 }

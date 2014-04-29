@@ -108,7 +108,7 @@ public class Member implements Opcode {
         return constant.getString();
     }
 
-    public String getSignature() throws ClassFormatException {
+    public String getDescriptor() throws ClassFormatException {
         Utf8Constant constant = (Utf8Constant) this.constantPool.getConstant(this.descriptorIndex, CONSTANT_Utf8);
         return constant.getString();
     }

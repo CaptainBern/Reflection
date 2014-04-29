@@ -8,6 +8,7 @@ import com.captainbern.jbel.commons.exception.ClassFormatException;
 import com.captainbern.jbel.commons.member.Interface;
 import com.captainbern.jbel.commons.member.field.FieldInfo;
 import com.captainbern.jbel.commons.member.method.MethodInfo;
+import com.captainbern.jbel.visitor.ClassVisitor;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,12 +20,30 @@ public class ClassReaderTest implements Opcode {
     @Test
     public void test() throws IOException, ClassFormatException {
         ClassReader reader = new ClassReader(HelloWorld.class.getCanonicalName());
-        log("");
-        print(reader);
-        Class<?> testClass = reader.defineClass();
-        reader = new ClassReader(reader.getByteCode());
-        print(reader);
-        log("TestClass: " + testClass.getCanonicalName());
+
+        reader.accept(new ClassVisitor(JBEL_1) {
+            @Override
+            public void visit(int version, int access, String className, String superClassName, String signature) {
+                log("Version: " + version);
+                log("AccessFlags: " + Integer.toHexString(access));
+                log("ClassName: " + className);
+                log("SuperClassName: " + superClassName);
+                log("Signature: " + signature);
+                super.visit(version, access, className, superClassName, signature);
+            }
+
+            @Override
+            public void visitSource(String sourceFile) {
+                log("Source: " + sourceFile);
+            }
+
+            @Override
+            public void visitEnd() {
+                log("Done visiting");
+            }
+        });
+
+        //print(reader);
     }
 
     public static void print(ClassReader reader) throws ClassFormatException {
@@ -62,7 +81,7 @@ public class ClassReaderTest implements Opcode {
         for(FieldInfo field : reader.getFields()) {
             log("\t Name: " + field.getName());
             log("\t AccessFlags: " + field.getAccessFlags());
-            log("\t Signature: " + field.getSignature());
+            log("\t Signature: " + field.getDescriptor());
             log("\t Attributes:");
             for(Attribute attribute : field.getAttributes()) {
                 log("\t\t" + attribute.getName());
@@ -75,7 +94,7 @@ public class ClassReaderTest implements Opcode {
         for(MethodInfo method : reader.getMethods()) {
             log("\t Name: " + method.getName());
             log("\t AccessFlags: " + method.getAccessFlags());
-            log("\t Signature: " + method.getSignature());
+            log("\t Signature: " + method.getDescriptor());
             log("\t Attributes:");
             for(Attribute attribute : method.getAttributes()) {
                 log("\t\t" + attribute.getName());

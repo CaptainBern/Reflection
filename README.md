@@ -1,7 +1,9 @@
 CaptainBern-Reflection-Framework
 ================================
 
-A Java-reflection framework. (in-dev) 7
+A Java-reflection framework. (in-dev)
+
+Everything is coded/tested/compiled on Java 7.
 
 contains:
 - Reflection framework

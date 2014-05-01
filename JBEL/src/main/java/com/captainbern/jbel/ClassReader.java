@@ -21,7 +21,6 @@ package com.captainbern.jbel;
 
 import com.captainbern.jbel.commons.attribute.Attribute;
 import com.captainbern.jbel.commons.attribute.Signature;
-import com.captainbern.jbel.commons.attribute.SourceFile;
 import com.captainbern.jbel.commons.exception.ClassFormatException;
 import com.captainbern.jbel.commons.member.Interface;
 import com.captainbern.jbel.commons.member.field.FieldInfo;
@@ -64,10 +63,6 @@ public class ClassReader implements Opcode {
         try {
             codeStream = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(newBytes), 8192));
             this.magic = codeStream.readInt();
-
-            if (magic != 0xCAFEBABE) {
-                throw new IOException("Invalid ClassFile! Magic returned: \'" + Integer.toHexString(magic) + "\'");
-            }
 
             this.minor = codeStream.readUnsignedShort();
             this.major = codeStream.readUnsignedShort();
@@ -420,28 +415,25 @@ public class ClassReader implements Opcode {
         String superClassName = this.getSuperClassName();
 
         String signature = null;
-        String sourceFile = null;
 
-        for (Attribute attribute : this.attributes) {
+        visitor.visit(version, accessFlags, className, superClassName, signature);
 
-            if (attribute instanceof SourceFile) {
-                sourceFile = ((SourceFile) attribute).getSourceFile();
-            } else if (attribute instanceof Signature) {
-                signature = ((Signature) attribute).getSignature();
-            }
-
-            visitor.visit(version, accessFlags, className, superClassName, signature);
-
-           visitor.visitSource(sourceFile);
-        }
+        visitor.visitConstantPool(this.constantPool);
 
         for(Interface iface : this.interfaces) {
             visitor.visitInterface(iface);
         }
+        visitor.visitInterfaces(this.interfaces);
 
         for(FieldInfo field : this.fields) {
             visitField(visitor, field);
         }
+        visitor.visitFields(this.fields);
+
+        for(Attribute attribute : this.attributes) {
+            visitor.visitAttribute(attribute);
+        }
+        visitor.visitAttributes(this.attributes);
     }
 
     /**

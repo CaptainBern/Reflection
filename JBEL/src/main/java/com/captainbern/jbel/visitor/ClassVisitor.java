@@ -1,8 +1,11 @@
 package com.captainbern.jbel.visitor;
 
+import com.captainbern.jbel.ConstantPool;
 import com.captainbern.jbel.Opcode;
 import com.captainbern.jbel.commons.attribute.Attribute;
 import com.captainbern.jbel.commons.member.Interface;
+import com.captainbern.jbel.commons.member.field.FieldInfo;
+import com.captainbern.jbel.commons.member.method.MethodInfo;
 
 /**
  * An ASM-like visitor system.
@@ -31,9 +34,9 @@ public abstract class ClassVisitor {
         }
     }
 
-    public void visitSource(String source) {
+    public void visitConstantPool(ConstantPool constantPool) {
         if(this.classVisitor != null) {
-            this.classVisitor.visitSource(source);
+            this.classVisitor.visitConstantPool(constantPool);
         }
     }
 
@@ -44,11 +47,23 @@ public abstract class ClassVisitor {
         return null;
     }
 
+    public void visitInterfaces(Interface[] interfaces) {
+        if(this.classVisitor != null) {
+            this.classVisitor.visitInterfaces(interfaces);
+        }
+    }
+
     public FieldVisitor visitField(int access, String name, String descriptor, String signature) {
         if(this.classVisitor != null) {
             return this.classVisitor.visitField(access, name, descriptor, signature);
         }
         return null;
+    }
+
+    public void visitFields(FieldInfo[] fields) {
+        if(this.classVisitor != null) {
+            this.classVisitor.visitFields(fields);
+        }
     }
 
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
@@ -58,9 +73,21 @@ public abstract class ClassVisitor {
         return null;
     }
 
+    public void visitMethods(MethodInfo[] methods) {
+        if(this.classVisitor != null) {
+            this.classVisitor.visitMethods(methods);
+        }
+    }
+
     public void visitAttribute(Attribute attribute) {
         if(this.classVisitor != null) {
             this.classVisitor.visitAttribute(attribute);
+        }
+    }
+
+    public void visitAttributes(Attribute[] attributes) {
+        if(this.classVisitor != null) {
+            this.classVisitor.visitAttributes(attributes);
         }
     }
 

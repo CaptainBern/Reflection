@@ -22,19 +22,13 @@ package com.captainbern.reflection;
 import java.lang.reflect.Member;
 import java.util.List;
 
-public interface ReflectedMember {
+public interface ReflectedMember extends Member {
 
     /**
      * Returns the underlying member.
      * @return
      */
     public Member member();
-
-    /**
-     * Returns the name of this member.
-     * @return
-     */
-    public String name();
 
     /**
      * In case the member is a method or a constructor, this will return how many arguments it takes.
@@ -47,19 +41,13 @@ public interface ReflectedMember {
      * the form of a ReflectedClass.
      * @return
      */
-    public List<ReflectedClass> getArguments();
+    public List<ReflectedClass<?>> getArguments();
 
     /**
      * Returns the type of this member as a ReflectedClass.
      * @return
      */
-    public ReflectedClass getType();
-
-    /**
-     * Returns the Descriptor of this Member. (eg: V();)
-     * @return
-     */
-    public String getDescriptor();
+    public ReflectedClass<?> getType();
 
     /**
      * Returns the modifiers of this member.

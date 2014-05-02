@@ -23,9 +23,9 @@ import com.captainbern.reflection.accessor.ConstructorAccessor;
 
 import java.lang.reflect.Constructor;
 
-public interface ReflectedConstructor extends ReflectedMember {
+public interface ReflectedConstructor<T> extends ReflectedMember {
 
     public Constructor member();
 
-    public ConstructorAccessor getAccessor();
+    public ConstructorAccessor<T> getAccessor();
 }

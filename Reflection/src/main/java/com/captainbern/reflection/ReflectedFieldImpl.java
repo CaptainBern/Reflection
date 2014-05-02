@@ -30,15 +30,17 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
 
     protected Field field;
 
-    public ReflectedFieldImpl(Field field) {
+    public ReflectedFieldImpl(final Field field) {
         if(field == null)
             throw new IllegalArgumentException("Field can't be NULL!");
 
         this.field = field;
-        try {
-            this.field.setAccessible(true);
-        } catch (SecurityException e) {
-            // Ignore
+        if(!this.field.isAccessible()) {
+            try {
+                this.field.setAccessible(true);
+            } catch (SecurityException e) {
+                // Ignore
+            }
         }
     }
 
@@ -54,7 +56,7 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
             public T get(Object instance) {
                 try {
                     if(ReflectedFieldImpl.this.field == null)
-                       throw new RuntimeException("Field is NULL!");
+                        throw new RuntimeException("Field is NULL!");
 
                     if(instance == null && !Modifier.isStatic(ReflectedFieldImpl.this.field.getModifiers()))
                         throw new IllegalArgumentException("Non-static fields require a valid instance passed in!");
@@ -96,18 +98,13 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
     }
 
     @Override
-    public String name() {
-        return this.field.getName();
-    }
-
-    @Override
     public int getArgumentCount() {
         return 0;
     }
 
     @Override
-    public List<ReflectedClass> getArguments() {
-        return new ArrayList<ReflectedClass>();
+    public List<ReflectedClass<?>> getArguments() {
+        return new ArrayList<ReflectedClass<?>>();
     }
 
     @Override
@@ -116,13 +113,23 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
     }
 
     @Override
-    public String getDescriptor() {
-        return Descriptor.getClassDescriptor(getType().getReflectedClass());
+    public Class<?> getDeclaringClass() {
+        return this.field.getDeclaringClass();
+    }
+
+    @Override
+    public String getName() {
+        return this.field.getName();
     }
 
     @Override
     public int getModifiers() {
         return this.field.getModifiers();
+    }
+
+    @Override
+    public boolean isSynthetic() {
+        return this.field.isSynthetic();
     }
 
     @Override

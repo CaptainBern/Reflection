@@ -27,12 +27,6 @@ import java.util.List;
 public interface ReflectedClass<T> extends Access<T> {
 
     /**
-     * Returns the Descriptor of this class.
-     * @return
-     */
-    public String getDescriptor();
-
-    /**
      * Constructs a new instance of this class using the given arguments.
      * @param args
      * @return

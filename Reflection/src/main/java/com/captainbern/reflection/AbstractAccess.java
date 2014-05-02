@@ -92,7 +92,7 @@ public class AbstractAccess<T> implements Access<T> {
 
         if(fields.size() > 0) {
             for (ReflectedField field : fields) {
-                if (field.name().equals(name)) {
+                if (field.getName().equals(name)) {
                     return field;
                 }
             }
@@ -105,7 +105,7 @@ public class AbstractAccess<T> implements Access<T> {
     public ReflectedField getFieldByName(String name) {
 
         for(ReflectedField field : getFields()) {
-            if(field.name().equals(name)) {
+            if(field.getName().equals(name)) {
                 return field;
             }
         }
@@ -136,11 +136,6 @@ public class AbstractAccess<T> implements Access<T> {
     @Override
     public boolean isInstanceOf(Object object) {
         return this.getReflectedClass().isInstance(object);
-    }
-
-    @Override
-    public String name() {
-        return this.getReflectedClass().getCanonicalName();
     }
 
     @Override

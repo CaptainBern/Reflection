@@ -22,49 +22,100 @@ package com.captainbern.reflection;
 import com.captainbern.reflection.accessor.ConstructorAccessor;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
 
-public class ReflectedConstructorImpl implements ReflectedConstructor {
+public class ReflectedConstructorImpl<T> implements ReflectedConstructor<T> {
+
+    protected Constructor<T> constructor;
+    protected Class<?> declarer;
+
+    public ReflectedConstructorImpl(final Constructor<T> constructor, final Class<?> declarer) {
+        if(constructor == null)
+            throw new IllegalArgumentException("Constructor can't be NULL!");
+        if(declarer == null) {
+            throw new IllegalArgumentException("Declarer is NULL!");
+        }
+
+        this.constructor = constructor;
+
+        if(!constructor.isAccessible()) {
+            try {
+                constructor.setAccessible(true);
+            } catch (SecurityException e) {
+                // Ignore
+            }
+        }
+    }
 
     @Override
     public Constructor member() {
-        return null;
+        return this.constructor;
     }
 
     @Override
     public ConstructorAccessor getAccessor() {
-        return null;
-    }
+        return new ConstructorAccessor<T>() {
+            @Override
+            public T invoke(Object... args) {
+                if(ReflectedConstructorImpl.this.constructor == null)
+                    throw new RuntimeException("Constructor is NULL!");
 
-    @Override
-    public String name() {
-        return null;
+                try {
+                    return ReflectedConstructorImpl.this.constructor.newInstance(args);
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            public ReflectedConstructor getConstructor() {
+                return ReflectedConstructorImpl.this;
+            }
+        };
     }
 
     @Override
     public int getArgumentCount() {
-        return 0;
+        return ReflectedConstructorImpl.this.getArgumentCount();
     }
 
     @Override
-    public List<ReflectedClass> getArguments() {
-        return null;
+    public List<ReflectedClass<?>> getArguments() {
+        return Reflection.reflect(Arrays.asList(this.constructor.getParameterTypes()));
     }
 
     @Override
     public ReflectedClass getType() {
-        return null;
+        return Reflection.reflect(this.declarer);
     }
 
     @Override
-    public String getDescriptor() {
-        return null;
+    public Class<?> getDeclaringClass() {
+        return this.constructor.getDeclaringClass();
+    }
+
+    @Override
+    public String getName() {
+        return this.constructor.getName();
     }
 
     @Override
     public int getModifiers() {
-        return 0;
+        return this.constructor.getModifiers();
+    }
+
+    @Override
+    public boolean isSynthetic() {
+        return this.constructor.isSynthetic();
     }
 
     @Override

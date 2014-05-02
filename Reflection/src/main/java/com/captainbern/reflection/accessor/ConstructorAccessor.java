@@ -21,14 +21,14 @@ package com.captainbern.reflection.accessor;
 
 import com.captainbern.reflection.ReflectedConstructor;
 
-public interface ConstructorAccessor {
+public interface ConstructorAccessor<T> {
 
     /**
      * Invokes the constructor with the given arguments.
      * @param args
      * @return
      */
-    public Object invoke(Object... args);
+    public T invoke(Object... args);
 
     /**
      * Returns the constructor as a ReflectedConstructor.

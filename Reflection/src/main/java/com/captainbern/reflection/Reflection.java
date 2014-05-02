@@ -22,6 +22,8 @@ package com.captainbern.reflection;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Reflection {
 
@@ -39,5 +41,17 @@ public class Reflection {
 
     public static <T> ReflectedClass<T> reflect(Class<T> clazz) {
         return null;
+    }
+
+    public static <T> ReflectedObject<T> reflect(T object) {
+        return null;
+    }
+
+    public static List<ReflectedClass<?>> reflect(List<Class<?>> classes) {
+        List<ReflectedClass<?>> reflectedClasses = new ArrayList<>();
+        for(Class<?> clazz : classes) {
+            reflectedClasses.add(reflect(clazz));
+        }
+        return reflectedClasses;
     }
 }

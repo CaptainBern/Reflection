@@ -24,12 +24,11 @@ import java.util.List;
 public class ReflectedClassImpl<T> extends AbstractAccess<T> implements ReflectedClass<T> {
 
     public ReflectedClassImpl(Class<T> clazz) {
-        super(clazz, false);
+        this(clazz, false);
     }
 
-    @Override
-    public String getDescriptor() {
-        return Descriptor.getClassDescriptor(this.getReflectedClass());
+    public ReflectedClassImpl(Class<T> clazz, boolean forceAccess) {
+        super(clazz, forceAccess);
     }
 
     @Override

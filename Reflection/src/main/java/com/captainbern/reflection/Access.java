@@ -105,12 +105,6 @@ public interface Access<T> {
     public boolean isInstanceOf(Object object);
 
     /**
-     * Returns the name of this class.
-     * @return
-     */
-    public String name();
-
-    /**
      * Returns the type of this class. (GenericSuperClass)
      * @return
      */

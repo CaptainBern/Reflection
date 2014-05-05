@@ -39,8 +39,12 @@ public class Reflection {
         return new ReflectedConstructorImpl(constructor);
     }
 
+    public static <T> ReflectedClass<T> reflect(Class<T> clazz, boolean forceAccess) {
+        return new ReflectedClassImpl<>(clazz, forceAccess);
+    }
+
     public static <T> ReflectedClass<T> reflect(Class<T> clazz) {
-        return new ReflectedClassImpl<>(clazz);
+        return reflect(clazz, true);
     }
 
     public static <T> ReflectedObject<T> reflect(T object) {

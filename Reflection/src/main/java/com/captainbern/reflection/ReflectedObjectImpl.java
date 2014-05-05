@@ -71,6 +71,11 @@ public class ReflectedObjectImpl<T> implements ReflectedObject<T> {
     }
 
     @Override
+    public ReflectedMethod getMethod(String name, Class<?> returnType, Class[] arguments) {
+        return asReflectedClass().getMethod(name, returnType, arguments);
+    }
+
+    @Override
     public Set<ReflectedConstructor> getConstructors() {
         return asReflectedClass().getConstructors();
     }

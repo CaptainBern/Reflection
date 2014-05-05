@@ -28,23 +28,23 @@ import java.util.List;
 public class Reflection {
 
     public static <T> ReflectedField<T> reflect(Field field) {
-        return null;
+        return new ReflectedFieldImpl<T>(field);
     }
 
     public static <T> ReflectedMethod<T> reflect(Method method) {
-        return null;
+        return new ReflectedMethodImpl<T>(method);
     }
 
     public static ReflectedConstructor reflect(Constructor constructor) {
-        return null;
+        return new ReflectedConstructorImpl(constructor);
     }
 
     public static <T> ReflectedClass<T> reflect(Class<T> clazz) {
-        return null;
+        return new ReflectedClassImpl<>(clazz);
     }
 
     public static <T> ReflectedObject<T> reflect(T object) {
-        return null;
+        return new ReflectedObjectImpl<>(object);
     }
 
     public static List<ReflectedClass<?>> reflect(List<Class<?>> classes) {

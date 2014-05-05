@@ -30,14 +30,9 @@ import java.util.List;
 public class ReflectedConstructorImpl<T> implements ReflectedConstructor<T> {
 
     protected Constructor<T> constructor;
-    protected Class<?> declarer;
-
-    public ReflectedConstructorImpl(final Constructor<T> constructor, final Class<?> declarer) {
+    public ReflectedConstructorImpl(final Constructor<T> constructor) {
         if(constructor == null)
             throw new IllegalArgumentException("Constructor can't be NULL!");
-        if(declarer == null) {
-            throw new IllegalArgumentException("Declarer is NULL!");
-        }
 
         this.constructor = constructor;
 
@@ -95,7 +90,7 @@ public class ReflectedConstructorImpl<T> implements ReflectedConstructor<T> {
 
     @Override
     public ReflectedClass getType() {
-        return Reflection.reflect(this.declarer);
+        return Reflection.reflect(this.constructor.getDeclaringClass());
     }
 
     @Override

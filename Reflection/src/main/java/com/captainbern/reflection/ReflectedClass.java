@@ -27,13 +27,6 @@ import java.util.List;
 public interface ReflectedClass<T> extends Access<T> {
 
     /**
-     * Constructs a new instance of this class using the given arguments.
-     * @param args
-     * @return
-     */
-    public ReflectedObject<T> newInstance(Object... args);
-
-    /**
      * Returns a List of all the Super classes of this class.
      * @return
      */

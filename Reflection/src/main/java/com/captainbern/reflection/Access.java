@@ -84,6 +84,19 @@ public interface Access<T> {
     public Set<ReflectedMethod> getDeclaredMethods(Class<?> exemptedSuperClass);
 
     /**
+     * Returns a Set which contains all the Constructors of this class.
+     * @return
+     */
+    public Set<ReflectedConstructor> getConstructors();
+
+    /**
+     * Returns all the constructors of this class and it's super classes until it reaches the specified superclass.
+     * @param exemptedSuperClass
+     * @return
+     */
+    public Set<ReflectedConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass);
+
+    /**
      * Whether or not this reflected class is assignable from {@param clazz}
      * @param clazz
      * @return

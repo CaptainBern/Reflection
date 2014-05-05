@@ -74,12 +74,6 @@ public class FuzzyReflection {
         return getMethods();
     }
 
-
-    /**
-     * Fields
-     */
-
-
     public Set<Field> getFields() {
         return getFields(this.forceAccess);
     }

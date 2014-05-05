@@ -19,6 +19,9 @@
 
 package com.captainbern.reflection;
 
+import com.captainbern.reflection.utils.ReflectionUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReflectedClassImpl<T> extends AbstractAccess<T> implements ReflectedClass<T> {
@@ -32,12 +35,11 @@ public class ReflectedClassImpl<T> extends AbstractAccess<T> implements Reflecte
     }
 
     @Override
-    public ReflectedObject<T> newInstance(Object... args) {
-        return null;
-    }
-
-    @Override
     public List<ReflectedClass> getSuperClasses() {
-        return null;
+        List<ReflectedClass> classes = new ArrayList<>();
+        for(Class<?> clazz : ReflectionUtils.getAllSuperClasses(this.clazz)) {
+            classes.add(Reflection.reflect(clazz));
+        }
+        return classes;
     }
 }

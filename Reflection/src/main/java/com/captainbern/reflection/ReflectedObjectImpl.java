@@ -71,6 +71,16 @@ public class ReflectedObjectImpl<T> implements ReflectedObject<T> {
     }
 
     @Override
+    public Set<ReflectedConstructor> getConstructors() {
+        return asReflectedClass().getConstructors();
+    }
+
+    @Override
+    public Set<ReflectedConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass) {
+        return asReflectedClass().getDeclaredConstructors(exemptedSuperClass);
+    }
+
+    @Override
     public boolean isAssignableFrom(Class<?> clazz) {
         return asReflectedClass().isAssignableFrom(clazz);
     }

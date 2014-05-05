@@ -1,5 +1,7 @@
 package com.captainbern.reflection.utils;
 
+import com.captainbern.reflection.utils.assertion.Assert;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -38,7 +40,7 @@ public class ReflectionUtils {
     }
 
     public static Set<Class<?>> getAllSuperClasses(final Class<?> clazz) {
-        Assert.checkNotNull(clazz);
+        Assert.assertNotNull(clazz);
 
         Set<Class<?>> set = new HashSet<>();
         if(clazz != null && !clazz.equals(Object.class)) {
@@ -53,7 +55,7 @@ public class ReflectionUtils {
     }
 
     public static Set<Field> getAllFields(Class<?> clazz) {
-        Assert.checkNotNull(clazz);
+        Assert.assertNotNull(clazz);
 
         Set<Field> set = new HashSet<>();
         for(Class<?> type : getAllSuperClasses(clazz)) {
@@ -63,7 +65,7 @@ public class ReflectionUtils {
     }
 
     public static Set<Field> getFields(Class<?> clazz) {
-        Assert.checkNotNull(clazz);
+        Assert.assertNotNull(clazz);
 
         Set<Field> set = new HashSet<>();
         for(Field field : clazz.isInterface() ? clazz.getFields() : clazz.getDeclaredFields()) {
@@ -73,8 +75,8 @@ public class ReflectionUtils {
     }
 
     public static Field getField(Class<?> clazz, String fieldName, Class<?> fieldType) {
-        Assert.checkNotNull(clazz);
-        Assert.isTrue(fieldName != null || fieldName != null, "Either name or type needs to be specified!");
+        Assert.assertNotNull(clazz);
+        Assert.assertTrue(fieldName != null || fieldType != null, "Either name or type needs to be specified!");
 
         Set<Field> fields = getFields(clazz);
         for(Field field : fields) {
@@ -87,7 +89,7 @@ public class ReflectionUtils {
     }
 
     public static Set<Method> getAllMethods(Class<?> clazz) {
-        Assert.checkNotNull(clazz);
+        Assert.assertNotNull(clazz);
 
         Set<Method> set = new HashSet<>();
         for(Class<?> type : getAllSuperClasses(clazz)) {
@@ -97,7 +99,7 @@ public class ReflectionUtils {
     }
 
     public static Set<Method> getMethods(Class<?> clazz) {
-        Assert.checkNotNull(clazz);
+        Assert.assertNotNull(clazz);
 
         Set<Method> set = new HashSet<>();
         for(Method method : clazz.isInterface() ? clazz.getMethods() : clazz.getDeclaredMethods()) {
@@ -107,8 +109,8 @@ public class ReflectionUtils {
     }
 
     public static Method getMethod(Class<?> clazz, String name, Class<?> returnType, Class[] parameters) {   // Don't dare to ask for varargs here.
-        Assert.checkNotNull(clazz);
-        Assert.isTrue(name != null || returnType != null || parameters != null);
+        Assert.assertNotNull(clazz);
+        Assert.assertTrue(name != null || returnType != null || parameters != null);
 
         Set<Method> methods = getMethods(clazz);
         for(Method method : methods) {
@@ -120,7 +122,7 @@ public class ReflectionUtils {
     }
 
     public static Set<Constructor<?>> getAllConstructors(Class<?> clazz) {
-        Assert.checkNotNull(clazz);
+        Assert.assertNotNull(clazz);
 
         Set<Constructor<?>> set = new HashSet<>();
         for(Class<?> type : getAllSuperClasses(clazz)) {
@@ -130,7 +132,7 @@ public class ReflectionUtils {
     }
 
     public static Set<Constructor<?>> getConstructors(Class<?> clazz) {
-        Assert.checkNotNull(clazz);
+        Assert.assertNotNull(clazz);
 
         Set<Constructor<?>> set = new HashSet<>();
         for(Constructor<?> constructor : clazz.getDeclaredConstructors()) {
@@ -140,7 +142,7 @@ public class ReflectionUtils {
     }
 
     public static Constructor<?> getConstructor(Class<?> clazz, Class... parameters) {
-        Assert.checkNotNull(clazz);
+        Assert.assertNotNull(clazz);
 
         Set<Constructor<?>> constructors = getConstructors(clazz);
         for(Constructor<?> constructor : constructors) {

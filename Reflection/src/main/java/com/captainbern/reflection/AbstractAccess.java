@@ -19,12 +19,11 @@
 
 package com.captainbern.reflection;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AbstractAccess<T> implements Access<T> {
 
@@ -103,7 +102,6 @@ public class AbstractAccess<T> implements Access<T> {
 
     @Override
     public ReflectedField getFieldByName(String name) {
-
         for(ReflectedField field : getFields()) {
             if(field.getName().equals(name)) {
                 return field;
@@ -115,12 +113,74 @@ public class AbstractAccess<T> implements Access<T> {
 
     @Override
     public Set<ReflectedMethod> getMethods() {
-        return null;
+        Set<ReflectedMethod> methods = new HashSet<>();
+
+        if(forceAccess) {
+            for(Method method : this.clazz.getDeclaredMethods()) {
+                methods.add(Reflection.reflect(method));
+            }
+        }
+
+        for(Method method : this.clazz.getMethods()) {
+            methods.add(Reflection.reflect(method));
+        }
+
+        return methods;
     }
 
     @Override
     public Set<ReflectedMethod> getDeclaredMethods(Class<?> exemptedSuperClass) {
-        return null;
+        if(forceAccess) {
+            Set<ReflectedMethod> methods = new LinkedHashSet<ReflectedMethod>();
+            Class<?> current = this.clazz;
+
+            while(current != null && current != exemptedSuperClass) {
+                for(Method method : current.getDeclaredMethods()) {
+                    methods.add(Reflection.reflect(method));
+                }
+                current = current.getSuperclass();
+            }
+
+            return methods;
+        }
+
+        return getMethods();
+    }
+
+    @Override
+    public Set<ReflectedConstructor> getConstructors() {
+        Set<ReflectedConstructor> constructors = new HashSet<>();
+
+        if(forceAccess) {
+            for(Constructor constructor : this.clazz.getDeclaredConstructors()) {
+                constructors.add(Reflection.reflect(constructor));
+            }
+        }
+
+        for(Constructor constructor : this.clazz.getConstructors()) {
+            constructors.add(Reflection.reflect(constructor));
+        }
+
+        return constructors;
+    }
+
+    @Override
+    public Set<ReflectedConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass) {
+        if(forceAccess) {
+            Set<ReflectedConstructor> constructors = new LinkedHashSet<ReflectedConstructor>();
+            Class<?> current = this.clazz;
+
+            while(current != null && current != exemptedSuperClass) {
+                for(Constructor constructor : current.getDeclaredConstructors()) {
+                    constructors.add(Reflection.reflect(constructor));
+                }
+                current = current.getSuperclass();
+            }
+
+            return constructors;
+        }
+
+        return getConstructors();
     }
 
     @Override

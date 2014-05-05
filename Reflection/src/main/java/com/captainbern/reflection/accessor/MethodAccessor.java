@@ -21,19 +21,23 @@ package com.captainbern.reflection.accessor;
 
 import com.captainbern.reflection.ReflectedMethod;
 
+/**
+ * An interface for weak-access to methods.
+ * @param <T> The return type of the underlying method.
+ */
 public interface MethodAccessor<T> {
 
     /**
      * Invokes the method for the given instance with the given arguments.
-     * @param instance
-     * @param args
-     * @return
+     * @param instance The instance or null for static methods.
+     * @param args The arguments to pass into to instantiate the underlying method.
+     * @return The value.
      */
     public T invoke(Object instance, Object... args);
 
     /**
-     * Returns the method as a ReflectedMethod.
-     * @return
+     * Returns the underlying method as a ReflectedMethod.
+     * @return The underlying method as a ReflectedMethod.
      */
     public ReflectedMethod getMethod();
 }

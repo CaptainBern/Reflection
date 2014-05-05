@@ -21,32 +21,36 @@ package com.captainbern.reflection.accessor;
 
 import com.captainbern.reflection.ReflectedField;
 
+/**
+ * An interface for weak access to fields and allows various operations to be done easier.
+ * @param <T> The type of the underlying field.
+ */
 public interface FieldAccessor<T> {
 
     /**
-     * Retrieves the value of a field for the given instance.
-     * @param instance
-     * @return
+     * Retrieves the value of the underlying field for the given instance.
+     * @param instance The instance or null for a static field.
+     * @return The value of the field.
      */
     public T get(Object instance);
 
     /**
-     * Sets the value of a field for the given instance.
-     * @param instance
-     * @param value
+     * Sets the value of the underlying field for the given instance.
+     * @param instance The instance or null for a static field.
+     * @param value The value that will be assigned to the field.
      */
     public void set(Object instance, T value);
 
     /**
      * Transfers the value of the field of the given instance to the given destination.
-     * @param from
-     * @param to
+     * @param from The object to transfer the field value from.
+     * @param to  The object to transfer the field value to.
      */
     public void transfer(Object from, Object to);
 
     /**
-     * Returns the ReflectedField object of this accessor.
-     * @return
+     * Returns the underlying field as a ReflectedField.
+     * @return The underlying field as a ReflectedField.
      */
     public ReflectedField getField();
 }

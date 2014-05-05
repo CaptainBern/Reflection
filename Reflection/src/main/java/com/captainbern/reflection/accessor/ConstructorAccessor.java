@@ -21,18 +21,22 @@ package com.captainbern.reflection.accessor;
 
 import com.captainbern.reflection.ReflectedConstructor;
 
+/**
+ * An interface for weak-access to constructors and make their invocation easier.
+ * @param <T> The type of the underlying constructor.
+ */
 public interface ConstructorAccessor<T> {
 
     /**
-     * Invokes the constructor with the given arguments.
-     * @param args
-     * @return
+     * Invokes the underlying constructor with the given arguments.
+     * @param args The arguments used to instantiate the constructor.
+     * @return The return value.
      */
     public T invoke(Object... args);
 
     /**
-     * Returns the constructor as a ReflectedConstructor.
-     * @return
+     * Returns the underlying constructor as a ReflectedConstructor.
+     * @return The underlying constructor as a ReflectedConstructor.
      */
     public ReflectedConstructor getConstructor();
 }

@@ -148,6 +148,16 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
+    public ReflectedMethod getMethod(String name, Class<?> returnType, Class[] arguments) {
+        for(ReflectedMethod method : getMethods()) {
+            if((name == null || method.getName().equals(name)) && (returnType == null || method.member().getReturnType().equals(returnType)) && (arguments == null || Arrays.equals(arguments, method.member().getParameterTypes()))) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Set<ReflectedConstructor> getConstructors() {
         Set<ReflectedConstructor> constructors = new HashSet<>();
 

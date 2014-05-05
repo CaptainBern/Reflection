@@ -84,6 +84,15 @@ public interface Access<T> {
     public Set<ReflectedMethod> getDeclaredMethods(Class<?> exemptedSuperClass);
 
     /**
+     * Returns a method that matches the given name, return-type or arguments.
+     * @param name
+     * @param returnType
+     * @param arguments
+     * @return
+     */
+    public ReflectedMethod getMethod(String name, Class<?> returnType, Class[] arguments);
+
+    /**
      * Returns a Set which contains all the Constructors of this class.
      * @return
      */

@@ -35,6 +35,18 @@ public class ReflectedClassImpl<T> extends AbstractAccess<T> implements Reflecte
     }
 
     @Override
+    public T newInstance() {
+        try {
+            return this.clazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public List<ReflectedClass> getSuperClasses() {
         List<ReflectedClass> classes = new ArrayList<>();
         for(Class<?> clazz : ReflectionUtils.getAllSuperClasses(this.clazz)) {

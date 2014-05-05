@@ -51,7 +51,8 @@ public class AbstractAccess<T> implements Access<T> {
         }
 
         for(Field field : getReflectedClass().getFields()) {
-            fields.add(Reflection.reflect(field));
+            if(!fields.contains(field))
+                fields.add(Reflection.reflect(field));
         }
         return fields;
     }
@@ -122,7 +123,8 @@ public class AbstractAccess<T> implements Access<T> {
         }
 
         for(Method method : this.clazz.getMethods()) {
-            methods.add(Reflection.reflect(method));
+            if(!methods.contains(method))
+                methods.add(Reflection.reflect(method));
         }
 
         return methods;
@@ -168,7 +170,8 @@ public class AbstractAccess<T> implements Access<T> {
         }
 
         for(Constructor constructor : this.clazz.getConstructors()) {
-            constructors.add(Reflection.reflect(constructor));
+            if(!constructors.contains(constructor))
+                constructors.add(Reflection.reflect(constructor));
         }
 
         return constructors;

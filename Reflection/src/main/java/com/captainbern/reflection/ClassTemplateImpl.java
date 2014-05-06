@@ -19,18 +19,16 @@
 
 package com.captainbern.reflection;
 
-import com.captainbern.reflection.utils.ReflectionUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReflectedClassImpl<T> extends AbstractAccess<T> implements ReflectedClass<T> {
+public class ClassTemplateImpl<T> extends AbstractAccess<T> implements ClassTemplate<T> {
 
-    public ReflectedClassImpl(Class<T> clazz) {
+    public ClassTemplateImpl(Class<T> clazz) {
         this(clazz, false);
     }
 
-    public ReflectedClassImpl(Class<T> clazz, boolean forceAccess) {
+    public ClassTemplateImpl(Class<T> clazz, boolean forceAccess) {
         super(clazz, forceAccess);
     }
 
@@ -47,10 +45,10 @@ public class ReflectedClassImpl<T> extends AbstractAccess<T> implements Reflecte
     }
 
     @Override
-    public List<ReflectedClass> getSuperClasses() {
-        List<ReflectedClass> classes = new ArrayList<>();
-        for(Class<?> clazz : ReflectionUtils.getAllSuperClasses(this.clazz)) {
-            classes.add(Reflection.reflect(clazz));
+    public List<ClassTemplate> getSuperClasses() {
+        List<ClassTemplate> classes = new ArrayList<>();
+        for(ClassTemplate<?> clazz : this.getSuperClasses()) {
+            classes.add(clazz);
         }
         return classes;
     }

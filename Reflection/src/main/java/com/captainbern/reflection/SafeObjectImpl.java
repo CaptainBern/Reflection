@@ -4,11 +4,11 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
-public class ReflectedObjectImpl<T> implements ReflectedObject<T> {
+public class SafeObjectImpl<T> implements SafeObject<T> {
 
     protected T object;
 
-    public ReflectedObjectImpl(final T object) {
+    public SafeObjectImpl(final T object) {
         if(object == null)
             throw new IllegalArgumentException("Object is NULL!");
 
@@ -16,8 +16,8 @@ public class ReflectedObjectImpl<T> implements ReflectedObject<T> {
     }
 
     @Override
-    public ReflectedClass<T> asReflectedClass() {
-        return (ReflectedClass<T>) Reflection.reflect(this.object);
+    public ClassTemplate<T> asReflectedClass() {
+        return (ClassTemplate<T>) Reflection.reflect(this.object);
     }
 
     @Override
@@ -36,52 +36,52 @@ public class ReflectedObjectImpl<T> implements ReflectedObject<T> {
     }
 
     @Override
-    public Set<ReflectedField> getFields() {
+    public Set<SafeField> getFields() {
         return asReflectedClass().getFields();
     }
 
     @Override
-    public Set<ReflectedField> getDeclaredFields(Class<?> exemptedSuperClass) {
+    public Set<SafeField> getDeclaredFields(Class<?> exemptedSuperClass) {
         return asReflectedClass().getDeclaredFields(exemptedSuperClass);
     }
 
     @Override
-    public List<ReflectedField> getFieldsByType(Class<?> type) {
+    public List<SafeField> getFieldsByType(Class<?> type) {
         return asReflectedClass().getFieldsByType(type);
     }
 
     @Override
-    public ReflectedField getFieldByNameAndType(String name, Class<?> type) {
+    public SafeField getFieldByNameAndType(String name, Class<?> type) {
         return asReflectedClass().getFieldByNameAndType(name, type);
     }
 
     @Override
-    public ReflectedField getFieldByName(String name) {
+    public SafeField getFieldByName(String name) {
         return asReflectedClass().getFieldByName(name);
     }
 
     @Override
-    public Set<ReflectedMethod> getMethods() {
+    public Set<SafeMethod> getMethods() {
         return asReflectedClass().getMethods();
     }
 
     @Override
-    public Set<ReflectedMethod> getDeclaredMethods(Class<?> exemptedSuperClass) {
+    public Set<SafeMethod> getDeclaredMethods(Class<?> exemptedSuperClass) {
         return asReflectedClass().getDeclaredMethods(exemptedSuperClass);
     }
 
     @Override
-    public ReflectedMethod getMethod(String name, Class<?> returnType, Class[] arguments) {
+    public SafeMethod getMethod(String name, Class<?> returnType, Class[] arguments) {
         return asReflectedClass().getMethod(name, returnType, arguments);
     }
 
     @Override
-    public Set<ReflectedConstructor> getConstructors() {
+    public Set<SafeConstructor> getConstructors() {
         return asReflectedClass().getConstructors();
     }
 
     @Override
-    public Set<ReflectedConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass) {
+    public Set<SafeConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass) {
         return asReflectedClass().getDeclaredConstructors(exemptedSuperClass);
     }
 

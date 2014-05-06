@@ -27,35 +27,35 @@ import java.util.List;
 
 public class Reflection {
 
-    public static <T> ReflectedField<T> reflect(Field field) {
-        return new ReflectedFieldImpl<T>(field);
+    public static <T> SafeField<T> reflect(Field field) {
+        return new SafeFieldImpl<T>(field);
     }
 
-    public static <T> ReflectedMethod<T> reflect(Method method) {
-        return new ReflectedMethodImpl<T>(method);
+    public static <T> SafeMethod<T> reflect(Method method) {
+        return new SafeMethodImpl<T>(method);
     }
 
-    public static ReflectedConstructor reflect(Constructor constructor) {
-        return new ReflectedConstructorImpl(constructor);
+    public static SafeConstructor reflect(Constructor constructor) {
+        return new SafeConstructorImpl(constructor);
     }
 
-    public static <T> ReflectedClass<T> reflect(Class<T> clazz, boolean forceAccess) {
-        return new ReflectedClassImpl<>(clazz, forceAccess);
+    public static <T> ClassTemplate<T> reflect(Class<T> clazz, boolean forceAccess) {
+        return new ClassTemplateImpl<>(clazz, forceAccess);
     }
 
-    public static <T> ReflectedClass<T> reflect(Class<T> clazz) {
+    public static <T> ClassTemplate<T> reflect(Class<T> clazz) {
         return reflect(clazz, true);
     }
 
-    public static <T> ReflectedObject<T> reflect(T object) {
-        return new ReflectedObjectImpl<>(object);
+    public static <T> SafeObject<T> reflect(T object) {
+        return new SafeObjectImpl<>(object);
     }
 
-    public static List<ReflectedClass<?>> reflect(List<Class<?>> classes) {
-        List<ReflectedClass<?>> reflectedClasses = new ArrayList<>();
+    public static List<ClassTemplate<?>> reflect(List<Class<?>> classes) {
+        List<ClassTemplate<?>> classTemplates = new ArrayList<>();
         for(Class<?> clazz : classes) {
-            reflectedClasses.add(reflect(clazz));
+            classTemplates.add(reflect(clazz));
         }
-        return reflectedClasses;
+        return classTemplates;
     }
 }

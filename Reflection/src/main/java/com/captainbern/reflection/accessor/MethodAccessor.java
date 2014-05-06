@@ -19,7 +19,7 @@
 
 package com.captainbern.reflection.accessor;
 
-import com.captainbern.reflection.ReflectedMethod;
+import com.captainbern.reflection.SafeMethod;
 
 /**
  * An interface for weak-access to methods.
@@ -28,7 +28,7 @@ import com.captainbern.reflection.ReflectedMethod;
 public interface MethodAccessor<T> {
 
     /**
-     * Invokes the method for the given instance with the given arguments.
+     * Invokes the underlying method for the given instance with the given arguments.
      * @param instance The instance or null for static methods.
      * @param args The arguments to pass into to instantiate the underlying method.
      * @return The value.
@@ -36,8 +36,15 @@ public interface MethodAccessor<T> {
     public T invoke(Object instance, Object... args);
 
     /**
+     * Invokes the underlying method static with the given arguments.
+     * @param args The arguments to pass into to instantiate the underlying method.
+     * @return The value.
+     */
+    public T invokeStatic(Object... args);
+
+    /**
      * Returns the underlying method as a ReflectedMethod.
      * @return The underlying method as a ReflectedMethod.
      */
-    public ReflectedMethod getMethod();
+    public SafeMethod getMethod();
 }

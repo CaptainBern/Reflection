@@ -38,21 +38,21 @@ public interface Access<T> {
      * Returns a Set of all the public fields of the reflected class.
      * @return
      */
-    public Set<ReflectedField> getFields();
+    public Set<SafeField> getFields();
 
     /**
      * Returns a list of all the fields of the reflected class and it's super classes until it reaches {@param exemptedSuperClass}
      * @param exemptedSuperClass
      * @return
      */
-    public Set<ReflectedField> getDeclaredFields(Class<?> exemptedSuperClass);
+    public Set<SafeField> getDeclaredFields(Class<?> exemptedSuperClass);
 
     /**
      * Returns a list of all the fields of type {@param type}
      * @param type
      * @return
      */
-    public List<ReflectedField> getFieldsByType(Class<?> type);
+    public List<SafeField> getFieldsByType(Class<?> type);
 
     /**
      * Returns a field with {@param name} of type: {@param type}. If the field isn't found
@@ -61,27 +61,27 @@ public interface Access<T> {
      * @param type
      * @return
      */
-    public ReflectedField getFieldByNameAndType(String name, Class<?> type);
+    public SafeField getFieldByNameAndType(String name, Class<?> type);
 
     /**
      * Returns the field with this specific name.
      * @param name
      * @return
      */
-    public ReflectedField getFieldByName(String name);
+    public SafeField getFieldByName(String name);
 
     /**
      * Returns a Set of all the public methods.
      * @return
      */
-    public Set<ReflectedMethod> getMethods();
+    public Set<SafeMethod> getMethods();
 
     /**
      * Returns a list of all the methods and the methods of this class's superclasses until it reaches a specific superclass.
      * @param exemptedSuperClass
      * @return
      */
-    public Set<ReflectedMethod> getDeclaredMethods(Class<?> exemptedSuperClass);
+    public Set<SafeMethod> getDeclaredMethods(Class<?> exemptedSuperClass);
 
     /**
      * Returns a method that matches the given name, return-type or arguments.
@@ -90,20 +90,20 @@ public interface Access<T> {
      * @param arguments
      * @return
      */
-    public ReflectedMethod getMethod(String name, Class<?> returnType, Class[] arguments);
+    public SafeMethod getMethod(String name, Class<?> returnType, Class[] arguments);
 
     /**
      * Returns a Set which contains all the Constructors of this class.
      * @return
      */
-    public Set<ReflectedConstructor> getConstructors();
+    public Set<SafeConstructor> getConstructors();
 
     /**
      * Returns all the constructors of this class and it's super classes until it reaches the specified superclass.
      * @param exemptedSuperClass
      * @return
      */
-    public Set<ReflectedConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass);
+    public Set<SafeConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass);
 
     /**
      * Whether or not this reflected class is assignable from {@param clazz}

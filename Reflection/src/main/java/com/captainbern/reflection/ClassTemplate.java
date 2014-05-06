@@ -19,13 +19,22 @@
 
 package com.captainbern.reflection;
 
-import com.captainbern.reflection.accessor.MethodAccessor;
+import java.util.List;
 
-import java.lang.reflect.Method;
+/**
+ * @author CaptainBern
+ */
+public interface ClassTemplate<T> extends Access<T> {
 
-public interface ReflectedMethod<T> extends ReflectedMember {
+    /**
+     * Created a new instance of this (reflected) class.
+     * @return
+     */
+    public T newInstance();
 
-    public Method member();
-
-    public MethodAccessor<T> getAccessor();
+    /**
+     * Returns a List of all the Super classes of this class.
+     * @return
+     */
+    public List<ClassTemplate> getSuperClasses();
 }

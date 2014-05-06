@@ -19,7 +19,7 @@
 
 package com.captainbern.reflection.accessor;
 
-import com.captainbern.reflection.ReflectedConstructor;
+import com.captainbern.reflection.SafeConstructor;
 
 /**
  * An interface for weak-access to constructors and make their invocation easier.
@@ -38,5 +38,5 @@ public interface ConstructorAccessor<T> {
      * Returns the underlying constructor as a ReflectedConstructor.
      * @return The underlying constructor as a ReflectedConstructor.
      */
-    public ReflectedConstructor getConstructor();
+    public SafeConstructor getConstructor();
 }

@@ -19,13 +19,14 @@
 
 package com.captainbern.reflection;
 
-import com.captainbern.reflection.accessor.ConstructorAccessor;
+/**
+ * @author CaptainBern
+ */
+public interface SafeObject<T> extends Access<T> {
 
-import java.lang.reflect.Constructor;
+    public ClassTemplate<T> asReflectedClass();
 
-public interface ReflectedConstructor<T> extends ReflectedMember {
+    public T value();
 
-    public Constructor member();
-
-    public ConstructorAccessor<T> getAccessor();
+    public <C> C cast(Class<C> type);
 }

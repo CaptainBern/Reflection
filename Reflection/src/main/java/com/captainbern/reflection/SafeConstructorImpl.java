@@ -27,10 +27,12 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-public class ReflectedConstructorImpl<T> implements ReflectedConstructor<T> {
+import static com.captainbern.reflection.Reflection.reflect;
+
+public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     protected Constructor<T> constructor;
-    public ReflectedConstructorImpl(final Constructor<T> constructor) {
+    public SafeConstructorImpl(final Constructor<T> constructor) {
         if(constructor == null)
             throw new IllegalArgumentException("Constructor can't be NULL!");
 
@@ -55,11 +57,11 @@ public class ReflectedConstructorImpl<T> implements ReflectedConstructor<T> {
         return new ConstructorAccessor<T>() {
             @Override
             public T invoke(Object... args) {
-                if(ReflectedConstructorImpl.this.constructor == null)
+                if(SafeConstructorImpl.this.constructor == null)
                     throw new RuntimeException("Constructor is NULL!");
 
                 try {
-                    return ReflectedConstructorImpl.this.constructor.newInstance(args);
+                    return SafeConstructorImpl.this.constructor.newInstance(args);
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
@@ -72,25 +74,25 @@ public class ReflectedConstructorImpl<T> implements ReflectedConstructor<T> {
             }
 
             @Override
-            public ReflectedConstructor getConstructor() {
-                return ReflectedConstructorImpl.this;
+            public SafeConstructor getConstructor() {
+                return SafeConstructorImpl.this;
             }
         };
     }
 
     @Override
     public int getArgumentCount() {
-        return ReflectedConstructorImpl.this.getArgumentCount();
+        return SafeConstructorImpl.this.getArgumentCount();
     }
 
     @Override
-    public List<ReflectedClass<?>> getArguments() {
-        return Reflection.reflect(Arrays.asList(this.constructor.getParameterTypes()));
+    public List<ClassTemplate<?>> getArguments() {
+        return reflect(Arrays.asList(this.constructor.getParameterTypes()));
     }
 
     @Override
-    public ReflectedClass getType() {
-        return Reflection.reflect(this.constructor.getDeclaringClass());
+    public ClassTemplate getType() {
+        return reflect(this.constructor.getDeclaringClass());
     }
 
     @Override
@@ -106,6 +108,11 @@ public class ReflectedConstructorImpl<T> implements ReflectedConstructor<T> {
     @Override
     public int getModifiers() {
         return this.constructor.getModifiers();
+    }
+
+    @Override
+    public void setModifiers(int mods) {
+        reflect(Constructor.class).getFieldByName("modifiers").getAccessor().set(this.constructor, mods);
     }
 
     @Override

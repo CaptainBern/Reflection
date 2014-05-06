@@ -41,8 +41,8 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public Set<ReflectedField> getFields() {
-        Set<ReflectedField> fields = new LinkedHashSet<ReflectedField>();
+    public Set<SafeField> getFields() {
+        Set<SafeField> fields = new LinkedHashSet<SafeField>();
 
         if(forceAccess) {
             for(Field field : getReflectedClass().getDeclaredFields()) {
@@ -58,8 +58,8 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public Set<ReflectedField> getDeclaredFields(Class<?> exemptedSuperClass) {
-        Set<ReflectedField> fields = new LinkedHashSet<ReflectedField>();
+    public Set<SafeField> getDeclaredFields(Class<?> exemptedSuperClass) {
+        Set<SafeField> fields = new LinkedHashSet<SafeField>();
 
         Class<?> current = this.clazz;
 
@@ -74,10 +74,10 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public List<ReflectedField> getFieldsByType(Class<?> type) {
-        List<ReflectedField> fields = new ArrayList<ReflectedField>();
+    public List<SafeField> getFieldsByType(Class<?> type) {
+        List<SafeField> fields = new ArrayList<SafeField>();
 
-        for(ReflectedField field : getFields()) {
+        for(SafeField field : getFields()) {
             if(type.isAssignableFrom(field.getType().getReflectedClass())) {
                 fields.add(field);
             }
@@ -87,11 +87,11 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public ReflectedField getFieldByNameAndType(String name, Class<?> type) {
-        List<ReflectedField> fields = getFieldsByType(type);
+    public SafeField getFieldByNameAndType(String name, Class<?> type) {
+        List<SafeField> fields = getFieldsByType(type);
 
         if(fields.size() > 0) {
-            for (ReflectedField field : fields) {
+            for (SafeField field : fields) {
                 if (field.getName().equals(name)) {
                     return field;
                 }
@@ -102,8 +102,8 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public ReflectedField getFieldByName(String name) {
-        for(ReflectedField field : getFields()) {
+    public SafeField getFieldByName(String name) {
+        for(SafeField field : getFields()) {
             if(field.getName().equals(name)) {
                 return field;
             }
@@ -113,8 +113,8 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public Set<ReflectedMethod> getMethods() {
-        Set<ReflectedMethod> methods = new HashSet<>();
+    public Set<SafeMethod> getMethods() {
+        Set<SafeMethod> methods = new HashSet<>();
 
         if(forceAccess) {
             for(Method method : this.clazz.getDeclaredMethods()) {
@@ -131,9 +131,9 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public Set<ReflectedMethod> getDeclaredMethods(Class<?> exemptedSuperClass) {
+    public Set<SafeMethod> getDeclaredMethods(Class<?> exemptedSuperClass) {
         if(forceAccess) {
-            Set<ReflectedMethod> methods = new LinkedHashSet<ReflectedMethod>();
+            Set<SafeMethod> methods = new LinkedHashSet<SafeMethod>();
             Class<?> current = this.clazz;
 
             while(current != null && current != exemptedSuperClass) {
@@ -150,8 +150,8 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public ReflectedMethod getMethod(String name, Class<?> returnType, Class[] arguments) {
-        for(ReflectedMethod method : getMethods()) {
+    public SafeMethod getMethod(String name, Class<?> returnType, Class[] arguments) {
+        for(SafeMethod method : getMethods()) {
             if((name == null || method.getName().equals(name)) && (returnType == null || method.member().getReturnType().equals(returnType)) && (arguments == null || Arrays.equals(arguments, method.member().getParameterTypes()))) {
                 return method;
             }
@@ -160,8 +160,8 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public Set<ReflectedConstructor> getConstructors() {
-        Set<ReflectedConstructor> constructors = new HashSet<>();
+    public Set<SafeConstructor> getConstructors() {
+        Set<SafeConstructor> constructors = new HashSet<>();
 
         if(forceAccess) {
             for(Constructor constructor : this.clazz.getDeclaredConstructors()) {
@@ -178,9 +178,9 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public Set<ReflectedConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass) {
+    public Set<SafeConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass) {
         if(forceAccess) {
-            Set<ReflectedConstructor> constructors = new LinkedHashSet<ReflectedConstructor>();
+            Set<SafeConstructor> constructors = new LinkedHashSet<SafeConstructor>();
             Class<?> current = this.clazz;
 
             while(current != null && current != exemptedSuperClass) {

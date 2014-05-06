@@ -19,16 +19,13 @@
 
 package com.captainbern.reflection;
 
-import com.captainbern.reflection.accessor.FieldAccessor;
+import com.captainbern.reflection.accessor.MethodAccessor;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
-/**
- * @author CaptainBern
- */
-public interface ReflectedField<T> extends ReflectedMember {
+public interface SafeMethod<T> extends SafeMember {
 
-    public Field member();
+    public Method member();
 
-    public FieldAccessor<T> getAccessor();
+    public MethodAccessor<T> getAccessor();
 }

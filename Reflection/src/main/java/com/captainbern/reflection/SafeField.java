@@ -19,22 +19,16 @@
 
 package com.captainbern.reflection;
 
-import java.util.List;
+import com.captainbern.reflection.accessor.FieldAccessor;
+
+import java.lang.reflect.Field;
 
 /**
  * @author CaptainBern
  */
-public interface ReflectedClass<T> extends Access<T> {
+public interface SafeField<T> extends SafeMember {
 
-    /**
-     * Created a new instance of this (reflected) class.
-     * @return
-     */
-    public T newInstance();
+    public Field member();
 
-    /**
-     * Returns a List of all the Super classes of this class.
-     * @return
-     */
-    public List<ReflectedClass> getSuperClasses();
+    public FieldAccessor<T> getAccessor();
 }

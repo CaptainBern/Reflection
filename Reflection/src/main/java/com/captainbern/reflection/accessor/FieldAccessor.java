@@ -19,7 +19,7 @@
 
 package com.captainbern.reflection.accessor;
 
-import com.captainbern.reflection.ReflectedField;
+import com.captainbern.reflection.SafeField;
 
 /**
  * An interface for weak access to fields and allows various operations to be done easier.
@@ -30,16 +30,28 @@ public interface FieldAccessor<T> {
     /**
      * Retrieves the value of the underlying field for the given instance.
      * @param instance The instance or null for a static field.
-     * @return The value of the field.
+     * @return The value of the underlying field.
      */
     public T get(Object instance);
 
     /**
+     * Retrieves the value of the underlying field static.
+     * @return The value of the underlying field.
+     */
+    public T getStatic();
+
+    /**
      * Sets the value of the underlying field for the given instance.
      * @param instance The instance or null for a static field.
-     * @param value The value that will be assigned to the field.
+     * @param value The value that will be assigned to the underlying field.
      */
     public void set(Object instance, T value);
+
+    /**
+     * Sets the value of the underlying field static.
+     * @param value The value that will be assigned to the underlying field.
+     */
+    public void setStatic(T value);
 
     /**
      * Transfers the value of the field of the given instance to the given destination.
@@ -52,5 +64,5 @@ public interface FieldAccessor<T> {
      * Returns the underlying field as a ReflectedField.
      * @return The underlying field as a ReflectedField.
      */
-    public ReflectedField getField();
+    public SafeField getField();
 }

@@ -2,18 +2,33 @@ package com.captainbern.reflection;
 
 import org.junit.Test;
 
+import java.lang.reflect.Modifier;
+
+import static com.captainbern.reflection.Reflection.reflect;
+import static org.junit.Assert.assertFalse;
+
 public class ReflectionTest {
 
-    private Object object = new Object();
-    public Integer someInteger = 4;
-    protected ReflectionTest test;
+    @Test
+    public void testClasses() {
+        SafeField field = reflect(Boolean.class).getFieldByName("TRUE");
+        field.setModifiers(field.getModifiers() & ~(Modifier.FINAL));
+        field.getAccessor().setStatic(Boolean.FALSE);
+        assertFalse(Boolean.TRUE);
+    }
 
     @Test
-    public void testReflection() {
-        test = this;
-        ReflectedClass reflectedClass = Reflection.reflect(ReflectionTest.class);
-        for(Object field : reflectedClass.getFields()) {
-            System.out.println(((ReflectedField) field).getName());
-        }
+    public void testConstructors() {
+
+    }
+
+    @Test
+    public void testMethods() {
+
+    }
+
+    @Test
+    public void testFields() {
+
     }
 }

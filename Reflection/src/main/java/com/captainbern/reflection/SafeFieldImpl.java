@@ -26,11 +26,13 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReflectedFieldImpl<T> implements ReflectedField<T> {
+import static com.captainbern.reflection.Reflection.reflect;
+
+public class SafeFieldImpl<T> implements SafeField<T> {
 
     protected Field field;
 
-    public ReflectedFieldImpl(final Field field) {
+    public SafeFieldImpl(final Field field) {
         if(field == null)
             throw new IllegalArgumentException("Field can't be NULL!");
 
@@ -55,10 +57,10 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
             @Override
             public T get(Object instance) {
                 try {
-                    if(ReflectedFieldImpl.this.field == null)
+                    if(SafeFieldImpl.this.field == null)
                         throw new RuntimeException("Field is NULL!");
 
-                    if(instance == null && !Modifier.isStatic(ReflectedFieldImpl.this.field.getModifiers()))
+                    if(instance == null && !Modifier.isStatic(SafeFieldImpl.this.field.getModifiers()))
                         throw new IllegalArgumentException("Non-static fields require a valid instance passed in!");
 
                     return (T) field.get(instance);
@@ -68,9 +70,14 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
             }
 
             @Override
+            public T getStatic() {
+                return get(null);
+            }
+
+            @Override
             public void set(Object instance, T value) {
                 try {
-                    if(ReflectedFieldImpl.this.field == null)
+                    if(SafeFieldImpl.this.field == null)
                         throw new RuntimeException("Field is NULL!");
 
                     if(!Modifier.isStatic(getModifiers()) && value == null)
@@ -83,6 +90,11 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
             }
 
             @Override
+            public void setStatic(T value) {
+                set(null, value);
+            }
+
+            @Override
             public void transfer(Object from, Object to) {
                 if(field == null)
                     throw new IllegalStateException("Field is NULL!");
@@ -91,8 +103,8 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
             }
 
             @Override
-            public ReflectedField getField() {
-                return ReflectedFieldImpl.this;
+            public SafeField getField() {
+                return SafeFieldImpl.this;
             }
         };
     }
@@ -103,13 +115,13 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
     }
 
     @Override
-    public List<ReflectedClass<?>> getArguments() {
-        return new ArrayList<ReflectedClass<?>>();
+    public List<ClassTemplate<?>> getArguments() {
+        return new ArrayList<ClassTemplate<?>>();
     }
 
     @Override
-    public ReflectedClass getType() {
-        return Reflection.reflect(this.field.getType());
+    public ClassTemplate getType() {
+        return reflect(this.field.getType());
     }
 
     @Override
@@ -125,6 +137,11 @@ public class ReflectedFieldImpl<T> implements ReflectedField<T> {
     @Override
     public int getModifiers() {
         return this.field.getModifiers();
+    }
+
+    @Override
+    public void setModifiers(int mods) {
+        reflect(Field.class).getFieldByName("modifiers").getAccessor().set(this.field, mods);
     }
 
     @Override

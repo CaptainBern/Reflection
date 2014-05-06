@@ -8,11 +8,13 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-public class ReflectedMethodImpl<T> implements ReflectedMethod<T> {
+import static com.captainbern.reflection.Reflection.reflect;
+
+public class SafeMethodImpl<T> implements SafeMethod<T> {
 
     protected Method method;
 
-    public ReflectedMethodImpl(final Method method) {
+    public SafeMethodImpl(final Method method) {
         if(method == null)
             throw new IllegalArgumentException("Method can't be NULL!");
 
@@ -38,13 +40,13 @@ public class ReflectedMethodImpl<T> implements ReflectedMethod<T> {
     }
 
     @Override
-    public List<ReflectedClass<?>> getArguments() {
-        return Reflection.reflect(Arrays.asList(this.method.getParameterTypes()));
+    public List<ClassTemplate<?>> getArguments() {
+        return reflect(Arrays.asList(this.method.getParameterTypes()));
     }
 
     @Override
-    public ReflectedClass<?> getType() {
-        return Reflection.reflect(this.method.getReturnType());
+    public ClassTemplate<?> getType() {
+        return reflect(this.method.getReturnType());
     }
 
     @Override
@@ -60,6 +62,11 @@ public class ReflectedMethodImpl<T> implements ReflectedMethod<T> {
     @Override
     public int getModifiers() {
         return this.method.getModifiers();
+    }
+
+    @Override
+    public void setModifiers(int mods) {
+        reflect(Method.class).getFieldByName("modifiers").getAccessor().set(this.method, mods);
     }
 
     @Override
@@ -95,11 +102,11 @@ public class ReflectedMethodImpl<T> implements ReflectedMethod<T> {
                 if(instance == null)
                     throw new IllegalArgumentException("Given instance can't be NULL!");
 
-                if(ReflectedMethodImpl.this.method == null)
+                if(SafeMethodImpl.this.method == null)
                     throw new RuntimeException("Method is NULL!");
 
                 try {
-                    return (T) ReflectedMethodImpl.this.method.invoke(instance, args);
+                    return (T) SafeMethodImpl.this.method.invoke(instance, args);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -110,8 +117,13 @@ public class ReflectedMethodImpl<T> implements ReflectedMethod<T> {
             }
 
             @Override
-            public ReflectedMethod getMethod() {
-                return ReflectedMethodImpl.this;
+            public T invokeStatic(Object... args) {
+                return invoke(null, args);
+            }
+
+            @Override
+            public SafeMethod getMethod() {
+                return SafeMethodImpl.this;
             }
         };
     }

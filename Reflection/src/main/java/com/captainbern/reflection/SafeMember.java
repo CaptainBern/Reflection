@@ -22,7 +22,7 @@ package com.captainbern.reflection;
 import java.lang.reflect.Member;
 import java.util.List;
 
-public interface ReflectedMember extends Member {
+public interface SafeMember extends Member {
 
     /**
      * Returns the underlying member.
@@ -41,19 +41,25 @@ public interface ReflectedMember extends Member {
      * the form of a ReflectedClass.
      * @return
      */
-    public List<ReflectedClass<?>> getArguments();
+    public List<ClassTemplate<?>> getArguments();
 
     /**
      * Returns the type of this member as a ReflectedClass.
      * @return
      */
-    public ReflectedClass<?> getType();
+    public ClassTemplate<?> getType();
 
     /**
      * Returns the modifiers of this member.
      * @return
      */
     public int getModifiers();
+
+    /**
+     * Sets the modifiers of this member.
+     * @param mods
+     */
+    public void setModifiers(int mods);
 
     /**
      * Returns whether or not this Class is public

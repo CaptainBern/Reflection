@@ -17,7 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection;
+package com.captainbern.reflection.impl;
+
+import com.captainbern.reflection.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

@@ -1,4 +1,4 @@
-package com.captainbern.reflection.utils.assertion;
+package com.captainbern.reflection.utils;
 
 public class Assert {
 

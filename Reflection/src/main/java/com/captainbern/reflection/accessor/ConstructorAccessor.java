@@ -38,5 +38,5 @@ public interface ConstructorAccessor<T> {
      * Returns the underlying constructor as a ReflectedConstructor.
      * @return The underlying constructor as a ReflectedConstructor.
      */
-    public SafeConstructor getConstructor();
+    public SafeConstructor<T> getConstructor();
 }

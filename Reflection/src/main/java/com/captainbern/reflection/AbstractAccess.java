@@ -19,6 +19,8 @@
 
 package com.captainbern.reflection;
 
+import com.captainbern.reflection.impl.Reflection;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -150,9 +152,9 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public SafeMethod getMethod(String name, Class<?> returnType, Class[] arguments) {
+    public SafeMethod getMethod(String name, Class<?> returnType, Class... arguments) {
         for(SafeMethod method : getMethods()) {
-            if((name == null || method.getName().equals(name)) && (returnType == null || method.member().getReturnType().equals(returnType)) && (arguments == null || Arrays.equals(arguments, method.member().getParameterTypes()))) {
+            if((name == null || method.getName().equals(name)) && (returnType == null || method.member().getReturnType().equals(returnType)) && (arguments == null && method.member().getParameterTypes().length == 0 || Arrays.equals(arguments, method.member().getParameterTypes()))) {
                 return method;
             }
         }

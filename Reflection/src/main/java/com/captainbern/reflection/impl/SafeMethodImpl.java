@@ -1,5 +1,7 @@
-package com.captainbern.reflection;
+package com.captainbern.reflection.impl;
 
+import com.captainbern.reflection.ClassTemplate;
+import com.captainbern.reflection.SafeMethod;
 import com.captainbern.reflection.accessor.MethodAccessor;
 
 import java.lang.reflect.InvocationTargetException;
@@ -8,7 +10,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.captainbern.reflection.Reflection.reflect;
+import static com.captainbern.reflection.impl.Reflection.reflect;
 
 public class SafeMethodImpl<T> implements SafeMethod<T> {
 

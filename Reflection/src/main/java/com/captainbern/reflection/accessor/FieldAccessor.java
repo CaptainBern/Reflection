@@ -64,5 +64,5 @@ public interface FieldAccessor<T> {
      * Returns the underlying field as a ReflectedField.
      * @return The underlying field as a ReflectedField.
      */
-    public SafeField getField();
+    public SafeField<T> getField();
 }

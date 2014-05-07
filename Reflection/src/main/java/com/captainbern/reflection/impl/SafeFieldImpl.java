@@ -17,8 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection;
+package com.captainbern.reflection.impl;
 
+import com.captainbern.reflection.ClassTemplate;
+import com.captainbern.reflection.SafeField;
 import com.captainbern.reflection.accessor.FieldAccessor;
 
 import java.lang.reflect.Field;
@@ -26,7 +28,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.captainbern.reflection.Reflection.reflect;
+import static com.captainbern.reflection.impl.Reflection.reflect;
 
 public class SafeFieldImpl<T> implements SafeField<T> {
 

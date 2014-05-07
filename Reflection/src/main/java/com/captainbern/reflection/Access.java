@@ -90,7 +90,7 @@ public interface Access<T> {
      * @param arguments
      * @return
      */
-    public SafeMethod getMethod(String name, Class<?> returnType, Class[] arguments);
+    public SafeMethod getMethod(String name, Class<?> returnType, Class... arguments);
 
     /**
      * Returns a Set which contains all the Constructors of this class.

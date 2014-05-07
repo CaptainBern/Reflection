@@ -17,7 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection;
+package com.captainbern.reflection.impl;
+
+import com.captainbern.reflection.AbstractAccess;
+import com.captainbern.reflection.ClassTemplate;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -46,5 +46,5 @@ public interface MethodAccessor<T> {
      * Returns the underlying method as a ReflectedMethod.
      * @return The underlying method as a ReflectedMethod.
      */
-    public SafeMethod getMethod();
+    public SafeMethod<T> getMethod();
 }

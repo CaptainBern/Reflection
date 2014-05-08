@@ -69,6 +69,24 @@ public class Matchers {
         return withNameRegex(Pattern.quote(name));
     }
 
+    public static Matcher<Member> withPrefix(final String prefix) {
+        return new AbstractMatcher<Member>() {
+            @Override
+            public boolean matches(Member type) {
+                return prefix != null && type.getName().startsWith(prefix);
+            }
+        };
+    }
+
+    public static Matcher<Member> withSuffix(final String suffix) {
+        return new AbstractMatcher<Member>() {
+            @Override
+            public boolean matches(Member type) {
+                return suffix != null && type.getName().endsWith(suffix);
+            }
+        };
+    }
+
     public static Matcher<Method> withArgumentCount(final int argumentCount) {
         return new AbstractMatcher<Method>() {
             @Override
@@ -112,6 +130,11 @@ public class Matchers {
      * Different matchers
      */
 
+    /**
+     * And "and" matcher. This allows one to "combine" 2 matchers. Will return true or false
+     * depending of the result of it's child-matchers.
+     * @param <T>
+     */
     private static class AndMatcher<T> extends AbstractMatcher<T> {
 
         private Matcher<? super T> parent;
@@ -140,6 +163,10 @@ public class Matchers {
         }
     }
 
+    /**
+     * And "or" matcher. Will return true when one of it's child-matchers returns true.
+     * @param <T>
+     */
     private static class OrMatcher<T> extends AbstractMatcher<T> {
 
         private Matcher<? super T> parent;
@@ -168,11 +195,15 @@ public class Matchers {
         }
     }
 
+    /**
+     * A combined matcher. This allows one to combine a list of matchers into one "and" matcher.
+     * @param <T>
+     */
     private static class CombinedMatcher<T> extends AbstractMatcher<T> {
 
         protected List<Matcher<? super T>> matchers;
 
-        public CombinedMatcher(List<Matcher<? super T>> matcherList) {
+        public CombinedMatcher(final List<Matcher<? super T>> matcherList) {
             this.matchers = matcherList;
         }
 
@@ -202,6 +233,7 @@ public class Matchers {
                     builder.append(", ");
                     builder.append(this.matchers.get(index++));
                 }
+                builder.append(")");
             }
             return builder.toString();
         }

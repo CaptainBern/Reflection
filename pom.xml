@@ -122,6 +122,7 @@
                         <manifestEntries>
                             <version>${project.version}</version>
                             <reflection-version>${reflection-version}</reflection-version>
+                            <jbel-version>${jbel-version}</jbel-version>
                         </manifestEntries>
                     </archive>
                 </configuration>

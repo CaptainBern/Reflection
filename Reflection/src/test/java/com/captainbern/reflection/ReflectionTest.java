@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Modifier;
 
-import static com.captainbern.reflection.impl.Reflection.reflect;
+import static com.captainbern.reflection.Reflection.reflect;
 import static org.junit.Assert.assertFalse;
 
 public class ReflectionTest {

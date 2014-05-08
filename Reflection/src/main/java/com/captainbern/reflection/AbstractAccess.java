@@ -19,8 +19,6 @@
 
 package com.captainbern.reflection;
 
-import com.captainbern.reflection.impl.Reflection;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

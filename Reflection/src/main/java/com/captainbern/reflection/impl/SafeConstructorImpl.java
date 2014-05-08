@@ -29,7 +29,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.captainbern.reflection.impl.Reflection.reflect;
+import static com.captainbern.reflection.Reflection.reflect;
 
 public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 

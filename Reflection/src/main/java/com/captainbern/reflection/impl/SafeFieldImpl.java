@@ -28,7 +28,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.captainbern.reflection.impl.Reflection.reflect;
+import static com.captainbern.reflection.Reflection.reflect;
 
 public class SafeFieldImpl<T> implements SafeField<T> {
 

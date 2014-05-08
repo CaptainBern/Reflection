@@ -17,9 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.captainbern.reflection.impl;
+package com.captainbern.reflection;
 
-import com.captainbern.reflection.*;
+import com.captainbern.reflection.impl.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -29,31 +29,31 @@ import java.util.List;
 
 public class Reflection {
 
-    public static <T> SafeField<T> reflect(Field field) {
+    public static <T> SafeField<T> reflect(final Field field) {
         return new SafeFieldImpl<T>(field);
     }
 
-    public static <T> SafeMethod<T> reflect(Method method) {
+    public static <T> SafeMethod<T> reflect(final Method method) {
         return new SafeMethodImpl<T>(method);
     }
 
-    public static SafeConstructor reflect(Constructor constructor) {
+    public static SafeConstructor reflect(final Constructor constructor) {
         return new SafeConstructorImpl(constructor);
     }
 
-    public static <T> ClassTemplate<T> reflect(Class<T> clazz, boolean forceAccess) {
+    public static <T> ClassTemplate<T> reflect(final Class<T> clazz, boolean forceAccess) {
         return new ClassTemplateImpl<>(clazz, forceAccess);
     }
 
-    public static <T> ClassTemplate<T> reflect(Class<T> clazz) {
+    public static <T> ClassTemplate<T> reflect(final Class<T> clazz) {
         return reflect(clazz, true);
     }
 
-    public static <T> SafeObject<T> reflect(T object) {
+    public static <T> SafeObject<T> reflect(final T object) {
         return new SafeObjectImpl<>(object);
     }
 
-    public static List<ClassTemplate<?>> reflect(List<Class<?>> classes) {
+    public static List<ClassTemplate<?>> reflect(final List<Class<?>> classes) {
         List<ClassTemplate<?>> classTemplates = new ArrayList<>();
         for(Class<?> clazz : classes) {
             classTemplates.add(reflect(clazz));

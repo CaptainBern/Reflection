@@ -123,6 +123,7 @@
                             <version>${project.version}</version>
                             <reflection-version>${reflection-version}</reflection-version>
                             <jbel-version>${jbel-version}</jbel-version>
+                            <minecraft-reflection-version>${minecraft-reflection-version}</minecraft-reflection-version>
                         </manifestEntries>
                     </archive>
                 </configuration>

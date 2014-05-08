@@ -28,14 +28,42 @@ public class FuzzyReflection {
 
     private Class<?> sourceClass;
     private boolean forceAccess;
+    private boolean includeObject;
 
-    public FuzzyReflection(Class<?> sourceClass) {
-        this(sourceClass, false);
+    public FuzzyReflection(final Class<?> sourceClass) {
+        this(sourceClass, false, false);
     }
 
-    public FuzzyReflection(Class<?> sourceClass, boolean forceAccess) {
+    public FuzzyReflection(final Class<?> sourceClass, final boolean forceAccess) {
+        this(sourceClass, forceAccess, false);
+    }
+
+    public FuzzyReflection(final Class<?> sourceClass, final boolean forceAccess, final boolean includeObject) {
         this.sourceClass = sourceClass;
         this.forceAccess = forceAccess;
+    }
+
+    public Set<Class<?>> getSuperClasses() {
+        Set<Class<?>> result = new HashSet<>();
+        Class<?> current = this.sourceClass;
+        while(sourceClass != null && (current != Object.class || this.includeObject)) {
+            result.add(current);
+            current = current.getSuperclass();
+        }
+
+        return result;
+    }
+
+    public Set<Class<?>> getInterfaces(final Class<?> clazz) {
+        Set<Class<?>> result = new HashSet<>();
+        Class<?> current = clazz;
+        while(current != null && (current != Object.class || includeObject)) {
+            for(Class<?> iface : current.getInterfaces()) {
+                result.addAll(getInterfaces(iface));
+            }
+        }
+
+        return result;
     }
 
     public Set<Method> getMethods() {

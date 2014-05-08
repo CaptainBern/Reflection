@@ -22,6 +22,7 @@ package com.captainbern.reflection.matcher;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Matchers {
@@ -93,5 +94,116 @@ public class Matchers {
                 return type.getReturnType().equals(returnType);
             }
         };
+    }
+
+    public static <T> Matcher<T> and(final Matcher<? super T> parent, final Matcher<? super T> other) {
+        return new AndMatcher<>(parent, other);
+    }
+
+    public static <T> Matcher<T> or(final Matcher<? super T> parent, final Matcher<? super T> other) {
+        return new OrMatcher<>(parent, other);
+    }
+
+    public static <T> Matcher<T> combine(final List<Matcher<? super T>> matchers){
+        return new CombinedMatcher<>(matchers);
+    }
+
+    /**
+     * Different matchers
+     */
+
+    private static class AndMatcher<T> extends AbstractMatcher<T> {
+
+        private Matcher<? super T> parent;
+        private Matcher<? super T> other;
+
+        public AndMatcher(Matcher<? super T> parent, Matcher<? super T> other) {
+            this.parent = parent;
+            this.other = other;
+        }
+
+        @Override
+        public boolean matches(T type) {
+            return parent.matches(type) && other.matches(type);
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof AndMatcher
+                    && ((AndMatcher) other).parent.equals(parent)
+                    && ((AndMatcher) other).other.equals(other);
+        }
+
+        @Override
+        public String toString() {
+            return "and(" + parent + ", " + other + ")";
+        }
+    }
+
+    private static class OrMatcher<T> extends AbstractMatcher<T> {
+
+        private Matcher<? super T> parent;
+        private Matcher<? super T> other;
+
+        public OrMatcher(Matcher<? super T> parent, Matcher<? super T> other) {
+            this.parent = parent;
+            this.other = other;
+        }
+
+        @Override
+        public boolean matches(T type) {
+            return parent.matches(type) || other.matches(type);
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof OrMatcher
+                    && ((OrMatcher) other).parent.equals(parent)
+                    && ((OrMatcher) other).other.equals(other);
+        }
+
+        @Override
+        public String toString() {
+            return "or(" + parent + ", " + other + ")";
+        }
+    }
+
+    private static class CombinedMatcher<T> extends AbstractMatcher<T> {
+
+        protected List<Matcher<? super T>> matchers;
+
+        public CombinedMatcher(List<Matcher<? super T>> matcherList) {
+            this.matchers = matcherList;
+        }
+
+        @Override
+        public boolean matches(T type) {
+            for(int i = 0; i < this.matchers.size(); i++) {
+                if(!this.matchers.get(i).matches(type))
+                    return false;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof CombinedMatcher
+                    && ((CombinedMatcher) other).matchers.equals(this.matchers);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("combined");
+            int index = 0;
+            while(index < this.matchers.size()) {
+                builder.append("(");
+                while (index < this.matchers.size()) {
+                    builder.append(", ");
+                    builder.append(this.matchers.get(index++));
+                }
+            }
+            return builder.toString();
+        }
     }
 }

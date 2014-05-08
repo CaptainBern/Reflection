@@ -121,7 +121,7 @@
                     <archive>
                         <manifestEntries>
                             <version>${project.version}</version>
-
+                            <reflection-version>${reflection-version}</reflection-version>
                         </manifestEntries>
                     </archive>
                 </configuration>

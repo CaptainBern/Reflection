@@ -19,6 +19,7 @@
 
 package com.captainbern.reflection.matcher;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -110,6 +111,15 @@ public class Matchers {
             @Override
             public boolean matches(Method type) {
                 return type.getReturnType().equals(returnType);
+            }
+        };
+    }
+
+    public static Matcher<Field> withType(final Class<?> clazz) {
+        return new AbstractMatcher<Field>() {
+            @Override
+            public boolean matches(Field type) {
+                return type.getType().equals(clazz);
             }
         };
     }

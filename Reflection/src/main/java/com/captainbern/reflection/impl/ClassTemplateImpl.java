@@ -25,6 +25,8 @@ import com.captainbern.reflection.ClassTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.captainbern.reflection.Reflection.reflect;
+
 public class ClassTemplateImpl<T> extends AbstractAccess<T> implements ClassTemplate<T> {
 
     public ClassTemplateImpl(Class<T> clazz) {
@@ -50,8 +52,8 @@ public class ClassTemplateImpl<T> extends AbstractAccess<T> implements ClassTemp
     @Override
     public List<ClassTemplate> getSuperClasses() {
         List<ClassTemplate> classes = new ArrayList<>();
-        for(ClassTemplate<?> clazz : this.getSuperClasses()) {
-            classes.add(clazz);
+        for(Class<?> clazz : super.getAllSuperClasses()) {
+            classes.add(reflect(clazz));
         }
         return classes;
     }

@@ -19,18 +19,23 @@
 
 package com.captainbern.reflection;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.*;
+import com.captainbern.reflection.matcher.Matcher;
+import com.captainbern.reflection.matcher.Matchers;
+
+import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class AbstractAccess<T> implements Access<T> {
+
+    public static boolean INCLUDE_OBJECT = false;
 
     protected Class<T> clazz;
     private boolean forceAccess;
 
-    public AbstractAccess(Class<T> clazz, boolean forceAccess) {
+    public AbstractAccess(final Class<T> clazz, final boolean forceAccess) {
         this.clazz = clazz;
         this.forceAccess = forceAccess;
     }
@@ -41,159 +46,67 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public Set<SafeField> getFields() {
-        Set<SafeField> fields = new LinkedHashSet<SafeField>();
-
-        if(forceAccess) {
-            for(Field field : getReflectedClass().getDeclaredFields()) {
-                fields.add(Reflection.reflect(field));
-            }
-        }
-
-        for(Field field : getReflectedClass().getFields()) {
-            if(!fields.contains(field))
-                fields.add(Reflection.reflect(field));
-        }
-        return fields;
+    public List<Class<?>> getAllSuperClasses() {
+        return getAllSuperClasses(this.clazz);
     }
 
     @Override
-    public Set<SafeField> getDeclaredFields(Class<?> exemptedSuperClass) {
-        Set<SafeField> fields = new LinkedHashSet<SafeField>();
+    public List<Class<?>> getAllSuperClasses(final Matcher<? super Class<?>>... matchers) {
+        return match(getAllSuperClasses(), matchers);
+    }
 
-        Class<?> current = this.clazz;
+    @Override
+    public List<Field> getFields() {
+        List<Field> fields = new ArrayList<>();
 
-        while(current != null && current != exemptedSuperClass) {
-            for(Field field : current.getDeclaredFields()) {
-                fields.add(Reflection.reflect(field));
-            }
-            current = current.getSuperclass();
+        if (forceAccess) {
+            fields.addAll(getAllFields(this.clazz));
+        } else {
+            fields.addAll(getFields(this.clazz));
         }
 
         return fields;
     }
 
     @Override
-    public List<SafeField> getFieldsByType(Class<?> type) {
-        List<SafeField> fields = new ArrayList<SafeField>();
-
-        for(SafeField field : getFields()) {
-            if(type.isAssignableFrom(field.getType().getReflectedClass())) {
-                fields.add(field);
-            }
-        }
-
-        return fields;
+    public List<Field> getFields(final Matcher<? super Field>... matchers) {
+        return match(getFields(), matchers);
     }
 
     @Override
-    public SafeField getFieldByNameAndType(String name, Class<?> type) {
-        List<SafeField> fields = getFieldsByType(type);
+    public List<Method> getMethods() {
+        List<Method> methods = new ArrayList<>();
 
-        if(fields.size() > 0) {
-            for (SafeField field : fields) {
-                if (field.getName().equals(name)) {
-                    return field;
-                }
-            }
-        }
-
-        throw new IllegalArgumentException("Failed to find field: " + name + " in class: " + this.clazz.getCanonicalName());
-    }
-
-    @Override
-    public SafeField getFieldByName(String name) {
-        for(SafeField field : getFields()) {
-            if(field.getName().equals(name)) {
-                return field;
-            }
-        }
-
-        throw new IllegalArgumentException("Failed to find field: " + name + " in class: " + this.clazz.getCanonicalName());
-    }
-
-    @Override
-    public Set<SafeMethod> getMethods() {
-        Set<SafeMethod> methods = new HashSet<>();
-
-        if(forceAccess) {
-            for(Method method : this.clazz.getDeclaredMethods()) {
-                methods.add(Reflection.reflect(method));
-            }
-        }
-
-        for(Method method : this.clazz.getMethods()) {
-            if(!methods.contains(method))
-                methods.add(Reflection.reflect(method));
+        if (forceAccess) {
+            methods.addAll(getAllMethods(this.clazz));
+        } else {
+            methods.addAll(getMethods(this.clazz));
         }
 
         return methods;
     }
 
     @Override
-    public Set<SafeMethod> getDeclaredMethods(Class<?> exemptedSuperClass) {
-        if(forceAccess) {
-            Set<SafeMethod> methods = new LinkedHashSet<SafeMethod>();
-            Class<?> current = this.clazz;
-
-            while(current != null && current != exemptedSuperClass) {
-                for(Method method : current.getDeclaredMethods()) {
-                    methods.add(Reflection.reflect(method));
-                }
-                current = current.getSuperclass();
-            }
-
-            return methods;
-        }
-
-        return getMethods();
+    public List<Method> getMethods(final Matcher<? super Method>... matchers) {
+        return match(getMethods(), matchers);
     }
 
     @Override
-    public SafeMethod getMethod(String name, Class<?> returnType, Class... arguments) {
-        for(SafeMethod method : getMethods()) {
-            if((name == null || method.getName().equals(name)) && (returnType == null || method.member().getReturnType().equals(returnType)) && (arguments == null && method.member().getParameterTypes().length == 0 || Arrays.equals(arguments, method.member().getParameterTypes()))) {
-                return method;
-            }
-        }
-        return null;
-    }
+    public List<Constructor> getConstructors() {
+        List<Constructor> constructors = new ArrayList<>();
 
-    @Override
-    public Set<SafeConstructor> getConstructors() {
-        Set<SafeConstructor> constructors = new HashSet<>();
-
-        if(forceAccess) {
-            for(Constructor constructor : this.clazz.getDeclaredConstructors()) {
-                constructors.add(Reflection.reflect(constructor));
-            }
-        }
-
-        for(Constructor constructor : this.clazz.getConstructors()) {
-            if(!constructors.contains(constructor))
-                constructors.add(Reflection.reflect(constructor));
+        if (forceAccess) {
+            constructors.addAll(getAllConstructors(this.clazz));
+        } else {
+            constructors.addAll(getConstructors(this.clazz));
         }
 
         return constructors;
     }
 
     @Override
-    public Set<SafeConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass) {
-        if(forceAccess) {
-            Set<SafeConstructor> constructors = new LinkedHashSet<SafeConstructor>();
-            Class<?> current = this.clazz;
-
-            while(current != null && current != exemptedSuperClass) {
-                for(Constructor constructor : current.getDeclaredConstructors()) {
-                    constructors.add(Reflection.reflect(constructor));
-                }
-                current = current.getSuperclass();
-            }
-
-            return constructors;
-        }
-
-        return getConstructors();
+    public List<Constructor> getConstructors(final Matcher<? super Constructor>... matchers) {
+        return match(getConstructors(), matchers);
     }
 
     @Override
@@ -214,5 +127,78 @@ public class AbstractAccess<T> implements Access<T> {
     @Override
     public Type getType() {
         return this.getReflectedClass().getGenericSuperclass();
+    }
+
+    /**
+     * Utility methods...
+     */
+
+    protected static List<Class<?>> getAllSuperClasses(final Class<?> clazz) {
+        List<Class<?>> result = new ArrayList<>();
+        if (clazz != null && (INCLUDE_OBJECT || !clazz.equals(Object.class))) {
+            result.add(clazz);
+            result.addAll(getAllSuperClasses(clazz.getSuperclass()));
+            for (Class<?> iface : clazz.getInterfaces()) {
+                result.addAll(getAllSuperClasses(iface));
+            }
+        }
+        return result;
+    }
+
+    protected static List<Field> getFields(final Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        Collections.addAll(fields, clazz.getDeclaredFields());
+        return fields;
+    }
+
+    protected static List<Field> getAllFields(final Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        for (final Class<?> superClass : getAllSuperClasses(clazz)) {
+            fields.addAll(getFields(superClass));
+        }
+        return fields;
+    }
+
+    protected static List<Method> getMethods(final Class<?> clazz) {
+        List<Method> methods = new ArrayList<>();
+        Collections.addAll(methods, clazz.getDeclaredMethods());
+        return methods;
+    }
+
+    protected static List<Method> getAllMethods(final Class<?> clazz) {
+        List<Method> methods = new ArrayList<>();
+        for (final Class<?> superClass : getAllSuperClasses(clazz)) {
+            methods.addAll(getMethods(superClass));
+        }
+        return methods;
+    }
+
+    protected static List<Constructor> getConstructors(final Class<?> clazz) {
+        List<Constructor> constructors = new ArrayList<>();
+        Collections.addAll(constructors, clazz.getDeclaredConstructors());
+        return constructors;
+    }
+
+    protected static List<Constructor> getAllConstructors(final Class<?> clazz) {
+        List<Constructor> constructors = new ArrayList<>();
+        for (Class<?> superClass : getAllSuperClasses(clazz)) {
+            constructors.addAll(getConstructors(superClass));
+        }
+        return constructors;
+    }
+
+    protected static <T> List<T> match(final List<T> classes, final Matcher<? super T>... matchers) {
+        if (classes.isEmpty()) {
+            return classes;
+        } else {
+            List<T> elements = new ArrayList<>();
+            Matcher<T> combinedMatcher = Matchers.combine(Arrays.asList(matchers));
+            for(T clazz : classes) {
+                if(combinedMatcher.matches(clazz)) {
+                    elements.add(clazz);
+                }
+            }
+            return elements;
+        }
     }
 }

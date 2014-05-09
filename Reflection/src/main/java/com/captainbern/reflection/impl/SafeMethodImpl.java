@@ -68,7 +68,7 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
 
     @Override
     public void setModifiers(int mods) {
-        reflect(Method.class).getFieldByName("modifiers").getAccessor().set(this.method, mods);
+        // TODO: reflect(Method.class).getFieldByName("modifiers").getAccessor().set(this.method, mods);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
             }
 
             @Override
-            public SafeMethod getMethod() {
+            public SafeMethod<T> getMethod() {
                 return SafeMethodImpl.this;
             }
         };

@@ -34,6 +34,7 @@ import static com.captainbern.reflection.Reflection.reflect;
 public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     protected Constructor<T> constructor;
+
     public SafeConstructorImpl(final Constructor<T> constructor) {
         if(constructor == null)
             throw new IllegalArgumentException("Constructor can't be NULL!");
@@ -55,7 +56,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
     }
 
     @Override
-    public ConstructorAccessor getAccessor() {
+    public ConstructorAccessor<T> getAccessor() {
         return new ConstructorAccessor<T>() {
             @Override
             public T invoke(Object... args) {
@@ -76,7 +77,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
             }
 
             @Override
-            public SafeConstructor getConstructor() {
+            public SafeConstructor<T> getConstructor() {
                 return SafeConstructorImpl.this;
             }
         };
@@ -84,7 +85,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     @Override
     public int getArgumentCount() {
-        return SafeConstructorImpl.this.getArgumentCount();
+        return this.constructor.getParameterCount();
     }
 
     @Override
@@ -114,7 +115,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     @Override
     public void setModifiers(int mods) {
-        reflect(Constructor.class).getFieldByName("modifiers").getAccessor().set(this.constructor, mods);
+        //TODO: reflect(Constructor.class).getFieldByName("modifiers").getAccessor().set(this.constructor, mods);
     }
 
     @Override

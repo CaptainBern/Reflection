@@ -19,9 +19,13 @@
 
 package com.captainbern.reflection;
 
+import com.captainbern.reflection.matcher.Matcher;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author CaptainBern
@@ -35,75 +39,55 @@ public interface Access<T> {
     public Class<T> getReflectedClass();
 
     /**
-     * Returns a Set of all the public fields of the reflected class.
+     * Returns a List of all the super-classes of the underlying class.
      * @return
      */
-    public Set<SafeField> getFields();
+    public List<Class<?>> getAllSuperClasses();
 
     /**
-     * Returns a list of all the fields of the reflected class and it's super classes until it reaches {@param exemptedSuperClass}
-     * @param exemptedSuperClass
+     * Returns a List of all the super-classes of the underlying class that match the matchers.
+     * @param matchers
      * @return
      */
-    public Set<SafeField> getDeclaredFields(Class<?> exemptedSuperClass);
+    public List<Class<?>> getAllSuperClasses(Matcher<? super Class<?>>... matchers);
 
     /**
-     * Returns a list of all the fields of type {@param type}
-     * @param type
+     * Returns a List of all the public fields of the reflected class.
      * @return
      */
-    public List<SafeField> getFieldsByType(Class<?> type);
+    public List<Field> getFields();
 
     /**
-     * Returns a field with {@param name} of type: {@param type}. If the field isn't found
-     * or the type is incorrect this will throw an IllegalArgumentException.
-     * @param name
-     * @param type
+     * Returns a list of all the fields that match the given matchers.
      * @return
      */
-    public SafeField getFieldByNameAndType(String name, Class<?> type);
+    public List<Field> getFields(final Matcher<? super Field>... matchers);
 
     /**
-     * Returns the field with this specific name.
-     * @param name
+     * Returns a List of all the methods of the underlying class, keeping in mind the access-level
      * @return
      */
-    public SafeField getFieldByName(String name);
+    public List<Method> getMethods();
 
     /**
-     * Returns a Set of all the public methods.
+     * Returns a List of all the methods that match the matchers.
+     * @param matchers
      * @return
      */
-    public Set<SafeMethod> getMethods();
+    public List<Method> getMethods(Matcher<? super Method>... matchers);
 
     /**
-     * Returns a list of all the methods and the methods of this class's superclasses until it reaches a specific superclass.
-     * @param exemptedSuperClass
+     * Returns a List of all the constructors of the underlying class, keeping in mind the access-level
      * @return
      */
-    public Set<SafeMethod> getDeclaredMethods(Class<?> exemptedSuperClass);
+    public List<Constructor> getConstructors();
 
     /**
-     * Returns a method that matches the given name, return-type or arguments.
-     * @param name
-     * @param returnType
-     * @param arguments
+     * Returns a List of all the constructors of the underlying class that match the matchers.
+     * @param matchers
      * @return
      */
-    public SafeMethod getMethod(String name, Class<?> returnType, Class... arguments);
-
-    /**
-     * Returns a Set which contains all the Constructors of this class.
-     * @return
-     */
-    public Set<SafeConstructor> getConstructors();
-
-    /**
-     * Returns all the constructors of this class and it's super classes until it reaches the specified superclass.
-     * @param exemptedSuperClass
-     * @return
-     */
-    public Set<SafeConstructor> getDeclaredConstructors(Class<?> exemptedSuperClass);
+    public List<Constructor> getConstructors(Matcher<? super Constructor>... matchers);
 
     /**
      * Whether or not this reflected class is assignable from {@param clazz}

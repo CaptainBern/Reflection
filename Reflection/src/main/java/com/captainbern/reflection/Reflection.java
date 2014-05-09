@@ -29,6 +29,8 @@ import java.util.List;
 
 public class Reflection {
 
+    private Reflection() {}
+
     public static <T> SafeField<T> reflect(final Field field) {
         return new SafeFieldImpl<T>(field);
     }
@@ -37,12 +39,12 @@ public class Reflection {
         return new SafeMethodImpl<T>(method);
     }
 
-    public static SafeConstructor reflect(final Constructor constructor) {
-        return new SafeConstructorImpl(constructor);
+    public static <T> SafeConstructor<T> reflect(final Constructor<T> constructor) {
+        return new SafeConstructorImpl<T>(constructor);
     }
 
     public static <T> ClassTemplate<T> reflect(final Class<T> clazz, boolean forceAccess) {
-        return new ClassTemplateImpl<>(clazz, forceAccess);
+        return new ClassTemplateImpl<T>(clazz, forceAccess);
     }
 
     public static <T> ClassTemplate<T> reflect(final Class<T> clazz) {

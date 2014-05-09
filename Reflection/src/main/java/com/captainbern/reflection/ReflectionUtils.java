@@ -34,7 +34,7 @@ public class ReflectionUtils {
     public static Set<Field> getFields(final Class<?> clazz) {
         Set<Field> result = new HashSet<>();
         Collections.addAll(result, clazz.getDeclaredFields());
-        return null;
+        return result;
     }
 
     public static Set<Field> getAllFields(final Class<?> clazz) {

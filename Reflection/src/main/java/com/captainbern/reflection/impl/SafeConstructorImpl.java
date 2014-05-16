@@ -116,8 +116,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     @Override
     public void setModifiers(int mods) {
-        //TODO: reflect(Constructor.class).getFieldByName("modifiers").getAccessor().set(this.constructor, mods);
-
+        reflect(Constructor.class).getSafeFieldByName("modifiers").getAccessor().set(this.constructor, mods);
     }
 
     @Override

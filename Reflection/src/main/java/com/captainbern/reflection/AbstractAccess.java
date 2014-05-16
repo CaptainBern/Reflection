@@ -221,9 +221,43 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
+    public <T> List<SafeConstructor<T>> getSafeConstructors() {
+        List<Constructor> constructors = getConstructors();
+
+        if (constructors.size() < 0)
+            return null;
+
+        List<SafeConstructor<T>> safeConstructors = new ArrayList<>();
+        for (Constructor constructor : constructors) {
+            safeConstructors.add(reflect(constructor));
+        }
+
+        return safeConstructors;
+    }
+
+    @Override
     public List<Constructor> getConstructors(final Matcher<? super Constructor>... matchers) {
         return match(getConstructors(), matchers);
     }
+
+    @Override
+    public <T> List<SafeConstructor<T>> getSafeConstructors(final Matcher<? super Constructor>... matchers) {
+        List<Constructor> constructors = getConstructors(matchers);
+
+        if (constructors.size() < 0)
+            return null;
+
+        List<SafeConstructor<T>> safeConstructors = new ArrayList<>();
+        for (Constructor constructor : constructors) {
+            safeConstructors.add(reflect(constructor));
+        }
+
+        return safeConstructors;
+    }
+
+    /**
+     * Other things
+     */
 
     @Override
     public boolean isAssignableFrom(final Class<?> clazz) {

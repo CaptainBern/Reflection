@@ -143,8 +143,7 @@ public class SafeFieldImpl<T> implements SafeField<T> {
 
     @Override
     public void setModifiers(int mods) {
-        // TODO: reflect(Field.class).getFieldByName("modifiers").getAccessor().set(this.field, mods);
-
+        reflect(Field.class).getSafeFieldByName("modifiers").getAccessor().set(this.field, mods);
     }
 
     @Override

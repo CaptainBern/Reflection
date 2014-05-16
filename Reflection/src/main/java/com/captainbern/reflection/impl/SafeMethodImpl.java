@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.captainbern.reflection.Reflection.reflect;
+import static com.captainbern.reflection.Reflection.reflectClasses;
 
 public class SafeMethodImpl<T> implements SafeMethod<T> {
 
@@ -43,7 +44,7 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
 
     @Override
     public List<ClassTemplate<?>> getArguments() {
-        return reflect(Arrays.asList(this.method.getParameterTypes()));
+        return reflectClasses(Arrays.asList(this.method.getParameterTypes()));
     }
 
     @Override

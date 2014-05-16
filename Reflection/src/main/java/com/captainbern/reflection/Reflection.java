@@ -51,15 +51,39 @@ public class Reflection {
         return reflect(clazz, true);
     }
 
-    public static <T> SafeObject<T> reflect(final T object) {
-        return new SafeObjectImpl<>(object);
-    }
+    /** public static <T> SafeObject<T> reflect(final T object) {
+     return new SafeObjectImpl<>(object);
+     } */
 
-    public static List<ClassTemplate<?>> reflect(final List<Class<?>> classes) {
+    public static List<ClassTemplate<?>> reflectClasses(final List<Class<?>> classes) {
         List<ClassTemplate<?>> classTemplates = new ArrayList<>();
         for(Class<?> clazz : classes) {
             classTemplates.add(reflect(clazz));
         }
         return classTemplates;
+    }
+
+    public static List<SafeField<?>> reflectFields(final List<Field> fields) {
+       List<SafeField<?>> safeFields = new ArrayList<>();
+        for (Field field : fields) {
+            safeFields.add(reflect(field));
+        }
+        return safeFields;
+    }
+
+    public static List<SafeMethod<?>> reflectMethods(final List<Method> methods) {
+        List<SafeMethod<?>> safeMethods = new ArrayList<>();
+        for (Method method : methods) {
+            safeMethods.add(reflect(method));
+        }
+        return safeMethods;
+    }
+
+    public static List<SafeConstructor<?>> reflectConstructors(final List<Constructor> constructors) {
+        List<SafeConstructor<?>> safeConstructors = new ArrayList<>();
+        for(Constructor constructor : constructors) {
+            safeConstructors.add(reflect(constructor));
+        }
+        return safeConstructors;
     }
 }

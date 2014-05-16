@@ -22,11 +22,18 @@ package com.captainbern.reflection;
 import com.captainbern.reflection.matcher.Matcher;
 import com.captainbern.reflection.matcher.Matchers;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.captainbern.reflection.Reflection.reflect;
+import static com.captainbern.reflection.matcher.Matchers.withExactName;
+import static com.captainbern.reflection.matcher.Matchers.withType;
 
 public class AbstractAccess<T> implements Access<T> {
 
@@ -55,6 +62,10 @@ public class AbstractAccess<T> implements Access<T> {
         return match(getAllSuperClasses(), matchers);
     }
 
+    /**
+     * Fields
+     */
+
     @Override
     public List<Field> getFields() {
         List<Field> fields = new ArrayList<>();
@@ -69,9 +80,80 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
+    public List<SafeField<?>> getSafeFields() {
+        List<Field> fields = getFields();
+
+        if (fields.size() < 0)
+            return null;
+
+        List<SafeField<?>> safeFields = new ArrayList<>();
+        for (Field field : fields) {
+            safeFields.add(reflect(field));
+        }
+
+        return safeFields;
+    }
+
+    @Override
     public List<Field> getFields(final Matcher<? super Field>... matchers) {
         return match(getFields(), matchers);
     }
+
+    public List<SafeField<?>> getSafeFields(final Matcher<? super Field>... matchers) {
+        List<Field> fields = getFields(matchers);
+
+        if (fields.size() < 0)
+            return null;
+
+        List<SafeField<?>> safeFields = new ArrayList<>();
+        for (Field field : fields) {
+            safeFields.add(reflect(field));
+        }
+
+        return safeFields;
+    }
+
+    @Override
+    public Field getFieldByName(final String name) {
+        List<Field> fields = getFields(withExactName(name));
+
+        if (fields.size() > 0) {
+            // It's probably the first field...
+            return fields.get(0);
+        }
+
+        return null;
+    }
+
+    @Override
+    public <T> SafeField<T> getSafeFieldByName(final String name) {
+        Field field = getFieldByName(name);
+        return field == null ? null : (SafeField<T>) reflect(field);
+    }
+
+    @Override
+    public Field getFieldByNameAndType(final String name, final Class<?> type) {
+        List<Field> fields = getFields(withExactName(name));
+
+        if (fields.size() > 0) {
+            for (Field field : fields) {
+                if (withType(type).matches(field)) {
+                    return field;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<?> type) {
+        Field field = getFieldByNameAndType(name, type);
+        return field == null ? null : (SafeField<T>) reflect(field);
+    }
+
+    /**
+     * Methods
+     */
 
     @Override
     public List<Method> getMethods() {
@@ -90,6 +172,10 @@ public class AbstractAccess<T> implements Access<T> {
     public List<Method> getMethods(final Matcher<? super Method>... matchers) {
         return match(getMethods(), matchers);
     }
+
+    /**
+     * Constructors
+     */
 
     @Override
     public List<Constructor> getConstructors() {
@@ -110,17 +196,17 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public boolean isAssignableFrom(Class<?> clazz) {
+    public boolean isAssignableFrom(final Class<?> clazz) {
         return this.getReflectedClass().isAssignableFrom(clazz);
     }
 
     @Override
-    public boolean isAssignableFromObject(Object object) {
+    public boolean isAssignableFromObject(final Object object) {
         return this.getReflectedClass().isAssignableFrom(object.getClass());
     }
 
     @Override
-    public boolean isInstanceOf(Object object) {
+    public boolean isInstanceOf(final Object object) {
         return this.getReflectedClass().isInstance(object);
     }
 

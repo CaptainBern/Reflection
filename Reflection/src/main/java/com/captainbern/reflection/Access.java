@@ -49,19 +49,64 @@ public interface Access<T> {
      * @param matchers
      * @return
      */
-    public List<Class<?>> getAllSuperClasses(Matcher<? super Class<?>>... matchers);
+    public List<Class<?>> getAllSuperClasses(final Matcher<? super Class<?>>... matchers);
 
     /**
-     * Returns a List of all the public fields of the reflected class.
+     * Returns a List of all the public of the reflected class.
      * @return
      */
     public List<Field> getFields();
+
+    /**
+     * Returns a List of all the fields of the reflected class, as a SafeField
+     * @return
+     */
+    public List<SafeField<?>> getSafeFields();
 
     /**
      * Returns a list of all the fields that match the given matchers.
      * @return
      */
     public List<Field> getFields(final Matcher<? super Field>... matchers);
+
+    /**
+     * Returns a list of all the fields that match the given matchers as SafeFields
+     * @param matchers
+     * @return
+     */
+    public List<SafeField<?>> getSafeFields(final Matcher<? super Field>... matchers);
+
+    /**
+     * Returns a field which matches the given name
+     * @param name
+     * @return
+     */
+    public Field getFieldByName(final String name);
+
+    /**
+     * Returns a field which matches the given name as a SafeField.
+     * @param name
+     * @param <T>
+     * @return
+     */
+    public <T> SafeField<T> getSafeFieldByName(final String name);
+
+    /**
+     * Returns a field which matches the name and type
+     * @param name
+     * @param type
+     * @return
+     */
+    public Field getFieldByNameAndType(final String name, final Class<?> type);
+
+    /**
+     * Returns a field which matches the given name and type as a SafeField
+     * @param name
+     * @param type
+     * @param <T>
+     * @return
+     */
+    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<?> type);
 
     /**
      * Returns a List of all the methods of the underlying class, keeping in mind the access-level
@@ -74,7 +119,7 @@ public interface Access<T> {
      * @param matchers
      * @return
      */
-    public List<Method> getMethods(Matcher<? super Method>... matchers);
+    public List<Method> getMethods(final Matcher<? super Method>... matchers);
 
     /**
      * Returns a List of all the constructors of the underlying class, keeping in mind the access-level
@@ -87,28 +132,28 @@ public interface Access<T> {
      * @param matchers
      * @return
      */
-    public List<Constructor> getConstructors(Matcher<? super Constructor>... matchers);
+    public List<Constructor> getConstructors(final Matcher<? super Constructor>... matchers);
 
     /**
      * Whether or not this reflected class is assignable from {@param clazz}
      * @param clazz
      * @return
      */
-    public boolean isAssignableFrom(Class<?> clazz);
+    public boolean isAssignableFrom(final Class<?> clazz);
 
     /**
      * Whether or not this class is assignable from {@param object}
      * @param object
      * @return
      */
-    public boolean isAssignableFromObject(Object object);
+    public boolean isAssignableFromObject(final Object object);
 
     /**
      * Returns whether or not the reflected class is an instance of the given object.
      * @param object
      * @return
      */
-    public boolean isInstanceOf(Object object);
+    public boolean isInstanceOf(final Object object);
 
     /**
      * Returns the type of this class. (GenericSuperClass)

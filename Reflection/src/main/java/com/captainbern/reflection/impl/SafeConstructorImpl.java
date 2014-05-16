@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.captainbern.reflection.Reflection.reflect;
+import static com.captainbern.reflection.Reflection.reflectClasses;
 
 public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
@@ -90,7 +91,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     @Override
     public List<ClassTemplate<?>> getArguments() {
-        return reflect(Arrays.asList(this.constructor.getParameterTypes()));
+        return reflectClasses(Arrays.asList(this.constructor.getParameterTypes()));
     }
 
     @Override
@@ -116,6 +117,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
     @Override
     public void setModifiers(int mods) {
         //TODO: reflect(Constructor.class).getFieldByName("modifiers").getAccessor().set(this.constructor, mods);
+
     }
 
     @Override

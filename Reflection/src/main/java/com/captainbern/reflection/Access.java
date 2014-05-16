@@ -115,11 +115,24 @@ public interface Access<T> {
     public List<Method> getMethods();
 
     /**
+     * Returns a List of all the methods of the underlying class as SafeMethods
+     * @return
+     */
+    public List<SafeMethod<?>> getSafeMethods();
+
+    /**
      * Returns a List of all the methods that match the matchers.
      * @param matchers
      * @return
      */
     public List<Method> getMethods(final Matcher<? super Method>... matchers);
+
+    /**
+     * Returns a List of all the methods that match the matchers as SafeMethods
+     * @param matchers
+     * @return
+     */
+    public List<SafeMethod<?>> getSafeMethods(final Matcher<? super Method>... matchers);
 
     /**
      * Returns a List of all the constructors of the underlying class, keeping in mind the access-level

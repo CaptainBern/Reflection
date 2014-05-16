@@ -169,8 +169,38 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
+    public List<SafeMethod<?>> getSafeMethods() {
+        List<Method> methods = getMethods();
+
+        if (methods.size() < 0)
+            return null;
+
+        List<SafeMethod<?>> safeMethods = new ArrayList<>();
+        for (Method method : methods) {
+            safeMethods.add(reflect(method));
+        }
+
+        return safeMethods;
+    }
+
+    @Override
     public List<Method> getMethods(final Matcher<? super Method>... matchers) {
         return match(getMethods(), matchers);
+    }
+
+    @Override
+    public List<SafeMethod<?>> getSafeMethods(final Matcher<? super Method>... matchers) {
+        List<Method> methods = getMethods(matchers);
+
+        if (methods.size() < 0)
+            return null;
+
+        List<SafeMethod<?>> safeMethods = new ArrayList<>();
+        for (Method method : methods) {
+            safeMethods.add(reflect(method));
+        }
+
+        return safeMethods;
     }
 
     /**

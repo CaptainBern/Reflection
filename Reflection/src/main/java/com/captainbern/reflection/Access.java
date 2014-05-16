@@ -141,11 +141,26 @@ public interface Access<T> {
     public List<Constructor> getConstructors();
 
     /**
+     * Returns a List of all the constructors of the underlying class as SafeConstructors
+     * @param <T>
+     * @return
+     */
+    public <T> List<SafeConstructor<T>> getSafeConstructors();
+
+    /**
      * Returns a List of all the constructors of the underlying class that match the matchers.
      * @param matchers
      * @return
      */
     public List<Constructor> getConstructors(final Matcher<? super Constructor>... matchers);
+
+    /**
+     * Returns a List of all the constructors of the underlying class that match the matchers as SafeConstructors
+     * @param matchers
+     * @param <T>
+     * @return
+     */
+    public <T> List<SafeConstructor<T>> getSafeConstructors(final Matcher<? super Constructor>... matchers);
 
     /**
      * Whether or not this reflected class is assignable from {@param clazz}

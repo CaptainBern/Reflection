@@ -9,7 +9,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public interface ClassProvider {
+public interface IProvider {
 
     public <T> ClassTemplate<T> reflect(final Class<T> clazz);
 

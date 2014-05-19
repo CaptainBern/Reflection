@@ -19,12 +19,13 @@
 
 package com.captainbern.reflection;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author CaptainBern
  */
-public interface ClassTemplate<T> extends Access<T> {
+public interface ClassTemplate<T> extends Access<T>, Serializable {
 
     /**
      * Created a new instance of this (reflected) class.

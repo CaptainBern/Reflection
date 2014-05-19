@@ -21,6 +21,7 @@ package com.captainbern.reflection;
 
 import com.captainbern.reflection.matcher.Matcher;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * @author CaptainBern
  */
-public interface Access<T> {
+public interface Access<T> extends Serializable {
 
     /**
      * Returns the reflected class. This is the class we're currently working with.

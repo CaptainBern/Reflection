@@ -19,10 +19,11 @@
 
 package com.captainbern.reflection;
 
+import java.io.Serializable;
 import java.lang.reflect.Member;
 import java.util.List;
 
-public interface SafeMember extends Member {
+public interface SafeMember extends Member, Serializable {
 
     /**
      * Returns the underlying member.

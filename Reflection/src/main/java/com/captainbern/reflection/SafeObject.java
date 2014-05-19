@@ -19,10 +19,12 @@
 
 package com.captainbern.reflection;
 
+import java.io.Serializable;
+
 /**
  * @author CaptainBern
  */
-public interface SafeObject<T> extends Access<T> {
+public interface SafeObject<T> extends Access<T>, Serializable {
 
     public ClassTemplate<T> asReflectedClass();
 

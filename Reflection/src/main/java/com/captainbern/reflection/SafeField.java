@@ -21,12 +21,13 @@ package com.captainbern.reflection;
 
 import com.captainbern.reflection.accessor.FieldAccessor;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
 /**
  * @author CaptainBern
  */
-public interface SafeField<T> extends SafeMember {
+public interface SafeField<T> extends SafeMember, Serializable {
 
     public Field member();
 

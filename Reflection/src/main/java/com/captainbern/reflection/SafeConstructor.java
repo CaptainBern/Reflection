@@ -21,9 +21,10 @@ package com.captainbern.reflection;
 
 import com.captainbern.reflection.accessor.ConstructorAccessor;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 
-public interface SafeConstructor<T> extends SafeMember {
+public interface SafeConstructor<T> extends SafeMember, Serializable {
 
     public Constructor member();
 

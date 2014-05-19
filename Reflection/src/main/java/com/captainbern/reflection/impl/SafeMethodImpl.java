@@ -130,4 +130,17 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
             }
         };
     }
+
+    @Override
+    public boolean isPackagePrivate() {
+        return !(Modifier.isPrivate(this.method.getModifiers()) || Modifier.isPublic(this.method.getModifiers()));
+    }
+
+    @Override
+    public boolean isOverridable() {
+        return !(Modifier.isFinal(this.method.getModifiers())
+                || Modifier.isPrivate(this.method.getModifiers())
+                || Modifier.isStatic(this.method.getModifiers())
+                || Modifier.isFinal(this.method.getDeclaringClass().getModifiers()));
+    }
 }

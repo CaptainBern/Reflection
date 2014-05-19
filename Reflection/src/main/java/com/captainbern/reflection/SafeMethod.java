@@ -21,11 +21,16 @@ package com.captainbern.reflection;
 
 import com.captainbern.reflection.accessor.MethodAccessor;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
-public interface SafeMethod<T> extends SafeMember {
+public interface SafeMethod<T> extends SafeMember, Serializable {
 
     public Method member();
 
     public MethodAccessor<T> getAccessor();
+
+    public boolean isPackagePrivate();
+
+    public boolean isOverridable();
 }

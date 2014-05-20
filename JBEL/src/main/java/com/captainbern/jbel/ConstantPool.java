@@ -49,6 +49,15 @@ public class ConstantPool implements Opcode {
         }
     }
 
+    public final void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.size);
+        for(int i = 1; i < this.size; i++) {
+            if(this.constantPool[i] != null) {
+                this.constantPool[i].write(codeStream);
+            }
+        }
+    }
+
     public Constant[] getConstantPool() {
         return this.constantPool;
     }
@@ -64,15 +73,6 @@ public class ConstantPool implements Opcode {
 
     public void setConstant(int index, Constant constant) {
         this.constantPool[index] = constant;
-    }
-
-    public final void write(DataOutputStream codeStream) throws IOException {
-        codeStream.writeShort(this.size);
-        for(int i = 1; i < this.size; i++) {
-            if(this.constantPool[i] != null) {
-                this.constantPool[i].write(codeStream);
-            }
-        }
     }
 
     public byte getTag(int index) {

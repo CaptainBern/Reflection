@@ -28,12 +28,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * Represents a Frame (while in the JVM-Specs the "stack_map_frame" a representation is of all the
- * possible StackMap types, I called this a StackMapFrame since I feel this name fits better then any other)
- *
  * To see how the parsing works read: <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.4">StackMapFrame</a>
  */
-public class StackMapFrame implements Opcode {
+public class StackMapTableEntry implements Opcode {
 
     private int frameType;
     private int offset;    /*delta offset*/
@@ -44,7 +41,7 @@ public class StackMapFrame implements Opcode {
 
     private ConstantPool constantPool;
 
-    public StackMapFrame(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
+    public StackMapTableEntry(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         this(codeStream.read(), -1, -1, null, -1, null, constantPool);
 
         if(isWithinBounds(this.frameType, SAME_FRAME, SAME_FRAME_MAX)) {
@@ -89,7 +86,7 @@ public class StackMapFrame implements Opcode {
         }
     }
 
-    public StackMapFrame(int frameType, int offset, int numberOfLocals, TypeInfo[] localFrames, int numberOfStackItems, TypeInfo[] stack, ConstantPool constantPool) {
+    public StackMapTableEntry(int frameType, int offset, int numberOfLocals, TypeInfo[] localFrames, int numberOfStackItems, TypeInfo[] stack, ConstantPool constantPool) {
         this.frameType = frameType;
         this.offset = offset;
         this.numberOfLocals = numberOfLocals;

@@ -31,19 +31,9 @@ public class ClassReaderTest implements Opcode {
                 log("Signature: " + signature);
                 super.visit(version, access, className, superClassName, signature);
             }
-
-            @Override
-            public void visitSource(String sourceFile) {
-                log("Source: " + sourceFile);
-            }
-
-            @Override
-            public void visitEnd() {
-                log("Done visiting");
-            }
         });
 
-        //print(reader);
+        print(reader);
     }
 
     public static void print(ClassReader reader) throws ClassFormatException {

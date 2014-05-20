@@ -28,6 +28,7 @@ import com.captainbern.jbel.commons.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Used to parse a field or method. (since their bytecode structure is the same)
@@ -37,7 +38,7 @@ public class Member implements Opcode {
     protected int nameIndex;
     protected int descriptorIndex;
     protected int attributeCount;
-    protected Attribute[] attributes;
+    protected ArrayList<Attribute> attributes;
 
     protected ConstantPool constantPool;
 
@@ -48,13 +49,13 @@ public class Member implements Opcode {
     public Member(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         this(codeStream.readUnsignedShort(), codeStream.readUnsignedShort(), codeStream.readUnsignedShort(), null, constantPool);
         this.attributeCount = codeStream.readUnsignedShort();
-        this.attributes = new Attribute[attributeCount];
+        this.attributes = new ArrayList<>();
         for(int i = 0; i < attributeCount; i++) {
-            this.attributes[i] = Attribute.readAttribute(codeStream, constantPool);
+            this.attributes.add(Attribute.readAttribute(codeStream, constantPool));
         }
     }
 
-    public Member(int accessFlags, int nameIndex, int descriptorIndex, Attribute[] attributes, ConstantPool constantPool) {
+    public Member(int accessFlags, int nameIndex, int descriptorIndex, ArrayList<Attribute> attributes, ConstantPool constantPool) {
         this.accessFlags = accessFlags;
         this.nameIndex = nameIndex;
         this.descriptorIndex = descriptorIndex;
@@ -94,12 +95,12 @@ public class Member implements Opcode {
         this.descriptorIndex = descriptorIndex;
     }
 
-    public Attribute[] getAttributes() {
+    public ArrayList<Attribute> getAttributes() {
         return this.attributes;
     }
 
-    public void setAttributes(Attribute[] attributes) {
-        this.attributeCount = attributes == null ? 0 : attributes.length;
+    public void setAttributes(ArrayList<Attribute> attributes) {
+        this.attributeCount = attributes == null ? 0 : attributes.size();
         this.attributes = attributes;
     }
 
@@ -117,9 +118,13 @@ public class Member implements Opcode {
         codeStream.writeShort(this.accessFlags);
         codeStream.writeShort(this.nameIndex);
         codeStream.writeShort(this.descriptorIndex);
-        codeStream.writeShort(this.attributeCount);
-        for(int i = 0; i < this.attributeCount; i++) {
-            this.attributes[i].write(codeStream);
+        if(this.attributes == null) {
+            codeStream.writeShort(0);
+        } else {
+            codeStream.writeShort(this.attributes.size());
+            for(int i = 0; i < this.attributes.size(); i++) {
+                this.attributes.get(i).write(codeStream);
+            }
         }
     }
 }

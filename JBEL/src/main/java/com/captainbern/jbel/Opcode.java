@@ -23,6 +23,8 @@ public interface Opcode {
 
     public static final int JBEL_1 = 1 << 1;
 
+    public static final int JAVA_MAGIC = 0xCAFEBABE;
+
     /**
      * JDK versions
      */
@@ -247,7 +249,7 @@ public interface Opcode {
     public static final int IMPDEP2         = 255;
 
     /**
-     * Types
+     * Types (for the newarray instruction)
      */
     public static final int T_BOOLEAN       = 4;
     public static final int T_CHAR          = 5;

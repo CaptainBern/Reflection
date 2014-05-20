@@ -28,6 +28,7 @@ import com.captainbern.jbel.commons.member.method.MethodInfo;
 import com.captainbern.jbel.visitor.ClassVisitor;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class ClassReader implements Opcode {
 
@@ -38,10 +39,10 @@ public class ClassReader implements Opcode {
     private int accessFlags;
     private int thisClass;
     private int superClass;
-    private Interface[] interfaces;
-    private FieldInfo[] fields;
-    private MethodInfo[] methods;
-    private Attribute[] attributes;
+    private ArrayList<Interface> interfaces;
+    private ArrayList<FieldInfo> fields;
+    private ArrayList<MethodInfo> methods;
+    private ArrayList<Attribute> attributes;
 
     /**
      * Constructs a new ClassReader with the given bytes.
@@ -79,30 +80,30 @@ public class ClassReader implements Opcode {
 
             // Interfaces
             int interfacesCount = codeStream.readUnsignedShort();
-            this.interfaces = new Interface[interfacesCount];
+            this.interfaces = new ArrayList<>();
             for (int i = 0; i < interfacesCount; i++) {
-                this.interfaces[i] = new Interface(codeStream.readUnsignedShort(), this.constantPool);
+                this.interfaces.add(new Interface(codeStream.readUnsignedShort(), this.constantPool));
             }
 
             // Fields
             int fieldCount = codeStream.readUnsignedShort();
-            this.fields = new FieldInfo[fieldCount];
+            this.fields = new ArrayList<>();
             for (int i = 0; i < fieldCount; i++) {
-                this.fields[i] = new FieldInfo(codeStream, this.constantPool);
+                this.fields.add(new FieldInfo(codeStream, this.constantPool));
             }
 
             // Methods
             int methodCount = codeStream.readUnsignedShort();
-            this.methods = new MethodInfo[methodCount];
+            this.methods = new ArrayList<>();
             for (int i = 0; i < methodCount; i++) {
-                this.methods[i] = new MethodInfo(codeStream, this.constantPool);
+                this.methods.add(new MethodInfo(codeStream, this.constantPool));
             }
 
             // Attributes
             int attributeCount = codeStream.readUnsignedShort();
-            this.attributes = new Attribute[attributeCount];
+            this.attributes = new ArrayList<>();
             for (int i = 0; i < attributeCount; i++) {
-                this.attributes[i] = Attribute.readAttribute(codeStream, this.constantPool);
+                this.attributes.add(Attribute.readAttribute(codeStream, this.constantPool));
             }
 
         } finally {
@@ -242,7 +243,7 @@ public class ClassReader implements Opcode {
         /**
          * Interfaces
          */
-        codeStream.writeShort(this.interfaces.length);
+        codeStream.writeShort(this.interfaces.size());
         for (Interface iface : this.interfaces) {
             codeStream.writeShort(iface.getIndex());
         }
@@ -250,7 +251,7 @@ public class ClassReader implements Opcode {
         /**
          * Fields
          */
-        codeStream.writeShort(this.fields.length);
+        codeStream.writeShort(this.fields.size());
         for (FieldInfo fieldInfo : this.fields) {
             fieldInfo.write(codeStream);
         }
@@ -258,7 +259,7 @@ public class ClassReader implements Opcode {
         /**
          * Methods
          */
-        codeStream.writeShort(this.methods.length);
+        codeStream.writeShort(this.methods.size());
         for (MethodInfo methodInfo : this.methods) {
             methodInfo.write(codeStream);
         }
@@ -267,7 +268,7 @@ public class ClassReader implements Opcode {
          * Attributes
          */
         if (this.attributes != null) {
-            codeStream.writeShort(this.attributes.length);
+            codeStream.writeShort(this.attributes.size());
             for (Attribute attribute : this.attributes) {
                 attribute.write(codeStream);
             }
@@ -376,7 +377,7 @@ public class ClassReader implements Opcode {
      * Returns an array of interfaces of this class.
      * @return
      */
-    public Interface[] getInterfaces() {
+    public ArrayList<Interface> getInterfaces() {
         return this.interfaces;
     }
 
@@ -384,7 +385,7 @@ public class ClassReader implements Opcode {
      * Returns an array of fields of this class.
      * @return
      */
-    public FieldInfo[] getFields() {
+    public ArrayList<FieldInfo> getFields() {
         return this.fields;
     }
 
@@ -392,7 +393,7 @@ public class ClassReader implements Opcode {
      * Returns an array of methods of this class.
      * @return
      */
-    public MethodInfo[] getMethods() {
+    public ArrayList<MethodInfo> getMethods() {
         return this.methods;
     }
 
@@ -400,7 +401,7 @@ public class ClassReader implements Opcode {
      * Returns an array of attributes of this class.
      * @return
      */
-    public Attribute[] getAttributes() {
+    public ArrayList<Attribute> getAttributes() {
         return this.attributes;
     }
 

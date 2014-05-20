@@ -7,6 +7,8 @@ import com.captainbern.jbel.commons.member.Interface;
 import com.captainbern.jbel.commons.member.field.FieldInfo;
 import com.captainbern.jbel.commons.member.method.MethodInfo;
 
+import java.util.ArrayList;
+
 /**
  * An ASM-like visitor system.
  */
@@ -47,7 +49,7 @@ public abstract class ClassVisitor {
         return null;
     }
 
-    public void visitInterfaces(Interface[] interfaces) {
+    public void visitInterfaces(ArrayList<Interface> interfaces) {
         if(this.classVisitor != null) {
             this.classVisitor.visitInterfaces(interfaces);
         }
@@ -60,7 +62,7 @@ public abstract class ClassVisitor {
         return null;
     }
 
-    public void visitFields(FieldInfo[] fields) {
+    public void visitFields(ArrayList<FieldInfo> fields) {
         if(this.classVisitor != null) {
             this.classVisitor.visitFields(fields);
         }
@@ -73,7 +75,7 @@ public abstract class ClassVisitor {
         return null;
     }
 
-    public void visitMethods(MethodInfo[] methods) {
+    public void visitMethods(ArrayList<MethodInfo> methods) {
         if(this.classVisitor != null) {
             this.classVisitor.visitMethods(methods);
         }
@@ -85,7 +87,7 @@ public abstract class ClassVisitor {
         }
     }
 
-    public void visitAttributes(Attribute[] attributes) {
+    public void visitAttributes(ArrayList<Attribute> attributes) {
         if(this.classVisitor != null) {
             this.classVisitor.visitAttributes(attributes);
         }

@@ -27,6 +27,9 @@ import com.captainbern.jbel.commons.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.*;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Attribute implements Opcode {
 
@@ -134,5 +137,26 @@ public class Attribute implements Opcode {
             default:
                 throw new ClassFormatException("Unknown attribute type: " + tag);
         }
+    }
+
+    public static Attribute getAttribute(ArrayList<Attribute> attributes, String name) {
+        if(attributes == null) {
+            return null;
+        }
+
+        ListIterator<Attribute> iterator = attributes.listIterator();
+        while (iterator.hasNext()) {
+            Attribute attribute = iterator.next();
+
+            try {
+                if(attribute.getName().equals(name)) {
+                    return attribute;
+                }
+            } catch (ClassFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 }

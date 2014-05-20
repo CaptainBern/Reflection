@@ -20,7 +20,7 @@
 package com.captainbern.jbel.commons.attribute;
 
 import com.captainbern.jbel.ConstantPool;
-import com.captainbern.jbel.commons.attribute.stackmap.StackMapFrame;
+import com.captainbern.jbel.commons.attribute.stackmap.StackMapTableEntry;
 import com.captainbern.jbel.commons.exception.ClassFormatException;
 
 import java.io.DataInputStream;
@@ -35,18 +35,18 @@ import java.io.IOException;
 public class StackMapTable extends Attribute {
 
     private int mapLength;
-    private StackMapFrame[] entries;
+    private StackMapTableEntry[] entries;
 
     public StackMapTable(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
-        this(index, length, (StackMapFrame[]) null, constantPool);
+        this(index, length, (StackMapTableEntry[]) null, constantPool);
         this.mapLength = codeStream.readUnsignedShort();
-        this.entries = new StackMapFrame[this.mapLength];
+        this.entries = new StackMapTableEntry[this.mapLength];
         for(int i = 0; i < this.mapLength; i++) {
-            this.entries[i] = new StackMapFrame(codeStream, constantPool);
+            this.entries[i] = new StackMapTableEntry(codeStream, constantPool);
         }
     }
 
-    public StackMapTable(int index, int length, StackMapFrame[] entries, ConstantPool constantPool) {
+    public StackMapTable(int index, int length, StackMapTableEntry[] entries, ConstantPool constantPool) {
         super(ATTR_STACK_MAP_TABLE, index, length, constantPool);
         setEntries(entries);
     }
@@ -55,11 +55,11 @@ public class StackMapTable extends Attribute {
         return this.mapLength;
     }
 
-    public StackMapFrame[] getEntries() {
+    public StackMapTableEntry[] getEntries() {
         return this.entries;
     }
 
-    public void setEntries(StackMapFrame[] entries) {
+    public void setEntries(StackMapTableEntry[] entries) {
         this.entries = entries;
         this.mapLength = entries == null ? 0 : entries.length;
     }

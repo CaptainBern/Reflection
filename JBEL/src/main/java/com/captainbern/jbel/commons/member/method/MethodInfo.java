@@ -27,6 +27,7 @@ import com.captainbern.jbel.commons.exception.ClassFormatException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MethodInfo extends Member implements Opcode {
 
@@ -38,7 +39,7 @@ public class MethodInfo extends Member implements Opcode {
         super(codeStream, constantPool);
     }
 
-    public MethodInfo(int accessFlags, int index, int signatureIndex, Attribute[] attributes, ConstantPool constantPool) {
+    public MethodInfo(int accessFlags, int index, int signatureIndex, ArrayList<Attribute> attributes, ConstantPool constantPool) {
         super(accessFlags, index, signatureIndex, attributes, constantPool);
     }
 }

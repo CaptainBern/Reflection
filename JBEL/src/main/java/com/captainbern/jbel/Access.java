@@ -6,7 +6,7 @@
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ *  (at your option) any later version.                        by
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -80,8 +80,7 @@ public class Access {
     }
 
     public int setPublic(boolean bool) {
-        return (bool ? (this.flag & ~(ACC_PRIVATE | ACC_PROTECTED)) | ACC_PUBLIC :
-                this.flag & ~(ACC_PUBLIC) | ACC_PRIVATE);
+        return this.flag = (bool ? (this.flag & ~(ACC_PRIVATE | ACC_PROTECTED)) | ACC_PUBLIC : this.flag & ~(ACC_PUBLIC) | ACC_PRIVATE);
     }
 
     public boolean isPublic() {
@@ -89,8 +88,7 @@ public class Access {
     }
 
     public int setPrivate(boolean bool) {
-        return (bool ? (this.flag & ~(ACC_PUBLIC | ACC_PROTECTED)) | ACC_PRIVATE :
-                this.flag & ~(ACC_PRIVATE));
+        return this.flag = (bool ? (this.flag & ~(ACC_PUBLIC | ACC_PROTECTED)) | ACC_PRIVATE : this.flag & ~(ACC_PRIVATE));
     }
 
     public boolean isPrivate() {
@@ -98,10 +96,26 @@ public class Access {
     }
 
     public int setProtected(boolean bool) {
-        return (this.flag & ~(ACC_PUBLIC | ACC_PRIVATE)) | ACC_PROTECTED;
+        return this.flag = (bool ? (this.flag & ~(ACC_PUBLIC | ACC_PRIVATE)) | ACC_PROTECTED : this.flag & ~(ACC_PROTECTED));
     }
 
     public boolean isProtected() {
         return (this.flag & ACC_PROTECTED) != 0;
+    }
+
+    public int setStatic(boolean bool) {
+        return this.flag = (bool ? (this.flag | ACC_STATIC) : this.flag & ~(ACC_STATIC));
+    }
+
+    public boolean isStatic() {
+        return (this.flag & ACC_STATIC) != 0;
+    }
+
+    public int setFinal(boolean bool) {
+         return this.flag = (bool ? (this.flag & ~(ACC_ABSTRACT) | ACC_FINAL) : this.flag & ~(ACC_STATIC));
+    }
+
+    public boolean isFinal() {
+        return (this.flag & ACC_FINAL) != 0;
     }
 }

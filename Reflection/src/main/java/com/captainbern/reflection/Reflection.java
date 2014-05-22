@@ -1,25 +1,7 @@
-/*
- *  CaptainBern-Reflection-Framework contains several utils and tools
- *  to make Reflection easier.
- *  Copyright (C) 2014  CaptainBern
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.captainbern.reflection;
 
 import com.captainbern.reflection.provider.ReflectionProvider;
+import com.captainbern.reflection.provider.impl.DefaultReflectionProvider;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -29,46 +11,92 @@ import java.util.List;
 
 public class Reflection {
 
-    private static ReflectionProvider provider;
+    private static ReflectionProvider reflectionProvider;
 
     static {
-        provider = new ReflectionProvider();
+        reflectionProvider  = new DefaultReflectionProvider();
     }
 
     private Reflection() {}
 
-    public void setProvider(ReflectionProvider reflectionProvider) {
-        Reflection.provider = reflectionProvider;
+    public static ReflectionProvider getReflectionProvider() {
+        return reflectionProvider;
     }
 
-    public static ReflectionProvider getProvider() {
-        return provider;
-    }
-
-    public static <T> SafeField<T> reflect(final Field field) {
-        return getProvider().getFieldProvider().reflect(field);
-    }
-
-    public static <T> SafeMethod<T> reflect(final Method method) {
-        return getProvider().getMethodProvider().reflect(method);
-    }
-
-    public static <T> SafeConstructor<T> reflect(final Constructor<T> constructor) {
-        return getProvider().getConstructorProvider().reflect(constructor);
+    public static void setReflectionProvider(final ReflectionProvider reflectionProvider) {
+        if (reflectionProvider == null) {
+            throw new IllegalArgumentException("Cannot set the ReflectionProvider to NUL!");
+        }
+        Reflection.reflectionProvider = reflectionProvider;
     }
 
     public static <T> ClassTemplate<T> reflect(final Class<T> clazz, boolean forceAccess) {
-        return getProvider().getClassProvider().reflect(clazz, forceAccess);
+        if (clazz == null) {
+            throw new IllegalArgumentException("Given class may not be NULL!");
+        }
+        return getReflectionProvider().getClassProvider(clazz, forceAccess).asClassTemplate();
     }
 
     public static <T> ClassTemplate<T> reflect(final Class<T> clazz) {
-        return reflect(clazz, true);
+        return reflect(clazz, false);
     }
 
-    /** public static <T> SafeObject<T> reflect(final T object) {
-     return new SafeObjectImpl<>(object);
-     } */
+    public static <T> ClassTemplate<T> reflect(final String className, boolean forceAccess) {
+        if (className == null) {
+            throw new IllegalArgumentException("Class name may not be NULL!");
+        }
+        return getReflectionProvider().getClassProvider(className, forceAccess).asClassTemplate();
+    }
 
+    public static <T> ClassTemplate<T> reflect(final String className) {
+        return reflect(className, false);
+    }
+
+    public static <T> SafeConstructor<T> reflect(final Constructor<T> constructor) {
+        if (constructor == null) {
+            throw new IllegalArgumentException("Constructor may not be NULL!");
+        }
+        return getReflectionProvider().getConstructorProvider(constructor).asSafeConstructor();
+    }
+
+    public static <T> SafeConstructor<T> reflect(final Class<T> clazz, final Class... args) {
+        if (clazz == null) {
+            throw new IllegalArgumentException("can't retrieve the constructor out of NULL!");
+        }
+        return getReflectionProvider().getConstructorProvider(clazz, args).asSafeConstructor();
+    }
+
+    public static <T> SafeField<T> reflect(final Field field) {
+        if (field == null) {
+            throw new IllegalArgumentException("Field may not be NULL!");
+        }
+        return getReflectionProvider().getFieldProvider(field).asSafeField();
+    }
+
+    public static <T> SafeField<T> reflect(final Class<?> clazz, final String name) {
+        if (clazz == null || name == null) {
+            throw new IllegalArgumentException("Class and field-name may not be NULL!");
+        }
+        return getReflectionProvider().getFieldProvider(clazz, name).asSafeField();
+    }
+
+    public static <T> SafeMethod<T> reflect(final Method method) {
+        if (method == null) {
+            throw new IllegalArgumentException("Method may not be NULL!");
+        }
+        return getReflectionProvider().getMethodProvider(method).asSafeMethod();
+    }
+
+    public static <T> SafeMethod<T> reflect(final Class<?> clazz, final String name, final Class... args) {
+        if (clazz == null || name == null) {
+            throw new IllegalArgumentException("Class and method-name may not be NULL!");
+        }
+        return getReflectionProvider().getMethodProvider(clazz, name, args).asSafeMethod();
+    }
+
+    /**
+     * Eww methods
+     */
     public static List<ClassTemplate<?>> reflectClasses(final List<Class<?>> classes) {
         List<ClassTemplate<?>> classTemplates = new ArrayList<>();
         for(Class<?> clazz : classes) {
@@ -78,7 +106,7 @@ public class Reflection {
     }
 
     public static List<SafeField<?>> reflectFields(final List<Field> fields) {
-       List<SafeField<?>> safeFields = new ArrayList<>();
+        List<SafeField<?>> safeFields = new ArrayList<>();
         for (Field field : fields) {
             safeFields.add(reflect(field));
         }

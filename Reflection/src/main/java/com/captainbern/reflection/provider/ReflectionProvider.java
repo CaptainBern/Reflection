@@ -1,45 +1,29 @@
 package com.captainbern.reflection.provider;
 
-import com.captainbern.reflection.provider.impl.DefaultClassProvider;
-import com.captainbern.reflection.provider.impl.DefaultFieldProvider;
-import com.captainbern.reflection.provider.impl.DefaultIConstructorProvider;
-import com.captainbern.reflection.provider.impl.DefaultMethodProvider;
+import com.captainbern.reflection.provider.type.ClassProvider;
+import com.captainbern.reflection.provider.type.ConstructorProvider;
+import com.captainbern.reflection.provider.type.FieldProvider;
+import com.captainbern.reflection.provider.type.MethodProvider;
 
-public class ReflectionProvider {
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
-    private Configuration configuration = null;
+public interface ReflectionProvider {
 
-    {
-        configuration = new Configuration.Builder()
-                .withClassLoader(Thread.currentThread().getContextClassLoader())
-                .withClassProvider(new DefaultClassProvider())
-                .withFieldProvider(new DefaultFieldProvider())
-                .withConstructorProvider(new DefaultIConstructorProvider())
-                .withMethodProvider(new DefaultMethodProvider())
-                .build();
-    }
+    public <T> ClassProvider<T> getClassProvider(final Class<T> clazz, final boolean forceAccess);
 
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
+    public <T> ClassProvider<T> getClassProvider(final String className, final boolean forceAccess);
 
-    public Configuration getConfiguration() {
-        return configuration;
-    }
+    public <T> ConstructorProvider<T> getConstructorProvider(final Constructor<T> constructor);
 
-    public IClassProvider getClassProvider() {
-        return configuration.getClassProvider();
-    }
+    public <T> ConstructorProvider<T> getConstructorProvider(final Class<T> clazz, final Class... args);
 
-    public IFieldProvider getFieldProvider() {
-        return configuration.getFieldProvider();
-    }
+    public <T> FieldProvider<T> getFieldProvider(final Field field);
 
-    public IConstructorProvider getConstructorProvider() {
-        return configuration.getConstructorProvider();
-    }
+    public <T> FieldProvider<T> getFieldProvider(final Class<?> clazz, final String fieldName);
 
-    public IMethodProvider getMethodProvider() {
-        return configuration.getMethodProvider();
-    }
+    public <T> MethodProvider<T> getMethodProvider(final Method method);
+
+    public <T> MethodProvider<T> getMethodProvider(final Class<?> clazz, final String methodName, final Class... args);
 }

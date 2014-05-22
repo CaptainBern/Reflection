@@ -20,6 +20,7 @@
 package com.captainbern.reflection;
 
 import com.captainbern.reflection.impl.*;
+import com.captainbern.reflection.provider.ReflectionProvider;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Reflection {
+
+    private static ReflectionProvider provider;
 
     private Reflection() {}
 

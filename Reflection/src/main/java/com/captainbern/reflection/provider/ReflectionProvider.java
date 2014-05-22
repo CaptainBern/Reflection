@@ -9,4 +9,20 @@ public class ReflectionProvider {
                 .withClassLoader(Thread.currentThread().getContextClassLoader())
                 .build();
     }
+
+    public IClassProvider getClassProvider() {
+        return null;
+    }
+
+    public IFieldProvider getFieldProvider() {
+        return null;
+    }
+
+    public IConstructorProvider getConstructorProvider() {
+        return null;
+    }
+
+    public IMethodProvider getMethodProvider() {
+        return null;
+    }
 }

@@ -7,9 +7,9 @@ import com.captainbern.reflection.provider.impl.DefaultMethodProvider;
 
 public class ReflectionProvider {
 
-    private static Configuration configuration = null;
+    private Configuration configuration = null;
 
-    static {
+    {
         configuration = new Configuration.Builder()
                 .withClassLoader(Thread.currentThread().getContextClassLoader())
                 .withClassProvider(new DefaultClassProvider())
@@ -17,6 +17,14 @@ public class ReflectionProvider {
                 .withConstructorProvider(new DefaultIConstructorProvider())
                 .withMethodProvider(new DefaultMethodProvider())
                 .build();
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     public IClassProvider getClassProvider() {

@@ -5,8 +5,9 @@ import com.captainbern.reflection.impl.ClassTemplateImpl;
 import com.captainbern.reflection.provider.IClassProvider;
 
 public class DefaultClassProvider implements IClassProvider {
+
     @Override
-    public <T> ClassTemplate<T> reflect(Class<T> clazz) {
-        return new ClassTemplateImpl<>(clazz, true);
+    public <T> ClassTemplate<T> reflect(Class<T> clazz, boolean forceAccess) {
+        return new ClassTemplateImpl<>(clazz, forceAccess);
     }
 }

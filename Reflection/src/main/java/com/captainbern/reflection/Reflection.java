@@ -19,7 +19,6 @@
 
 package com.captainbern.reflection;
 
-import com.captainbern.reflection.impl.*;
 import com.captainbern.reflection.provider.ReflectionProvider;
 
 import java.lang.reflect.Constructor;
@@ -32,22 +31,34 @@ public class Reflection {
 
     private static ReflectionProvider provider;
 
+    static {
+        provider = new ReflectionProvider();
+    }
+
     private Reflection() {}
 
+    public void setProvider(ReflectionProvider reflectionProvider) {
+        Reflection.provider = reflectionProvider;
+    }
+
+    public static ReflectionProvider getProvider() {
+        return provider;
+    }
+
     public static <T> SafeField<T> reflect(final Field field) {
-        return new SafeFieldImpl<T>(field);
+        return getProvider().getFieldProvider().reflect(field);
     }
 
     public static <T> SafeMethod<T> reflect(final Method method) {
-        return new SafeMethodImpl<T>(method);
+        return getProvider().getMethodProvider().reflect(method);
     }
 
     public static <T> SafeConstructor<T> reflect(final Constructor<T> constructor) {
-        return new SafeConstructorImpl<T>(constructor);
+        return getProvider().getConstructorProvider().reflect(constructor);
     }
 
     public static <T> ClassTemplate<T> reflect(final Class<T> clazz, boolean forceAccess) {
-        return new ClassTemplateImpl<T>(clazz, forceAccess);
+        return getProvider().getClassProvider().reflect(clazz, forceAccess);
     }
 
     public static <T> ClassTemplate<T> reflect(final Class<T> clazz) {

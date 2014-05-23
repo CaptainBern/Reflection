@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This *can* be used as a "lightweight" alternative to the default reflection stuff
+ */
 public class ReflectionUtils {
 
     public static boolean INCLUDE_OBJECT = true;

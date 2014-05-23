@@ -1,3 +1,7 @@
+/**
+ * @DSH105 i need a license banner here
+ */
+
 package com.captainbern.reflection;
 
 import com.captainbern.reflection.matcher.Matcher;

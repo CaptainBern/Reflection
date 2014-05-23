@@ -226,7 +226,7 @@ public class ClassReader implements Opcode {
      * @throws IOException
      */
     public final void write(DataOutputStream codeStream) throws IOException {
-        codeStream.writeInt(0xCAFEBABE);
+        codeStream.writeInt(this.magic);
 
         codeStream.writeShort(this.minor);
         codeStream.writeShort(this.major);

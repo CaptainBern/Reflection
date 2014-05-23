@@ -18,7 +18,7 @@ public class HelloWorldTest {
         for(Constant constant : reader.getConstantPool().getConstantPool()) {
             if(constant instanceof Utf8Constant) {
                 if(((Utf8Constant) constant).getString().equals("Hello World!"))
-                    ((Utf8Constant) constant).setString("Changed!");
+                    ((Utf8Constant) constant).setString("Changed!");         // Don't use this, it's just POC
                 continue;
             }
         }

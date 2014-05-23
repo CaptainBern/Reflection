@@ -20,6 +20,7 @@
 package com.captainbern.reflection.impl;
 
 import com.captainbern.reflection.ClassTemplate;
+import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeField;
 import com.captainbern.reflection.accessor.FieldAccessor;
 
@@ -28,17 +29,18 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.captainbern.reflection.Reflection.reflect;
-
 public class SafeFieldImpl<T> implements SafeField<T> {
 
+    protected final Reflection reflection;
     protected Field field;
 
-    public SafeFieldImpl(final Field field) {
+    public SafeFieldImpl(final Reflection reflection, final Field field) {
         if(field == null)
             throw new IllegalArgumentException("Field can't be NULL!");
 
+        this.reflection = reflection;
         this.field = field;
+
         if(!this.field.isAccessible()) {
             try {
                 this.field.setAccessible(true);
@@ -123,7 +125,7 @@ public class SafeFieldImpl<T> implements SafeField<T> {
 
     @Override
     public ClassTemplate getType() {
-        return reflect(this.field.getType());
+        return this.reflection.reflect(this.field.getType());
     }
 
     @Override
@@ -143,7 +145,7 @@ public class SafeFieldImpl<T> implements SafeField<T> {
 
     @Override
     public void setModifiers(int mods) {
-        reflect(Field.class).getSafeFieldByName("modifiers").getAccessor().set(this.field, mods);
+        this.reflection.reflect(Field.class).getSafeFieldByName("modifiers").getAccessor().set(this.field, mods);
     }
 
     @Override

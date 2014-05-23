@@ -21,20 +21,19 @@ package com.captainbern.reflection.impl;
 
 import com.captainbern.reflection.AbstractAccess;
 import com.captainbern.reflection.ClassTemplate;
+import com.captainbern.reflection.Reflection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.captainbern.reflection.Reflection.reflect;
-
 public class ClassTemplateImpl<T> extends AbstractAccess<T> implements ClassTemplate<T> {
 
-    public ClassTemplateImpl(Class<T> clazz) {
-        this(clazz, false);
+    public ClassTemplateImpl(final Reflection reflection, final Class<T> clazz) {
+        this(reflection, clazz, false);
     }
 
-    public ClassTemplateImpl(Class<T> clazz, boolean forceAccess) {
-        super(clazz, forceAccess);
+    public ClassTemplateImpl(final Reflection reflection, Class<T> clazz, boolean forceAccess) {
+        super(reflection, clazz, forceAccess);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class ClassTemplateImpl<T> extends AbstractAccess<T> implements ClassTemp
     public List<ClassTemplate> getSuperClasses() {
         List<ClassTemplate> classes = new ArrayList<>();
         for(Class<?> clazz : super.getAllSuperClasses()) {
-            classes.add(reflect(clazz));
+            classes.add(super.reflection.reflect(clazz));
         }
         return classes;
     }

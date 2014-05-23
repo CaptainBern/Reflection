@@ -20,6 +20,7 @@
 package com.captainbern.reflection.impl;
 
 import com.captainbern.reflection.ClassTemplate;
+import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeConstructor;
 import com.captainbern.reflection.accessor.ConstructorAccessor;
 
@@ -29,17 +30,16 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.captainbern.reflection.Reflection.reflect;
-import static com.captainbern.reflection.Reflection.reflectClasses;
-
 public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
+    protected final Reflection reflection;
     protected Constructor<T> constructor;
 
-    public SafeConstructorImpl(final Constructor<T> constructor) {
+    public SafeConstructorImpl(final Reflection reflection, final Constructor<T> constructor) {
         if(constructor == null)
             throw new IllegalArgumentException("Constructor can't be NULL!");
 
+        this.reflection = reflection;
         this.constructor = constructor;
 
         if(!constructor.isAccessible()) {
@@ -91,12 +91,12 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     @Override
     public List<ClassTemplate<?>> getArguments() {
-        return reflectClasses(Arrays.asList(this.constructor.getParameterTypes()));
+        return this.reflection.reflectClasses(Arrays.asList(this.constructor.getParameterTypes()));
     }
 
     @Override
     public ClassTemplate getType() {
-        return reflect(this.constructor.getDeclaringClass());
+        return this.reflection.reflect(this.constructor.getDeclaringClass());
     }
 
     @Override
@@ -116,7 +116,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     @Override
     public void setModifiers(int mods) {
-        reflect(Constructor.class).getSafeFieldByName("modifiers").getAccessor().set(this.constructor, mods);
+        this.reflection.reflect(Constructor.class).getSafeFieldByName("modifiers").getAccessor().set(this.constructor, mods);
     }
 
     @Override

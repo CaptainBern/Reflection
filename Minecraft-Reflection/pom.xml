@@ -12,5 +12,36 @@
     <artifactId>Minecraft-Reflection</artifactId>
     <version>${minecraft-reflection-version}</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <minecraft.version>1.7.8</minecraft.version>
+        <craftbukkit.version>R0.1</craftbukkit.version>
+    </properties>
+
+    <repositories>
+        <!-- Bukkit -->
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Bukkit -->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>${minecraft.version}-${craftbukkit.version}-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- CraftBukkit -->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>${minecraft.version}-${craftbukkit.version}-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -1,6 +1,7 @@
 package com.captainbern.reflection.impl;
 
 import com.captainbern.reflection.ClassTemplate;
+import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeMethod;
 import com.captainbern.reflection.accessor.MethodAccessor;
 
@@ -10,17 +11,16 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.captainbern.reflection.Reflection.reflect;
-import static com.captainbern.reflection.Reflection.reflectClasses;
-
 public class SafeMethodImpl<T> implements SafeMethod<T> {
 
+    protected final Reflection reflection;
     protected Method method;
 
-    public SafeMethodImpl(final Method method) {
+    public SafeMethodImpl(final Reflection reflection, final Method method) {
         if(method == null)
             throw new IllegalArgumentException("Method can't be NULL!");
 
+        this.reflection = reflection;
         this.method = method;
 
         if(!this.method.isAccessible()) {
@@ -44,12 +44,12 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
 
     @Override
     public List<ClassTemplate<?>> getArguments() {
-        return reflectClasses(Arrays.asList(this.method.getParameterTypes()));
+        return this.reflection.reflectClasses(Arrays.asList(this.method.getParameterTypes()));
     }
 
     @Override
     public ClassTemplate<?> getType() {
-        return reflect(this.method.getReturnType());
+        return this.reflection.reflect(this.method.getReturnType());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
 
     @Override
     public void setModifiers(int mods) {
-        reflect(Method.class).getSafeFieldByName("modifiers").getAccessor().set(this.method, mods);
+        this.reflection.reflect(Method.class).getSafeFieldByName("modifiers").getAccessor().set(this.method, mods);
     }
 
     @Override

@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.captainbern.reflection.Reflection.reflect;
 import static com.captainbern.reflection.matcher.Matchers.withExactName;
 import static com.captainbern.reflection.matcher.Matchers.withType;
 
@@ -39,10 +38,13 @@ public class AbstractAccess<T> implements Access<T> {
 
     public static boolean INCLUDE_OBJECT = false;
 
+    protected final Reflection reflection;
+    
     protected Class<T> clazz;
     private boolean forceAccess;
 
-    public AbstractAccess(final Class<T> clazz, final boolean forceAccess) {
+    public AbstractAccess(final Reflection reflection, final Class<T> clazz, final boolean forceAccess) {
+        this.reflection = reflection;
         this.clazz = clazz;
         this.forceAccess = forceAccess;
     }
@@ -88,7 +90,7 @@ public class AbstractAccess<T> implements Access<T> {
 
         List<SafeField<?>> safeFields = new ArrayList<>();
         for (Field field : fields) {
-            safeFields.add(reflect(field));
+            safeFields.add(this.reflection.reflect(field));
         }
 
         return safeFields;
@@ -107,7 +109,7 @@ public class AbstractAccess<T> implements Access<T> {
 
         List<SafeField<?>> safeFields = new ArrayList<>();
         for (Field field : fields) {
-            safeFields.add(reflect(field));
+            safeFields.add(this.reflection.reflect(field));
         }
 
         return safeFields;
@@ -128,7 +130,7 @@ public class AbstractAccess<T> implements Access<T> {
     @Override
     public <T> SafeField<T> getSafeFieldByName(final String name) {
         Field field = getFieldByName(name);
-        return field == null ? null : (SafeField<T>) reflect(field);
+        return field == null ? null : (SafeField<T>) this.reflection.reflect(field);
     }
 
     @Override
@@ -148,7 +150,7 @@ public class AbstractAccess<T> implements Access<T> {
 
     public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<?> type) {
         Field field = getFieldByNameAndType(name, type);
-        return field == null ? null : (SafeField<T>) reflect(field);
+        return field == null ? null : (SafeField<T>) this.reflection.reflect(field);
     }
 
     /**
@@ -177,7 +179,7 @@ public class AbstractAccess<T> implements Access<T> {
 
         List<SafeMethod<?>> safeMethods = new ArrayList<>();
         for (Method method : methods) {
-            safeMethods.add(reflect(method));
+            safeMethods.add(this.reflection.reflect(method));
         }
 
         return safeMethods;
@@ -197,7 +199,7 @@ public class AbstractAccess<T> implements Access<T> {
 
         List<SafeMethod<?>> safeMethods = new ArrayList<>();
         for (Method method : methods) {
-            safeMethods.add(reflect(method));
+            safeMethods.add(this.reflection.reflect(method));
         }
 
         return safeMethods;
@@ -229,7 +231,7 @@ public class AbstractAccess<T> implements Access<T> {
 
         List<SafeConstructor<T>> safeConstructors = new ArrayList<>();
         for (Constructor constructor : constructors) {
-            safeConstructors.add(reflect(constructor));
+            safeConstructors.add(this.reflection.reflect(constructor));
         }
 
         return safeConstructors;
@@ -249,7 +251,7 @@ public class AbstractAccess<T> implements Access<T> {
 
         List<SafeConstructor<T>> safeConstructors = new ArrayList<>();
         for (Constructor constructor : constructors) {
-            safeConstructors.add(reflect(constructor));
+            safeConstructors.add(this.reflection.reflect(constructor));
         }
 
         return safeConstructors;

@@ -38,6 +38,54 @@ public class StackMapEntry {
         this.constantPool = constantPool;
     }
 
+    public int getOffset() {
+        return this.offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getNumberOfLocals() {
+        return this.numberOfLocals;
+    }
+
+    public void setNumberOfLocals(int numberOfLocals) {
+        this.numberOfLocals = numberOfLocals;
+    }
+
+    public TypeInfo[] getLocals() {
+        return this.locals;
+    }
+
+    public void setLocals(TypeInfo[] locals) {
+        this.locals = locals;
+    }
+
+    public int getNumberOfStackItems() {
+        return this.numberOfStackItems;
+    }
+
+    public void setNumberOfStackItems(int numberOfStackItems) {
+        this.numberOfStackItems = numberOfStackItems;
+    }
+
+    public TypeInfo[] getStack() {
+        return this.stack;
+    }
+
+    public void setStack(TypeInfo[] stack) {
+        this.stack = stack;
+    }
+
+    public ConstantPool getConstantPool() {
+        return this.constantPool;
+    }
+
+    public void setConstantPool(ConstantPool constantPool) {
+        this.constantPool = constantPool;
+    }
+
     public void write(final DataOutputStream codeStream) throws IOException {
         codeStream.writeShort(this.offset);
 

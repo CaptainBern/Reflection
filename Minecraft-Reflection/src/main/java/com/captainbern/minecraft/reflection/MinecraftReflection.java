@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 public class MinecraftReflection {
 
+
     /**
      * The Minecraft package
      */

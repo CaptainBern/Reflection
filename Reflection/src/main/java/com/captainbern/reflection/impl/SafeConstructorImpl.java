@@ -86,7 +86,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     @Override
     public int getArgumentCount() {
-        return this.constructor.getParameterCount();
+        return this.constructor.getParameterTypes().length;
     }
 
     @Override

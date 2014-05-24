@@ -39,7 +39,7 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
 
     @Override
     public int getArgumentCount() {
-        return this.method.getParameterCount();
+        return this.method.getParameterTypes().length;
     }
 
     @Override

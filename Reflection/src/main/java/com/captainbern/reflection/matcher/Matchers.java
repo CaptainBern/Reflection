@@ -92,7 +92,7 @@ public class Matchers {
         return new AbstractMatcher<Method>() {
             @Override
             public boolean matches(Method type) {
-                return type.getParameterCount() == argumentCount;
+                return type.getParameterTypes().length == argumentCount;
             }
         };
     }

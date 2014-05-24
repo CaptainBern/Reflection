@@ -1,4 +1,4 @@
-CaptainBern-Reflection-Framework
+CaptainBern's Reflection Framework
 ================================
 
 This is a Java-Reflection and Bytecode Engineering library.
@@ -28,7 +28,7 @@ Prerequisites:
 
 Everyone can contribute code to their liking. When making PR's please provide a brief description of what your code does, how it works and why it should be pulled.
 
-* I generally follow the Sun/Oracle coding conventions.
+* I generally follow the Sun/Oracle coding conventions
 * Feel free to ignore the "80 column limit"
 * Curly braces should always be on the same line. (with one space in between)
 * Make sure your code works

@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.captainbern.reflection.matcher.Matchers.withArguments;
 import static com.captainbern.reflection.matcher.Matchers.withExactName;
 import static com.captainbern.reflection.matcher.Matchers.withType;
 
@@ -203,6 +204,42 @@ public class AbstractAccess<T> implements Access<T> {
         }
 
         return safeMethods;
+    }
+
+    @Override
+    public Method getMethod(final String name) {
+        List<Method> methods = getMethods(withExactName(name));
+        if (methods.size() > 0) {
+            return methods.get(0); // suppose it's the first one
+        }
+        return null;
+    }
+
+    @Override
+    public SafeMethod getSafeMethod(final String name) {
+        List<SafeMethod<?>> methods = getSafeMethods(withExactName(name));
+        if (methods.size() > 0) {
+            return methods.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public Method getMethod(final String name, final Class... params) {
+        List<Method> methods = getMethods(withExactName(name), withArguments(params));
+        if (methods.size() > 0) {
+            return methods.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public SafeMethod getSafeMethod(final String name, final Class... params) {
+        List<SafeMethod<?>> methods = getSafeMethods(withExactName(name), withArguments(params));
+        if (methods.size() > 0) {
+            return methods.get(0);
+        }
+        return null;
     }
 
     /**

@@ -136,6 +136,36 @@ public interface Access<T> extends Serializable {
     public List<SafeMethod<?>> getSafeMethods(final Matcher<? super Method>... matchers);
 
     /**
+     * Returns a method with the given name
+     * @param name
+     * @return
+     */
+    public Method getMethod(final String name);
+
+    /**
+     * Returns a SafeMethod with the given name
+     * @param name
+     * @return
+     */
+    public SafeMethod getSafeMethod(final String name);
+
+    /**
+     * Returns a method with the given name and parameters
+     * @param name
+     * @param params
+     * @return
+     */
+    public Method getMethod(final String name, final Class... params);
+
+    /**
+     * Returns a SafeMethod with the given name and parameters
+     * @param name
+     * @param params
+     * @return
+     */
+    public SafeMethod getSafeMethod(final String name, final Class... params);
+
+    /**
      * Returns a List of all the constructors of the underlying class, keeping in mind the access-level
      * @return
      */

@@ -110,10 +110,12 @@ public class ByteVector {
         return this;
     }
 
-    public void putString(final String s) {
+    public ByteVector putString(final String s) {
         int stringLength = s.length();
 
         ensureCapacity(2 + stringLength);
+
+        final int originalLength = this.length;
 
         this.data[this.length++] = (byte) (stringLength >>> 8);
         this.data[this.length++] = (byte) (stringLength);
@@ -123,8 +125,43 @@ public class ByteVector {
             char c = s.charAt(i);
             if (c >= '\001' && c <= '\177') {
                 this.data[length++] = (byte) c;
+            } else {
+                int bytesLength = i;
+                for (int j = 0; j < stringLength; j++) {
+                    c = s.charAt(j);
+                    if (c >= '\001' && c <= '\177') {
+                        bytesLength++;
+                    } else if (c > '\u07FF') {
+                        bytesLength += 3;
+                    } else {
+                        bytesLength += 2;
+                    }
+                }
+
+                this.data[originalLength] = (byte) (bytesLength >>> 8);
+                this.data[originalLength + 1] = (byte) (bytesLength);
+
+                ensureCapacity(bytesLength + 2);
+
+                for (int j = i; j < stringLength; ++j) {
+                    c = s.charAt(j);
+                    if (c >= '\001' && c <= '\177') {
+                        this.data[this.length++] = (byte)c;
+                    } else if (c > '\u07FF') {
+                        this.data[this.length++] = (byte)(0xE0 | c >> 12 & 0xF);
+                        this.data[this.length++] = (byte)(0x80 | c >> 6 & 0x3F);
+                        this.data[this.length++] = (byte)(0x80 | c & 0x3F);
+                    }
+                    else {
+                        this.data[this.length++] = (byte)(0xC0 | c >> 6 & 0x1F);
+                        this.data[this.length++] = (byte)(0x80 | c & 0x3F);
+                    }
+                }
+                break;
             }
         }
+
+        return this;
     }
 
     protected void ensureCapacity(final int size) {

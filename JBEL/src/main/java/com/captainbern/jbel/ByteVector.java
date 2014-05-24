@@ -99,7 +99,35 @@ public class ByteVector {
         return this;
     }
 
-    public void ensureCapacity(final int size) {
+    public ByteVector putByteArray(final byte[] bytes, final int offset, final int length) {
+        ensureCapacity(length);
+
+        if (bytes != null) {
+            System.arraycopy(bytes, offset, this.data, this.length, length);
+        }
+        this.length += length;
+
+        return this;
+    }
+
+    public void putString(final String s) {
+        int stringLength = s.length();
+
+        ensureCapacity(2 + stringLength);
+
+        this.data[this.length++] = (byte) (stringLength >>> 8);
+        this.data[this.length++] = (byte) (stringLength);
+
+        for (int i = 0; i < stringLength; i++) {
+            // Apply magic here
+            char c = s.charAt(i);
+            if (c >= '\001' && c <= '\177') {
+                this.data[length++] = (byte) c;
+            }
+        }
+    }
+
+    protected void ensureCapacity(final int size) {
         if (size + this.length <= this.data.length) {
             return;
         }

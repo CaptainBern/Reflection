@@ -1,13 +1,7 @@
 package com.captainbern.reflection;
 
-import org.junit.Test;
-
-import java.lang.reflect.Modifier;
-
-import static org.junit.Assert.assertTrue;
-
 public class ReflectionTest {
-
+  /*
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalArgumentNull() {
         new Reflection().reflect((Class) null);
@@ -19,5 +13,5 @@ public class ReflectionTest {
         FALSE.setModifiers(Modifier.PUBLIC | Modifier.STATIC);
         FALSE.getAccessor().set(null, true);
         assertTrue(Boolean.FALSE);
-    }
+    } */
 }

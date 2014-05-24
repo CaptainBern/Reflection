@@ -74,6 +74,16 @@ public class ByteVector {
         return this;
     }
 
+    public ByteVector putFloat(final float f) {
+        this.putInt(Float.floatToRawIntBits(f));
+        return this;
+    }
+
+    public ByteVector putDouble(final double d) {
+        this.putLong(Double.doubleToRawLongBits(d));
+        return this;
+    }
+
     public ByteVector putLong(final long l) {
         ensureCapacity(8);
 

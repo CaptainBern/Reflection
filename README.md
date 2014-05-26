@@ -9,7 +9,7 @@ The Bytecode Engineering Lib (as for now "JBEL") can be used for Class-analysis 
 
 One can also use it to, as example, parse a class, visit it with the build in visitor-api and dissemble the class.
 
-(Please note that the bytecode library is a "toy" created by a 16-year to learn a little more about bytecode and the java programming language, you have been warned)
+(Please note that the bytecode library is a "toy" created by a 16-year old to learn a little more about bytecode and the java programming language, you have been warned)
 
 The reflection framework was originally created to easily set and get fields and to invoke methods and constructors easier.
 

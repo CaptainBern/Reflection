@@ -27,6 +27,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.captainbern</groupId>
+            <artifactId>Reflection</artifactId>
+            <version>${reflection-version}</version>
+        </dependency>
+
         <!-- Bukkit -->
         <dependency>
             <groupId>org.bukkit</groupId>

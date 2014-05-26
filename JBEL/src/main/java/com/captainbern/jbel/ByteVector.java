@@ -1,3 +1,22 @@
+/*
+ *  CaptainBern-Reflection-Framework contains several utils and tools
+ *  to make Reflection easier.
+ *  Copyright (C) 2014  CaptainBern
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.                        by
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.captainbern.jbel;
 
 /**
@@ -5,10 +24,19 @@ package com.captainbern.jbel;
  */
 public class ByteVector {
 
+    /**
+     * The default size of a ByteVector
+     */
     public static final int DEFAULT_SIZE = 64;
 
+    /**
+     * The contents of the ByteVector
+     */
     private byte[] data;
 
+    /**
+     * The length of the ByteVector, also uses as "index"
+     */
     private int length;
 
     public ByteVector() {
@@ -19,14 +47,27 @@ public class ByteVector {
         this.data = new byte[length];
     }
 
+    /**
+     * Returns the contents of the ByteVector
+     * @return
+     */
     public byte[] getBytes() {
         return this.data;
     }
 
+    /**
+     * Returns the length of this ByteVector
+     * @return
+     */
     public int getLength() {
         return this.length;
     }
 
+    /**
+     * Puts a byte in the vector
+     * @param b
+     * @return
+     */
     public ByteVector putByte(final int b) {
         ensureCapacity(1);
 
@@ -35,6 +76,24 @@ public class ByteVector {
         return this;
     }
 
+    public int readUnsignedByte(final int index) {
+        checkIndex(index);
+
+        return this.data[index] & 0xFF;
+    }
+
+    public int readSignedByte(final int index) {
+        checkIndex(index);
+
+        return this.data[index];
+    }
+
+    /**
+     * Puts 2 bytes in the vector
+     * @param b1
+     * @param b2
+     * @return
+     */
     public ByteVector put11(final int b1, final int b2) {
         ensureCapacity(2);
 
@@ -44,6 +103,11 @@ public class ByteVector {
         return this;
     }
 
+    /**
+     * Puts a short in the vector
+     * @param s
+     * @return
+     */
     public ByteVector putShort(final short s) {
         ensureCapacity(2);
 
@@ -53,6 +117,26 @@ public class ByteVector {
         return this;
     }
 
+    public short readSignedShort(final int index) {
+        checkIndex(index);
+
+        return (short) (this.data[index] << 8 & 0xFF |
+                (this.data[index + 1] & 0xFF));
+    }
+
+    public short readUnsignedShort(final int index) {
+        checkIndex(index);
+
+        return (short) (this.data[index] << 8 |
+                this.data[index + 1]);
+    }
+
+    /**
+     * Puts a byte and a short in the vector
+     * @param b
+     * @param s
+     * @return
+     */
     public ByteVector put12(final int b, final short s) {
         ensureCapacity(3);
 
@@ -63,6 +147,11 @@ public class ByteVector {
         return this;
     }
 
+    /**
+     * Puts an int in the vector
+     * @param i
+     * @return
+     */
     public ByteVector putInt(final int i) {
         ensureCapacity(4);
 
@@ -74,16 +163,53 @@ public class ByteVector {
         return this;
     }
 
+    public int readSignedInt(final int index) {
+        checkIndex(index);
+
+        return (
+                this.data[index] << 24 |
+                        this.data[index + 1] << 16 |
+                        this.data[index + 2] << 8 |
+                        this.data[index + 3]
+        );
+    }
+
+    public int readUnsignedInt(final int index) {
+        checkIndex(index);
+
+        return (
+                this.data[index] << 24 & 0xFF |
+                        this.data[index + 1] << 16 & 0xFF  |
+                        this.data[index + 2] << 8 & 0xFF |
+                        this.data[index + 3] & 0xFF
+        );
+    }
+
+    /**
+     * Puts a float in the vector
+     * @param f
+     * @return
+     */
     public ByteVector putFloat(final float f) {
         this.putInt(Float.floatToRawIntBits(f));
         return this;
     }
 
+    /**
+     * Puts a double in the vector
+     * @param d
+     * @return
+     */
     public ByteVector putDouble(final double d) {
         this.putLong(Double.doubleToRawLongBits(d));
         return this;
     }
 
+    /**
+     * Puts a long in the vector
+     * @param l
+     * @return
+     */
     public ByteVector putLong(final long l) {
         ensureCapacity(8);
 
@@ -99,6 +225,13 @@ public class ByteVector {
         return this;
     }
 
+    /**
+     * Puts a byte array in the vector
+     * @param bytes
+     * @param offset
+     * @param length
+     * @return
+     */
     public ByteVector putByteArray(final byte[] bytes, final int offset, final int length) {
         ensureCapacity(length);
 
@@ -110,6 +243,11 @@ public class ByteVector {
         return this;
     }
 
+    /**
+     * Puts a string in the bytevector
+     * @param s
+     * @return
+     */
     public ByteVector putString(final String s) {
         int stringLength = s.length();
 
@@ -164,6 +302,11 @@ public class ByteVector {
         return this;
     }
 
+    /**
+     * Ensures the capacity of the vector, when it's too small for the data that needs to
+     * be put in, it will be resized
+     * @param size
+     */
     protected void ensureCapacity(final int size) {
         if (size + this.length <= this.data.length) {
             return;
@@ -174,5 +317,11 @@ public class ByteVector {
         byte[] newData = new byte[length1 > length2 ? length1 : length2];
         System.arraycopy(data, 0, newData, 0, this.length);
         this.data = newData;
+    }
+
+    protected void checkIndex(final int index) {
+        if (index < 0 || index > this.data.length) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 }

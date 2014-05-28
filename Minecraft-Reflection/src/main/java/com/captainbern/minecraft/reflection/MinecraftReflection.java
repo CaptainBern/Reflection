@@ -18,7 +18,7 @@ public class MinecraftReflection {
      */
     private static String MINECRAFT_PACKAGE;
 
-    private static String MINECARFT_PACKAGE_PREFIX = "net.minecraft.server";
+    private static String MINECRAFT_PACKAGE_PREFIX = "net.minecraft.server";
 
     private static String FORGE_ENTITY_PACKAGE = "net.minecraft.entity";
 

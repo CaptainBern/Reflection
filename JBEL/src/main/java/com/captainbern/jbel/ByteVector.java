@@ -76,18 +76,6 @@ public class ByteVector {
         return this;
     }
 
-    public int readUnsignedByte(final int index) {
-        checkIndex(index);
-
-        return this.data[index] & 0xFF;
-    }
-
-    public int readSignedByte(final int index) {
-        checkIndex(index);
-
-        return this.data[index];
-    }
-
     /**
      * Puts 2 bytes in the vector
      * @param b1
@@ -115,20 +103,6 @@ public class ByteVector {
         this.data[this.length++] = (byte) (s & 0xFF);
 
         return this;
-    }
-
-    public short readSignedShort(final int index) {
-        checkIndex(index);
-
-        return (short) (this.data[index] << 8 & 0xFF |
-                (this.data[index + 1] & 0xFF));
-    }
-
-    public short readUnsignedShort(final int index) {
-        checkIndex(index);
-
-        return (short) (this.data[index] << 8 |
-                this.data[index + 1]);
     }
 
     /**
@@ -161,28 +135,6 @@ public class ByteVector {
         this.data[this.length++] = (byte) (i & 0xFF);
 
         return this;
-    }
-
-    public int readSignedInt(final int index) {
-        checkIndex(index);
-
-        return (
-                this.data[index] << 24 |
-                        this.data[index + 1] << 16 |
-                        this.data[index + 2] << 8 |
-                        this.data[index + 3]
-        );
-    }
-
-    public int readUnsignedInt(final int index) {
-        checkIndex(index);
-
-        return (
-                this.data[index] << 24 & 0xFF |
-                        this.data[index + 1] << 16 & 0xFF  |
-                        this.data[index + 2] << 8 & 0xFF |
-                        this.data[index + 3] & 0xFF
-        );
     }
 
     /**

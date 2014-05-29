@@ -8,7 +8,6 @@ import com.captainbern.reflection.accessor.MethodAccessor;
 import com.captainbern.reflection.provider.type.ClassProvider;
 import com.captainbern.reflection.provider.type.FieldProvider;
 import com.captainbern.reflection.provider.type.MethodProvider;
-import com.captainbern.reflection.provider.type.impl.DefaultClassProvider;
 import com.captainbern.reflection.provider.type.impl.DefaultFieldProvider;
 import org.bukkit.Bukkit;
 
@@ -111,11 +110,6 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
             return getRemappedMethodName(type, name, args);
 
         return name;
-    }
-
-    @Override
-    public <T> ClassProvider<T> getClassProvider(Reflection reflection, Class<T> clazz, boolean forceAccess) {
-        return new DefaultClassProvider<T>(reflection, clazz, forceAccess);
     }
 
     @Override

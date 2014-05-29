@@ -23,8 +23,8 @@ public class DefaultReflectionProvider implements ReflectionProvider {
     }
 
     @Override
-    public <T> ClassProvider<T> getClassProvider(final Reflection reflection, String className, boolean forceAccess) {
-        return new DefaultClassProvider<T>(reflection, getClass(className), forceAccess);
+    public <T> ClassProvider<T> getClassProvider(final Reflection reflection, String className, boolean forceAccess) throws ClassNotFoundException {
+        return new DefaultClassProvider<T>(reflection, (Class<T>) loadClass(className), forceAccess);
     }
 
     @Override
@@ -72,12 +72,12 @@ public class DefaultReflectionProvider implements ReflectionProvider {
         }
     }
 
-    private static Class getClass(String className) {
+    @Override
+    public Class<?> loadClass(final String className) throws ClassNotFoundException {
         try {
-            return Class.forName(className);
+            return getClass().getClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            throw new ClassNotFoundException("Failed to find class: " + className);
         }
     }
 }

@@ -14,7 +14,7 @@ public interface ReflectionProvider {
 
     public <T> ClassProvider<T> getClassProvider(final Reflection reflection, final Class<T> clazz, final boolean forceAccess);
 
-    public <T> ClassProvider<T> getClassProvider(final Reflection reflection, final String className, final boolean forceAccess);
+    public <T> ClassProvider<T> getClassProvider(final Reflection reflection, final String className, final boolean forceAccess) throws ClassNotFoundException;
 
     public <T> ConstructorProvider<T> getConstructorProvider(final Reflection reflection, final Constructor<T> constructor);
 
@@ -27,4 +27,6 @@ public interface ReflectionProvider {
     public <T> MethodProvider<T> getMethodProvider(final Reflection reflection, final Method method);
 
     public <T> MethodProvider<T> getMethodProvider(final Reflection reflection, final Class<?> clazz, final String methodName, final Class... args);
+
+    public Class<?> loadClass(final String className) throws ClassNotFoundException;
 }

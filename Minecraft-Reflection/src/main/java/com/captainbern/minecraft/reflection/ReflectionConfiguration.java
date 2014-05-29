@@ -1,8 +1,6 @@
-package com.captainbern.minecraft.reflection.providers;
+package com.captainbern.minecraft.reflection;
 
-import com.captainbern.reflection.provider.impl.DefaultReflectionProvider;
-
-public abstract class AbstractReflectionProvider extends DefaultReflectionProvider {
+public class ReflectionConfiguration {
 
     public class Builder {
 
@@ -25,8 +23,8 @@ public abstract class AbstractReflectionProvider extends DefaultReflectionProvid
     private final String packagePrefix;
     private final ClassLoader classLoader;
 
-    protected AbstractReflectionProvider(final Builder builder) {
-         this.packagePrefix = builder.packagePrefix;
+    protected ReflectionConfiguration(final Builder builder) {
+        this.packagePrefix = builder.packagePrefix;
         this.classLoader = builder.classLoader;
     }
 

@@ -31,16 +31,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.captainbern.reflection.matcher.Matchers.withArguments;
-import static com.captainbern.reflection.matcher.Matchers.withExactName;
-import static com.captainbern.reflection.matcher.Matchers.withType;
+import static com.captainbern.reflection.matcher.Matchers.*;
 
 public class AbstractAccess<T> implements Access<T> {
 
     public static boolean INCLUDE_OBJECT = false;
 
     protected final Reflection reflection;
-    
     protected Class<T> clazz;
     private boolean forceAccess;
 

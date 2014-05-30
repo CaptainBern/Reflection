@@ -1,10 +1,15 @@
 package com.captainbern.minecraft.reflection;
 
 import com.captainbern.minecraft.reflection.providers.StandardReflectionProvider;
+import com.captainbern.minecraft.reflection.providers.remapper.RemappedReflectionProvider;
+import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.accessor.MethodAccessor;
+import com.google.common.base.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
+import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,23 +53,81 @@ public class MinecraftReflection {
     }
 
     protected static void initializePackages() {
+        Main.getInstance().getLogger().info("Initializing packages");
+
         Server craftServer = Bukkit.getServer();
 
         if (craftServer != null) {
 
-            Class<?> craftServerClass = craftServer.getClass();
-            CRAFTBUKKIT_PACKAGE = getPackage(craftServerClass);
+            try {
 
-            ReflectionConfiguration craftBukkitConfiguration = new ReflectionConfiguration.Builder()
-                    .withClassLoader(MinecraftReflection.class.getClassLoader())
-                    .withPackagePrefix(CRAFTBUKKIT_PACKAGE)
-                    .build();
+                Class<?> craftServerClass = craftServer.getClass();
+                CRAFTBUKKIT_PACKAGE = getPackage(craftServerClass);
 
-            CRAFTBUKKIT_REFLECTION = new Reflection(new StandardReflectionProvider(craftBukkitConfiguration).init());
+                ReflectionConfiguration craftBukkitConfiguration = new ReflectionConfiguration.Builder()
+                        .withClassLoader(MinecraftReflection.class.getClassLoader())
+                        .withPackagePrefix(CRAFTBUKKIT_PACKAGE)
+                        .build();
 
-            Matcher versionMatcher = PACKAGE_VERSION_MATCHER.matcher(CRAFTBUKKIT_PACKAGE);
-            if (versionMatcher.matches()) {
-                VERSION_TAG = versionMatcher.group(1);
+                CRAFTBUKKIT_REFLECTION = new Reflection(new StandardReflectionProvider(craftBukkitConfiguration).init());
+
+                Matcher versionMatcher = PACKAGE_VERSION_MATCHER.matcher(CRAFTBUKKIT_PACKAGE);
+                if (versionMatcher.matches()) {
+                    VERSION_TAG = versionMatcher.group(1);
+                }
+
+                /**
+                 * Initialize the NMS-package stuff
+                 */
+                Class<?> craftEntity = getCraftEntityClass();
+                Method getHandle = craftEntity.getDeclaredMethod("getHandle");
+                Class<?> returnType = getHandle.getReturnType();
+
+                MINECRAFT_PACKAGE = getPackage(returnType);
+
+                ReflectionConfiguration minecraftConfiguration;
+
+                ReflectionConfiguration.Builder configBuilder = new ReflectionConfiguration.Builder();
+                configBuilder.withClassLoader(MinecraftReflection.class.getClassLoader());
+
+                if (!MINECRAFT_PACKAGE.startsWith(MINECRAFT_PACKAGE_PREFIX)) {
+                    // The user is probably running a modded server... (MCPC+)
+
+                    // Hack for MCPC+ 1.7.x and above
+                    try {
+                        if (VERSION_TAG == null || VERSION_TAG.equals("")) {
+                            if (getClass("org.bukkit.plugin.java.PluginClassLoader") != null) {
+                                ClassTemplate<?> classLoader = new Reflection().reflect(getClass("org.bukkit.plugin.java.PluginClassLoader"));
+                                MethodAccessor<String> getNativeVersion = classLoader.getSafeMethod("getNativeVersion").getAccessor();
+                                if (getNativeVersion != null) {
+                                    VERSION_TAG = getNativeVersion.invokeStatic();
+                                }
+                            }
+                        }
+                    } catch (ClassNotFoundException e) {
+                        // The class-loader we're looking for appears to be not present... odd...
+                    }
+
+                    configBuilder.withPackagePrefix(MINECRAFT_PACKAGE);
+                    minecraftConfiguration = configBuilder.build();
+
+                    MINECRAFT_REFLECTION = new Reflection(new RemappedReflectionProvider(minecraftConfiguration).init());
+
+                    if (MINECRAFT_PACKAGE.equals(FORGE_ENTITY_PACKAGE)) {
+                         MINECRAFT_PACKAGE = combine(MINECRAFT_PACKAGE_PREFIX, VERSION_TAG);
+                    } else {
+                        MINECRAFT_PACKAGE_PREFIX = MINECRAFT_PACKAGE;
+                    }
+                } else {
+                    configBuilder.withPackagePrefix(MINECRAFT_PACKAGE);
+                    minecraftConfiguration = configBuilder.build();
+                    MINECRAFT_REFLECTION = new Reflection(new StandardReflectionProvider(minecraftConfiguration).init());
+                }
+
+            } catch (SecurityException se) {
+                throw new RuntimeException("Security violation!");
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("Failed to find method!", e);
             }
         }
     }
@@ -77,6 +140,16 @@ public class MinecraftReflection {
             return fullName.substring(0, index);
         else
             return ""; // Default package
+    }
+
+    private static String combine(final String part1, final String part2) {
+        if (Strings.isNullOrEmpty(part1)) {
+            return part2;
+        } else if (Strings.isNullOrEmpty(part2)) {
+            return part1;
+        }
+
+        return part1 + "." + part2;
     }
 
     public static Class<?> getClass(final String className) throws ClassNotFoundException {

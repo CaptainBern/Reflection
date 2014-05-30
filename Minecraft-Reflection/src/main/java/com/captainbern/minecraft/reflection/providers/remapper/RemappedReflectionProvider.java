@@ -31,7 +31,7 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
 
     @Override
     public RemappedReflectionProvider init() {
-        if (Bukkit.getServer() != null || !Bukkit.getServer().getVersion().contains("MCPC-Plus")) {
+        if (Bukkit.getServer() == null || !Bukkit.getServer().getVersion().contains("MCPC-Plus")) {
             throw new RemapperException(RemapperException.Reason.REMAPPER_NOT_FOUND);
         }
 
@@ -68,6 +68,7 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
         try {
             return this.mapType.invoke(this.remapper, className.replace('.', '/')).replace('/', '.');
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Failed to remap class: " + className);
         }
     }

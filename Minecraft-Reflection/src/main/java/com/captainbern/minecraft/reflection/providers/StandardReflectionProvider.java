@@ -13,7 +13,7 @@ public class StandardReflectionProvider extends DefaultReflectionProvider {
 
     public StandardReflectionProvider init() {
         // With the standard reflection provider we do nothing here
-        return null;
+        return this;
     }
 
     public ReflectionConfiguration getConfiguration() {

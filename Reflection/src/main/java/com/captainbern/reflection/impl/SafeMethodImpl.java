@@ -102,8 +102,6 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
         return new MethodAccessor<T>() {
             @Override
             public T invoke(Object instance, Object... args) {
-                if(instance == null)
-                    throw new IllegalArgumentException("Given instance can't be NULL!");
 
                 if(SafeMethodImpl.this.method == null)
                     throw new RuntimeException("Method is NULL!");

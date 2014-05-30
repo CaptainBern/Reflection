@@ -94,6 +94,7 @@ public class MinecraftReflection {
 
             return CRAFTBUKKIT_REFLECTION.getReflectionProvider().loadClass(className);
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
             throw new ClassNotFoundException("Failed to find (Craftbukkit) class: " + className);
         }
     }
@@ -127,6 +128,7 @@ public class MinecraftReflection {
             return getCraftBukkitClass("entity.CraftEntity");
         } catch (ClassNotFoundException e) {
             // Swallow
+            e.printStackTrace();
             return null;
         }
     }

@@ -60,7 +60,7 @@ public class MinecraftReflection {
                     .withPackagePrefix(CRAFTBUKKIT_PACKAGE)
                     .build();
 
-            CRAFTBUKKIT_REFLECTION = new Reflection(new StandardReflectionProvider(craftBukkitConfiguration));
+            CRAFTBUKKIT_REFLECTION = new Reflection(new StandardReflectionProvider(craftBukkitConfiguration).init());
 
             Matcher versionMatcher = PACKAGE_VERSION_MATCHER.matcher(CRAFTBUKKIT_PACKAGE);
             if (versionMatcher.matches()) {

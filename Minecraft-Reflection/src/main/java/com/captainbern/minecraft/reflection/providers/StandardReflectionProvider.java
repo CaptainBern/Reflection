@@ -11,8 +11,9 @@ public class StandardReflectionProvider extends DefaultReflectionProvider {
         this.configuration = configuration;
     }
 
-    public void init() {
+    public StandardReflectionProvider init() {
         // With the standard reflection provider we do nothing here
+        return null;
     }
 
     public ReflectionConfiguration getConfiguration() {

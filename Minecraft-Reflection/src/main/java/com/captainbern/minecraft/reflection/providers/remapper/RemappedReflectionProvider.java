@@ -30,7 +30,7 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
     }
 
     @Override
-    public void init() {
+    public RemappedReflectionProvider init() {
         if (Bukkit.getServer() != null || !Bukkit.getServer().getVersion().contains("MCPC-Plus")) {
             throw new RemapperException(RemapperException.Reason.REMAPPER_NOT_FOUND);
         }
@@ -50,6 +50,8 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
         this.classes = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("classes").getAccessor().getStatic();
         this.fields = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("fields").getAccessor().getStatic();
         this.methods = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("methods").getAccessor().getStatic();
+
+        return this;
     }
 
     @Override

@@ -18,8 +18,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jbel-version>1.0.0-SNAPSHOT</jbel-version>
-        <reflection-version>1.0.0-SNAPSHOT</reflection-version>
-        <minecraft-reflection-version>1.0.0-SNAPSHOT</minecraft-reflection-version>
+        <reflection-version>1.0.1</reflection-version>
+        <minecraft-reflection-version>1.0.0</minecraft-reflection-version>
     </properties>
 
     <dependencies>

@@ -2,7 +2,7 @@ package com.captainbern.minecraft.reflection;
 
 public class ReflectionConfiguration {
 
-    public class Builder {
+    public static class Builder {
 
         private String packagePrefix;
         private ClassLoader classLoader;
@@ -18,12 +18,16 @@ public class ReflectionConfiguration {
             this.classLoader = classLoader;
             return this;
         }
+
+        public ReflectionConfiguration build() {
+            return new ReflectionConfiguration(this);
+        }
     }
 
     private final String packagePrefix;
     private final ClassLoader classLoader;
 
-    protected ReflectionConfiguration(final Builder builder) {
+    private ReflectionConfiguration(final Builder builder) {
         this.packagePrefix = builder.packagePrefix;
         this.classLoader = builder.classLoader;
     }

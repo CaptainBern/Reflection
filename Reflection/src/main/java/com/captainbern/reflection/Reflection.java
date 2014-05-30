@@ -66,7 +66,12 @@ public class Reflection {
         if (className == null) {
             throw new IllegalArgumentException("Class name may not be NULL!");
         }
-        return getReflectionProvider().getClassProvider(this, className, forceAccess).asClassTemplate();
+        try {
+            return getReflectionProvider().getClassProvider(this, className, forceAccess).asClassTemplate();
+        } catch (ClassNotFoundException e) {
+            // Swallow
+            return null;
+        }
     }
 
     public <T> ClassTemplate<T> reflect(final String className) {

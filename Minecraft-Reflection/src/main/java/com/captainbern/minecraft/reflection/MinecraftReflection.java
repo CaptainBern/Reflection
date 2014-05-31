@@ -2,6 +2,7 @@ package com.captainbern.minecraft.reflection;
 
 import com.captainbern.minecraft.reflection.providers.StandardReflectionProvider;
 import com.captainbern.minecraft.reflection.providers.remapper.RemappedReflectionProvider;
+import com.captainbern.minecraft.reflection.utils.ClassCache;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.accessor.MethodAccessor;
@@ -18,8 +19,8 @@ import java.util.regex.Pattern;
  */
 public class MinecraftReflection {
 
-    private static Reflection CRAFTBUKKIT_REFLECTION;
-    private static Reflection MINECRAFT_REFLECTION;
+    private static ClassCache CRAFTBUKKIT_REFLECTION;
+    private static ClassCache MINECRAFT_REFLECTION;
 
     /**
      * The Craftbukkit package
@@ -72,7 +73,7 @@ public class MinecraftReflection {
                         .withPackagePrefix(CRAFTBUKKIT_PACKAGE)
                         .build();
 
-                CRAFTBUKKIT_REFLECTION = new Reflection(new StandardReflectionProvider(craftBukkitConfiguration).init());
+                CRAFTBUKKIT_REFLECTION = new ClassCache(new Reflection(new StandardReflectionProvider(craftBukkitConfiguration).init()));
 
                 Matcher versionMatcher = PACKAGE_VERSION_MATCHER.matcher(CRAFTBUKKIT_PACKAGE);
                 if (versionMatcher.matches()) {
@@ -114,7 +115,7 @@ public class MinecraftReflection {
                     configBuilder.withPackagePrefix(MINECRAFT_PACKAGE);
                     minecraftConfiguration = configBuilder.build();
 
-                    MINECRAFT_REFLECTION = new Reflection(new RemappedReflectionProvider(minecraftConfiguration).init());
+                    MINECRAFT_REFLECTION = new ClassCache(new Reflection(new RemappedReflectionProvider(minecraftConfiguration).init()));
 
                     if (MINECRAFT_PACKAGE.equals(FORGE_ENTITY_PACKAGE)) {
                          MINECRAFT_PACKAGE = combine(MINECRAFT_PACKAGE_PREFIX, VERSION_TAG);
@@ -124,7 +125,7 @@ public class MinecraftReflection {
                 } else {
                     configBuilder.withPackagePrefix(MINECRAFT_PACKAGE);
                     minecraftConfiguration = configBuilder.build();
-                    MINECRAFT_REFLECTION = new Reflection(new StandardReflectionProvider(minecraftConfiguration).init());
+                    MINECRAFT_REFLECTION = new ClassCache(new Reflection(new StandardReflectionProvider(minecraftConfiguration).init()));
                 }
 
             } catch (SecurityException sex) {
@@ -168,8 +169,8 @@ public class MinecraftReflection {
             if (CRAFTBUKKIT_REFLECTION == null)
                 initializePackages();
 
-            return CRAFTBUKKIT_REFLECTION.getReflectionProvider().loadClass(className);
-        } catch (ClassNotFoundException e) {
+            return CRAFTBUKKIT_REFLECTION.getClass(className);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ClassNotFoundException("Failed to find (Craftbukkit) class: " + className);
         }
@@ -180,8 +181,8 @@ public class MinecraftReflection {
             if (MINECRAFT_REFLECTION == null)
                 initializePackages();
 
-            return MINECRAFT_REFLECTION.getReflectionProvider().loadClass(className);
-        } catch (ClassNotFoundException e) {
+            return MINECRAFT_REFLECTION.getClass(className);
+        } catch (Exception e) {
             throw new ClassNotFoundException("Failed to find (Minecraft) class: " + className);
         }
     }

@@ -13,6 +13,9 @@ import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * To understand how this all works, please refer to the bottom of the file.
+ */
 public class MinecraftReflection {
 
     private static Reflection CRAFTBUKKIT_REFLECTION;
@@ -124,8 +127,8 @@ public class MinecraftReflection {
                     MINECRAFT_REFLECTION = new Reflection(new StandardReflectionProvider(minecraftConfiguration).init());
                 }
 
-            } catch (SecurityException se) {
-                throw new RuntimeException("Security violation!");
+            } catch (SecurityException sex) {
+                throw new RuntimeException("SEX violation!");
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("Failed to find method!", e);
             }
@@ -206,3 +209,7 @@ public class MinecraftReflection {
         }
     }
 }
+
+/**
+ * No.
+ */

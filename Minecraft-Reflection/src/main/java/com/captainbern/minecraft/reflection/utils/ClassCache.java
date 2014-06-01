@@ -20,19 +20,14 @@ public class ClassCache {
     }
 
     public Class<?> getClass(final String name) {
-        try {
-            Class<?> result = this.cache.get(Preconditions.checkNotNull(name, "Given class-name can't be NULL!"));
+        Class<?> result = this.cache.get(Preconditions.checkNotNull(name, "Given class-name can't be NULL!"));
+        if (result == null) {
+            result = this.reflection.getReflectionProvider().loadClass(name);
 
-            if (result == null) {
-                result = this.reflection.getReflectionProvider().loadClass(name);
-
-                if (result == null)
-                    throw new IllegalArgumentException("Class-name: " + name + " returned NULL for provider: " + this.reflection.getReflectionProvider().toString());
-            }
-
-            return null;
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to find a class with name: " + name);
+            if (result == null)
+                throw new IllegalArgumentException("Class-name: " + name + " returned NULL for provider: " + this.reflection.getReflectionProvider().toString());
         }
+
+        return result;
     }
 }

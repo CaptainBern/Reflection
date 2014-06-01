@@ -11,21 +11,17 @@ public class StandardReflectionProvider extends DefaultReflectionProvider {
         this.configuration = configuration;
     }
 
-    public StandardReflectionProvider init() {
-        // With the standard reflection provider we do nothing here
-        return this;
-    }
-
     public ReflectionConfiguration getConfiguration() {
         return this.configuration;
     }
 
     @Override
-    public Class<?> loadClass(String className) throws ClassNotFoundException {
+    public Class<?> loadClass(String className) {
         try {
-            return getConfiguration().getClassLoader().loadClass(getConfiguration().getPackagePrefix() + "." + className);
+            className = getConfiguration().getPackagePrefix() + "." + className;
+            return getConfiguration().getClassLoader().loadClass(className);
         } catch (Exception e) {
-            throw new ClassNotFoundException("Failed to load class: " + className);
+            throw new RuntimeException("Failed to load class: " + className, e);
         }
     }
 

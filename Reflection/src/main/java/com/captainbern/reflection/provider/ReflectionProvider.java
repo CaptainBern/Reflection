@@ -28,5 +28,5 @@ public interface ReflectionProvider {
 
     public <T> MethodProvider<T> getMethodProvider(final Reflection reflection, final Class<?> clazz, final String methodName, final Class... args);
 
-    public Class<?> loadClass(final String className) throws ClassNotFoundException;
+    public Class<?> loadClass(final String className);
 }

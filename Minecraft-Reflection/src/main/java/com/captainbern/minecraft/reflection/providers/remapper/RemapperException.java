@@ -13,8 +13,8 @@ public class RemapperException extends RuntimeException {
     }
 
     public static enum Reason {
-        REMAPPER_NOT_FOUND("Remapper not found!"),
-        REMAPPER_DISABLED("Remapper was found but is not enabled!");
+        REMAPPER_DISABLED("Remapper was found but is not enabled!"),
+        MCPC_NOT_PRESENT("MCPC+ is not present!");
 
         private final String additionalInfo;
 

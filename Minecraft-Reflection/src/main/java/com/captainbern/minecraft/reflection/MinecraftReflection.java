@@ -2,10 +2,10 @@ package com.captainbern.minecraft.reflection;
 
 import com.captainbern.minecraft.reflection.providers.StandardReflectionProvider;
 import com.captainbern.minecraft.reflection.providers.remapper.RemappedReflectionProvider;
+import com.captainbern.minecraft.reflection.providers.remapper.RemapperException;
 import com.captainbern.minecraft.reflection.utils.ClassCache;
-import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
-import com.captainbern.reflection.accessor.MethodAccessor;
+import com.captainbern.reflection.provider.ReflectionProvider;
 import com.google.common.base.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -21,6 +21,7 @@ public class MinecraftReflection {
 
     private static ClassCache CRAFTBUKKIT_REFLECTION;
     private static ClassCache MINECRAFT_REFLECTION;
+    private static ReflectionProvider PROVIDER;
 
     /**
      * The Craftbukkit package
@@ -41,10 +42,14 @@ public class MinecraftReflection {
      */
     private static String VERSION_TAG;
 
+    private static boolean initializing = false;
+
     /**
      * Pattern
      */
     private static final Pattern PACKAGE_VERSION_MATCHER = Pattern.compile(".*\\.(v\\d+_\\d+_\\w*\\d+)");
+
+    private static final Pattern BUKKIT_VERSION_MATCHER = Pattern.compile("([0-9]+)(\\.)([0-9]+)(\\.)([0-9]+)(-)(R)([0-9]+)");
 
     private MinecraftReflection() {
         super();
@@ -57,82 +62,61 @@ public class MinecraftReflection {
     }
 
     protected static void initializePackages() {
-        Main.getInstance().getLogger().info("Initializing packages");
+        if (initializing)
+            throw new IllegalStateException("Already initializing the packages!");
 
+        initializing = true;
         Server craftServer = Bukkit.getServer();
 
         if (craftServer != null) {
-
             try {
 
                 Class<?> craftServerClass = craftServer.getClass();
                 CRAFTBUKKIT_PACKAGE = getPackage(craftServerClass);
 
-                ReflectionConfiguration craftBukkitConfiguration = new ReflectionConfiguration.Builder()
-                        .withClassLoader(MinecraftReflection.class.getClassLoader())
-                        .withPackagePrefix(CRAFTBUKKIT_PACKAGE)
-                        .build();
-
-                CRAFTBUKKIT_REFLECTION = new ClassCache(new Reflection(new StandardReflectionProvider(craftBukkitConfiguration).init()));
-
-                Matcher versionMatcher = PACKAGE_VERSION_MATCHER.matcher(CRAFTBUKKIT_PACKAGE);
-                if (versionMatcher.matches()) {
-                    VERSION_TAG = versionMatcher.group(1);
+                Matcher packageMatcher = PACKAGE_VERSION_MATCHER.matcher(CRAFTBUKKIT_PACKAGE);
+                if (packageMatcher.matches()) {
+                    VERSION_TAG = packageMatcher.group(1);
+                } else {
+                    Matcher versionMatcher = BUKKIT_VERSION_MATCHER.matcher(Bukkit.getVersion());
+                    if (versionMatcher.matches()) {
+                        String major = versionMatcher.group(1);
+                        String minor = versionMatcher.group(3);
+                        String build = versionMatcher.group(5); // We do not need this one
+                        String release = versionMatcher.group(8);
+                        VERSION_TAG = "v" + major + "_" + minor + "_R" + release;
+                    }
+                    System.out.print("#########: " + Bukkit.getVersion());
+                    System.out.print(versionMatcher.group());
+                    System.out.print("#########: " + VERSION_TAG);
                 }
 
-                /**
-                 * Initialize the NMS-package stuff
-                 */
-                Class<?> craftEntity = getCraftEntityClass();
-                Method getHandle = craftEntity.getDeclaredMethod("getHandle");
-                Class<?> returnType = getHandle.getReturnType();
+                handlePossiblePackageTrouble();
 
-                MINECRAFT_PACKAGE = getPackage(returnType);
+                Class<?> craftEntityClass = getCraftEntityClass();
+                Method getHandle = craftEntityClass.getDeclaredMethod("getHandle");
 
-                ReflectionConfiguration minecraftConfiguration;
-
-                ReflectionConfiguration.Builder configBuilder = new ReflectionConfiguration.Builder();
-                configBuilder.withClassLoader(MinecraftReflection.class.getClassLoader());
+                MINECRAFT_PACKAGE = getPackage(getHandle.getReturnType());
 
                 if (!MINECRAFT_PACKAGE.startsWith(MINECRAFT_PACKAGE_PREFIX)) {
-                    // The user is probably running a modded server... (MCPC+)
-
-                    // Hack for MCPC+ 1.7.x and above
-                    try {
-                        if (VERSION_TAG == null || VERSION_TAG.equals("")) {
-                            if (getClass("org.bukkit.plugin.java.PluginClassLoader") != null) {
-                                ClassTemplate<?> classLoader = new Reflection().reflect(getClass("org.bukkit.plugin.java.PluginClassLoader"));
-                                MethodAccessor<String> getNativeVersion = classLoader.getSafeMethod("getNativeVersion").getAccessor();
-                                if (getNativeVersion != null) {
-                                    VERSION_TAG = getNativeVersion.invokeStatic();
-                                }
-                            }
-                        }
-                    } catch (ClassNotFoundException e) {
-                        // The class-loader we're looking for appears to be not present... odd...
-                    }
-
-                    configBuilder.withPackagePrefix(MINECRAFT_PACKAGE);
-                    minecraftConfiguration = configBuilder.build();
-
-                    MINECRAFT_REFLECTION = new ClassCache(new Reflection(new RemappedReflectionProvider(minecraftConfiguration).init()));
-
-                    if (MINECRAFT_PACKAGE.equals(FORGE_ENTITY_PACKAGE)) {
-                         MINECRAFT_PACKAGE = combine(MINECRAFT_PACKAGE_PREFIX, VERSION_TAG);
-                    } else {
-                        MINECRAFT_PACKAGE_PREFIX = MINECRAFT_PACKAGE;
-                    }
-                } else {
-                    configBuilder.withPackagePrefix(MINECRAFT_PACKAGE);
-                    minecraftConfiguration = configBuilder.build();
-                    MINECRAFT_REFLECTION = new ClassCache(new Reflection(new StandardReflectionProvider(minecraftConfiguration).init()));
+                   if (MINECRAFT_PACKAGE.equals(FORGE_ENTITY_PACKAGE)) {
+                       MINECRAFT_PACKAGE = combine(MINECRAFT_PACKAGE_PREFIX, VERSION_TAG);
+                   } else {
+                       MINECRAFT_PACKAGE_PREFIX = MINECRAFT_PACKAGE;
+                   }
                 }
 
-            } catch (SecurityException sex) {
-                throw new RuntimeException("SEX violation!");
+            } catch (SecurityException e) {
+                throw new RuntimeException("SEX violation. Cannot get handle method.", e);
             } catch (NoSuchMethodException e) {
-                throw new RuntimeException("Failed to find method!", e);
+                throw new IllegalStateException("Cannot find getHandle() method on server. Is this a modified CraftBukkit version?", e);
+            } finally {
+                initializing = false;
             }
+
+        } else {
+            initializing = false;
+            throw new IllegalStateException("It appears Bukkit isn't running properly?");
         }
     }
 
@@ -156,6 +140,31 @@ public class MinecraftReflection {
         return part1 + "." + part2;
     }
 
+    private static void handlePossiblePackageTrouble() {
+        try {
+            getCraftEntityClass();
+        } catch (Exception e) {
+            CRAFTBUKKIT_REFLECTION = null; // We have to nullify this so our changes take effect.
+            CRAFTBUKKIT_PACKAGE = "org.bukkit.craftbukkit";
+
+            getCraftEntityClass();
+        }
+    }
+
+    public static String getCraftBukkitPackage() {
+        if (CRAFTBUKKIT_PACKAGE == null)
+            initializePackages();
+
+        return CRAFTBUKKIT_PACKAGE;
+    }
+
+    public static String getMinecraftPackage() {
+        if (MINECRAFT_PACKAGE == null)
+            initializePackages();
+
+        return MINECRAFT_PACKAGE;
+    }
+
     public static Class<?> getClass(final String className) throws ClassNotFoundException {
         try {
             return Thread.currentThread().getContextClassLoader().loadClass(className);
@@ -164,50 +173,66 @@ public class MinecraftReflection {
         }
     }
 
-    public static Class<?> getCraftBukkitClass(final String className) throws ClassNotFoundException {
-        try {
-            if (CRAFTBUKKIT_REFLECTION == null)
-                initializePackages();
+    public static Class<?> getCraftBukkitClass(final String className) {
+        if (CRAFTBUKKIT_REFLECTION == null) {
+            ReflectionConfiguration configuration = new ReflectionConfiguration.Builder()
+                    .withClassLoader(MinecraftReflection.class.getClassLoader())
+                    .withPackagePrefix(getCraftBukkitPackage())
+                    .build();
 
-            return CRAFTBUKKIT_REFLECTION.getClass(className);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ClassNotFoundException("Failed to find (Craftbukkit) class: " + className);
+            ReflectionProvider provider = null;
+
+            try {
+                provider = new RemappedReflectionProvider(configuration);
+            } catch (RemapperException e) {
+                switch (e.getReason()) {
+                    case REMAPPER_DISABLED:
+                        System.out.println("It appears you are running MCPC+ but the remapper is disabled, please enable it.");
+                        break;
+                    default:
+                        provider = new StandardReflectionProvider(configuration);
+                }
+            }
+
+            CRAFTBUKKIT_REFLECTION = new ClassCache(new Reflection(provider));
         }
+
+        return CRAFTBUKKIT_REFLECTION.getClass(className);
     }
 
-    public static Class<?> getMinecraftClass(final String className) throws ClassNotFoundException {
-        try {
-            if (MINECRAFT_REFLECTION == null)
-                initializePackages();
+    public static Class<?> getMinecraftClass(final String className) {
+        if (MINECRAFT_REFLECTION == null) {
+            ReflectionConfiguration configuration = new ReflectionConfiguration.Builder()
+                    .withClassLoader(MinecraftReflection.class.getClassLoader())
+                    .withPackagePrefix(getMinecraftPackage())
+                    .build();
 
-            return MINECRAFT_REFLECTION.getClass(className);
-        } catch (Exception e) {
-            throw new ClassNotFoundException("Failed to find (Minecraft) class: " + className);
+            ReflectionProvider provider = null;
+
+            try {
+               provider = new RemappedReflectionProvider(configuration);
+            } catch (RemapperException e) {
+                 switch (e.getReason()) {
+                     case REMAPPER_DISABLED:
+                         System.out.println("It appears you are running MCPC+ but the remapper is disabled, please enable it.");
+                         break;
+                     default:
+                         provider = new StandardReflectionProvider(configuration);
+                 }
+            }
+
+            MINECRAFT_REFLECTION = new ClassCache(new Reflection(provider));
         }
+
+        return MINECRAFT_REFLECTION.getClass(className);
     }
 
     /**
-     * Usefull methods
+     * Useful methods
      */
 
-    public static Class<?> getCraftServerClass() {
-        try {
-            return getCraftBukkitClass("CraftServer");
-        } catch (ClassNotFoundException e) {
-            // Swallow
-            return null;
-        }
-    }
-
     public static Class<?> getCraftEntityClass() {
-        try {
-            return getCraftBukkitClass("entity.CraftEntity");
-        } catch (ClassNotFoundException e) {
-            // Swallow
-            e.printStackTrace();
-            return null;
-        }
+        return getCraftBukkitClass("entity.CraftEntity");
     }
 }
 

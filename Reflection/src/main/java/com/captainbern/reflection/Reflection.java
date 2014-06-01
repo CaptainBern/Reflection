@@ -41,12 +41,12 @@ public class Reflection {
     }
 
     public ReflectionProvider getReflectionProvider() {
-        return reflectionProvider;
+        return this.reflectionProvider;
     }
 
     public void setReflectionProvider(final ReflectionProvider reflectionProvider) {
         if (reflectionProvider == null) {
-            throw new IllegalArgumentException("Cannot set the ReflectionProvider to NUL!");
+            throw new IllegalArgumentException("Cannot set the ReflectionProvider to NULL!");
         }
         this.reflectionProvider = reflectionProvider;
     }

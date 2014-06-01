@@ -73,11 +73,11 @@ public class DefaultReflectionProvider implements ReflectionProvider {
     }
 
     @Override
-    public Class<?> loadClass(final String className) throws ClassNotFoundException {
+    public Class<?> loadClass(final String className) {
         try {
             return getClass().getClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("Failed to find class: " + className);
+            throw new RuntimeException("Failed to find class: " + className);
         }
     }
 }

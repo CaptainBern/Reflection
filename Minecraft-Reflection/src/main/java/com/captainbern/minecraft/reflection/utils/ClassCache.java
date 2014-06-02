@@ -19,6 +19,13 @@ public class ClassCache {
         return this.reflection;
     }
 
+    public void set(String key, Class<?> value) {
+        Preconditions.checkNotNull(key);
+        Preconditions.checkNotNull(value);
+
+        this.cache.put(key, value);
+    }
+
     public Class<?> getClass(final String name) {
         Class<?> result = this.cache.get(Preconditions.checkNotNull(name, "Given class-name can't be NULL!"));
         if (result == null) {

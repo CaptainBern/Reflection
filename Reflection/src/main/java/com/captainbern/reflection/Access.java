@@ -93,6 +93,21 @@ public interface Access<T> extends Serializable {
     public <T> SafeField<T> getSafeFieldByName(final String name);
 
     /**
+     * Returns the first field found that matches the given type
+     * @param type
+     * @return
+     */
+    public Field getFieldByType(final Class<?> type);
+
+    /**
+     * Returns the first field found that matches the given type as a SafeField
+     * @param type
+     * @param <T>
+     * @return
+     */
+    public <T> SafeField<T> getSafeFieldByType(final Class<T> type);
+
+    /**
      * Returns a field which matches the name and type
      * @param name
      * @param type

@@ -68,6 +68,8 @@ public class MinecraftReflection {
      */
     private static final Pattern PACKAGE_VERSION_MATCHER = Pattern.compile(".*\\.(v\\d+_\\d+_\\w*\\d+)");
 
+    private static Boolean isUsingNetty;
+
     private MinecraftReflection() {
         super();
     }
@@ -282,13 +284,99 @@ public class MinecraftReflection {
         return MINECRAFT_REFLECTION.getClass(className);
     }
 
+    protected static Class<?> setCraftBukkitClass(final String key, final Class<?> value) {
+        if (CRAFTBUKKIT_REFLECTION == null)
+            getCraftServerClass(); // This will initialize the CraftBukkit Reflection
+        CRAFTBUKKIT_REFLECTION.set(key, value);
+        return value;
+    }
+
+    protected static Class<?> setMinecraftClass(final String key, final Class<?> value) {
+        if (MINECRAFT_REFLECTION == null)
+            getMinecraftServerClass(); // This will initialize the Minecraft Reflection
+        MINECRAFT_REFLECTION.set(key, value);
+        return value;
+    }
+
     /**
-     * Useful methods
+     * CraftBukkit
      */
+
+    public static Class<?> getCraftServerClass() {
+        return getCraftBukkitClass("CraftServer");
+    }
 
     public static Class<?> getCraftEntityClass() {
         return getCraftBukkitClass("entity.CraftEntity");
     }
+
+    public static Class<?> getCraftItemStackClass() {
+        return getCraftBukkitClass("inventory.CraftItemStack");
+    }
+
+    /**
+     * Minecraft
+     */
+
+    public static Class<?> getMinecraftServerClass() {
+        return getMinecraftClass("MinecraftServer");
+    }
+
+    public static Class<?> getServerConnectionClass() {
+        return getMinecraftClass("ServerConnection");
+    }
+
+    public static Class<?> getEntityClass() {
+        return getMinecraftClass("Entity");
+    }
+
+    public static Class<?> getDataWatcherClass() {
+        return getMinecraftClass("DataWatcher");
+    }
+
+    public static Class<?> getWatchableObjectClass() {
+        return getMinecraftClass("WatchableObject");
+    }
+
+    public static Class<?> getItemStackClass() {
+        try {
+            return getMinecraftClass("ItemStack");
+        } catch (RuntimeException e) {
+            return setMinecraftClass("ItemStack", new Reflection().reflect(getCraftItemStackClass()).getFieldByName("handle").getType());
+        }
+    }
+
+    public static Class<?> getPacketClass() {
+        try {
+            return getMinecraftClass("Packet");
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    public static Class<?> getEnumProtocolClass() {
+        try {
+            return getMinecraftClass("EnumProtocol");
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    public static boolean isUsingNetty() {
+        if (isUsingNetty == null) {
+            try {
+                isUsingNetty = getEnumProtocolClass() != null;
+            } catch (RuntimeException e) {
+                isUsingNetty = false;
+            }
+        }
+        return isUsingNetty;
+    }
+
+    /**
+     * Other utility methods
+     */
+
 }
 
 /**

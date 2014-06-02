@@ -1,4 +1,4 @@
-package com.captainbern.minecraft.reflection.wrapper;
+package com.captainbern.minecraft.wrapper;
 
 public class AbstractWrapper {
 

@@ -132,6 +132,27 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
+    public Field getFieldByType(Class<?> type) {
+        List<Field> fields = getFields(withType(type));
+
+        if (fields.size() > 0) {
+            return fields.get(0);
+        }
+
+        return null;
+    }
+
+    @Override
+    public <T> SafeField<T> getSafeFieldByType(Class<T> type) {
+        List<SafeField<?>> fields = getSafeFields(withType(type));
+        if (fields.size() > 0) {
+            return (SafeField<T>) fields.get(0);
+        }
+
+        return null;
+    }
+
+    @Override
     public Field getFieldByNameAndType(final String name, final Class<?> type) {
         List<Field> fields = getFields(withExactName(name));
 

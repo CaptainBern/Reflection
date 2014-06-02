@@ -58,7 +58,7 @@ public class MinecraftVersion implements Serializable {
         if (versionMatcher.find()) {
             this.major = Integer.parseInt(versionMatcher.group(1));
             this.minor = Integer.parseInt(versionMatcher.group(3));
-            this.build = Integer.parseInt(versionMatcher.group(5)); // We do not need this one
+            this.build = Integer.parseInt(versionMatcher.group(5));
             this.release = Integer.parseInt(versionMatcher.group(8));
         } else {
             /**

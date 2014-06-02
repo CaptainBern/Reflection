@@ -45,11 +45,11 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
         this.mapType = remapperTemplate.getSafeMethod("map", String.class).getAccessor();
         this.mapField = remapperTemplate.getSafeMethod("mapFieldName", String.class, String.class, String.class, int.class).getAccessor();
 
-        Object jarMapping = remapperTemplate.getSafeFieldByName("jarMapping");
+        Object jarMapping = remapperTemplate.getSafeFieldByName("jarMapping").getAccessor().get(this.remapper);
         ClassTemplate<?> jarMappingTemplate = new Reflection().reflect(jarMapping.getClass());
-        //this.classes = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("classes").getAccessor().getStatic();
-        //this.fields = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("fields").getAccessor().getStatic();
-        //this.methods = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("methods").getAccessor().getStatic();
+        this.classes = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("classes").getAccessor().get(jarMapping);
+        this.fields = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("fields").getAccessor().get(jarMapping);
+        this.methods = (Map<String, String>) jarMappingTemplate.getSafeFieldByName("methods").getAccessor().get(jarMapping);
 
         return this;
     }

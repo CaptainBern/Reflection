@@ -16,12 +16,22 @@ import java.util.regex.Pattern;
 
 /**
  * To understand how this all works, please refer to the bottom of the file.
+ *
+ * This class should provide a pretty safe way of using Reflection with both NMS and CraftBukkit classes.
+ * It can never be 100% safe of course but it may be a better alternative compared to all those other
+ * "ReflectionUtils" out there.
  */
 public class MinecraftReflection {
 
+    /**
+     * The CraftBukkit class-cache
+     */
     private static ClassCache CRAFTBUKKIT_REFLECTION;
+
+    /**
+     * The Minecraft class-cache
+     */
     private static ClassCache MINECRAFT_REFLECTION;
-    private static ReflectionProvider PROVIDER;
 
     /**
      * The Craftbukkit package
@@ -33,8 +43,14 @@ public class MinecraftReflection {
      */
     private static String MINECRAFT_PACKAGE;
 
+    /**
+     * The Minecraft package-prefix
+     */
     private static String MINECRAFT_PACKAGE_PREFIX = "net.minecraft.server";
 
+    /**
+     * The MinecraftForge Entity-package
+     */
     private static String FORGE_ENTITY_PACKAGE = "net.minecraft.entity";
 
     /**
@@ -42,6 +58,9 @@ public class MinecraftReflection {
      */
     private static String VERSION_TAG;
 
+    /**
+     * Are we initializing or not?
+     */
     private static boolean initializing = false;
 
     /**
@@ -53,12 +72,19 @@ public class MinecraftReflection {
         super();
     }
 
+    /**
+     * Returns the Version tag, used by the safeguard
+     * @return The version tag used by the safeguard.
+     */
     public static String getVersionTag() {
         if (VERSION_TAG == null)
             initializePackages();
         return VERSION_TAG;
     }
 
+    /**
+     * Initializes both the craftbukkit and minecraft packages.
+     */
     protected static void initializePackages() {
         if (initializing)
             throw new IllegalStateException("Already initializing the packages!");
@@ -76,6 +102,7 @@ public class MinecraftReflection {
                 if (packageMatcher.matches()) {
                     VERSION_TAG = packageMatcher.group(1);
                 } else {
+                    // This is more of a backup
                     MinecraftVersion version = new MinecraftVersion(Bukkit.getVersion());
                     VERSION_TAG = version.toSafeguardTag();
                 }
@@ -109,6 +136,12 @@ public class MinecraftReflection {
         }
     }
 
+    /**
+     * Returns the last part of the package of a given string, in this case it *should* return the version tag
+     * used by the safeguard
+     * @param clazz
+     * @return
+     */
     private static String getPackage(final Class<?> clazz) {
         String fullName = clazz.getCanonicalName();
         int index = fullName.lastIndexOf(".");
@@ -119,6 +152,12 @@ public class MinecraftReflection {
             return ""; // Default package
     }
 
+    /**
+     * "Combines" 2 packages, keeping in mind if one of both packages is NULL.
+     * @param part1
+     * @param part2
+     * @return
+     */
     private static String combine(final String part1, final String part2) {
         if (Strings.isNullOrEmpty(part1)) {
             return part2;
@@ -129,6 +168,9 @@ public class MinecraftReflection {
         return part1 + "." + part2;
     }
 
+    /**
+     * Handles possible package trouble for specific server mods.
+     */
     private static void handlePossiblePackageTrouble() {
         try {
             getCraftEntityClass();
@@ -140,6 +182,10 @@ public class MinecraftReflection {
         }
     }
 
+    /**
+     * Returns the (versioned) CraftBukkit package.
+     * @return
+     */
     public static String getCraftBukkitPackage() {
         if (CRAFTBUKKIT_PACKAGE == null)
             initializePackages();
@@ -147,6 +193,10 @@ public class MinecraftReflection {
         return CRAFTBUKKIT_PACKAGE;
     }
 
+    /**
+     * Returns the (versioned) Minecraft package.
+     * @return
+     */
     public static String getMinecraftPackage() {
         if (MINECRAFT_PACKAGE == null)
             initializePackages();
@@ -154,6 +204,12 @@ public class MinecraftReflection {
         return MINECRAFT_PACKAGE;
     }
 
+    /**
+     * Returns a class with the given name, using the context ClassLoader.
+     * @param className
+     * @return
+     * @throws ClassNotFoundException
+     */
     public static Class<?> getClass(final String className) throws ClassNotFoundException {
         try {
             return Thread.currentThread().getContextClassLoader().loadClass(className);
@@ -162,6 +218,11 @@ public class MinecraftReflection {
         }
     }
 
+    /**
+     * Returns a CraftBukkit class with the given name.
+     * @param className
+     * @return
+     */
     public static Class<?> getCraftBukkitClass(final String className) {
         if (CRAFTBUKKIT_REFLECTION == null) {
             ReflectionConfiguration configuration = new ReflectionConfiguration.Builder()
@@ -189,6 +250,11 @@ public class MinecraftReflection {
         return CRAFTBUKKIT_REFLECTION.getClass(className);
     }
 
+    /**
+     * Returns a Minecraft class with the given name.
+     * @param className
+     * @return
+     */
     public static Class<?> getMinecraftClass(final String className) {
         if (MINECRAFT_REFLECTION == null) {
             ReflectionConfiguration configuration = new ReflectionConfiguration.Builder()

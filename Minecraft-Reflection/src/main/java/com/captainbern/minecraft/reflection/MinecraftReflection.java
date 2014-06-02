@@ -49,8 +49,6 @@ public class MinecraftReflection {
      */
     private static final Pattern PACKAGE_VERSION_MATCHER = Pattern.compile(".*\\.(v\\d+_\\d+_\\w*\\d+)");
 
-    private static final Pattern BUKKIT_VERSION_MATCHER = Pattern.compile("([0-9]+)(\\.)([0-9]+)(\\.)([0-9]+)(-)(R)([0-9]+)");
-
     private MinecraftReflection() {
         super();
     }
@@ -78,17 +76,8 @@ public class MinecraftReflection {
                 if (packageMatcher.matches()) {
                     VERSION_TAG = packageMatcher.group(1);
                 } else {
-                    Matcher versionMatcher = BUKKIT_VERSION_MATCHER.matcher(Bukkit.getVersion());
-                    if (versionMatcher.matches()) {
-                        String major = versionMatcher.group(1);
-                        String minor = versionMatcher.group(3);
-                        String build = versionMatcher.group(5); // We do not need this one
-                        String release = versionMatcher.group(8);
-                        VERSION_TAG = "v" + major + "_" + minor + "_R" + release;
-                    }
-                    System.out.print("#########: " + Bukkit.getVersion());
-                    System.out.print(versionMatcher.group());
-                    System.out.print("#########: " + VERSION_TAG);
+                    MinecraftVersion version = new MinecraftVersion(Bukkit.getVersion());
+                    VERSION_TAG = version.toSafeguardTag();
                 }
 
                 handlePossiblePackageTrouble();
@@ -99,11 +88,11 @@ public class MinecraftReflection {
                 MINECRAFT_PACKAGE = getPackage(getHandle.getReturnType());
 
                 if (!MINECRAFT_PACKAGE.startsWith(MINECRAFT_PACKAGE_PREFIX)) {
-                   if (MINECRAFT_PACKAGE.equals(FORGE_ENTITY_PACKAGE)) {
-                       MINECRAFT_PACKAGE = combine(MINECRAFT_PACKAGE_PREFIX, VERSION_TAG);
-                   } else {
-                       MINECRAFT_PACKAGE_PREFIX = MINECRAFT_PACKAGE;
-                   }
+                    if (MINECRAFT_PACKAGE.equals(FORGE_ENTITY_PACKAGE)) {
+                        MINECRAFT_PACKAGE = combine(MINECRAFT_PACKAGE_PREFIX, VERSION_TAG);
+                    } else {
+                        MINECRAFT_PACKAGE_PREFIX = MINECRAFT_PACKAGE;
+                    }
                 }
 
             } catch (SecurityException e) {
@@ -210,15 +199,15 @@ public class MinecraftReflection {
             ReflectionProvider provider = null;
 
             try {
-               provider = new RemappedReflectionProvider(configuration);
+                provider = new RemappedReflectionProvider(configuration);
             } catch (RemapperException e) {
-                 switch (e.getReason()) {
-                     case REMAPPER_DISABLED:
-                         System.out.println("It appears you are running MCPC+ but the remapper is disabled, please enable it.");
-                         break;
-                     default:
-                         provider = new StandardReflectionProvider(configuration);
-                 }
+                switch (e.getReason()) {
+                    case REMAPPER_DISABLED:
+                        System.out.println("It appears you are running MCPC+ but the remapper is disabled, please enable it.");
+                        break;
+                    default:
+                        provider = new StandardReflectionProvider(configuration);
+                }
             }
 
             MINECRAFT_REFLECTION = new ClassCache(new Reflection(provider));

@@ -26,6 +26,7 @@ public class ClassCache {
 
             if (result == null)
                 throw new IllegalArgumentException("Class-name: " + name + " returned NULL for provider: " + this.reflection.getReflectionProvider().toString());
+            cache.put(name, result);
         }
 
         return result;

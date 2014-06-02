@@ -56,7 +56,7 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
 
     @Override
     public Class<?> loadClass(String className) {
-        String remapped = getRemappedClassName(className);
+        String remapped = getRemappedClassName(getConfiguration().getPackagePrefix() + "." + className);
         try {
             return getConfiguration().getClassLoader().loadClass(remapped);
         } catch (Exception e) {

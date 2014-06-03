@@ -212,11 +212,11 @@ public class MinecraftReflection {
      * @return
      * @throws ClassNotFoundException
      */
-    public static Class<?> getClass(final String className) throws ClassNotFoundException {
+    public static Class<?> getClass(final String className) {
         try {
             return Thread.currentThread().getContextClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("Failed to find class: " + className);
+            throw new RuntimeException("Failed to find class: " + className);
         }
     }
 
@@ -239,7 +239,7 @@ public class MinecraftReflection {
             } catch (RemapperException e) {
                 switch (e.getReason()) {
                     case REMAPPER_DISABLED:
-                        System.out.println("It appears you are running MCPC+ but the remapper is disabled, please enable it.");
+                        System.err.println("It appears you are running MCPC+ but the remapper is disabled, please enable it.");
                         break;
                     default:
                         provider = new StandardReflectionProvider(configuration);
@@ -271,7 +271,7 @@ public class MinecraftReflection {
             } catch (RemapperException e) {
                 switch (e.getReason()) {
                     case REMAPPER_DISABLED:
-                        System.out.println("It appears you are running MCPC+ but the remapper is disabled, please enable it.");
+                        System.err.println("It appears you are running MCPC+ but the remapper is disabled, please enable it.");
                         break;
                     default:
                         provider = new StandardReflectionProvider(configuration);

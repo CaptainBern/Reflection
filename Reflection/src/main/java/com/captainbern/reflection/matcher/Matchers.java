@@ -110,7 +110,16 @@ public class Matchers {
         return new AbstractMatcher<Method>() {
             @Override
             public boolean matches(Method type) {
-                return type.getReturnType().equals(returnType);
+                return returnType.isAssignableFrom(type.getReturnType());
+            }
+        };
+    }
+
+    public static Matcher<Method> withExactReturnType(final Class<?> returnType) {
+        return new AbstractMatcher<Method>() {
+            @Override
+            public boolean matches(Method type) {
+                return returnType.equals(type.getReturnType());
             }
         };
     }
@@ -119,7 +128,16 @@ public class Matchers {
         return new AbstractMatcher<Field>() {
             @Override
             public boolean matches(Field type) {
-                return type.getType().equals(clazz);
+                return clazz.isAssignableFrom(type.getType());
+            }
+        };
+    }
+
+    public static Matcher<Field> withExactType(final Class<?> clazz) {
+        return new AbstractMatcher<Field>() {
+            @Override
+            public boolean matches(Field type) {
+                return clazz.equals(type.getType());
             }
         };
     }

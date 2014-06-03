@@ -54,28 +54,29 @@ public class MinecraftVersion implements Serializable {
         /**
          * Let's try to retrieve the Minecraft version out of the given bukkit version
          */
-        Matcher versionMatcher = BUKKIT_VERSION_PATTERN.matcher(versionString);
-        if (versionMatcher.find()) {
-            this.major = Integer.parseInt(versionMatcher.group(1));
-            this.minor = Integer.parseInt(versionMatcher.group(3));
-            this.build = Integer.parseInt(versionMatcher.group(5));
-            this.release = Integer.parseInt(versionMatcher.group(8));
-        } else {
-            /**
-             * We have failed! Let's try to do it with the Minecraft version part then...
-             */
-            Matcher mcVersionMatcher = VERSION_PATTERN.matcher(versionString);
-            if (mcVersionMatcher.matches() && mcVersionMatcher.group(1) != null) {
-                String version = mcVersionMatcher.group(1);
-                int[] numbers = parseVersion(version);
-                this.major = numbers[0];
-                this.minor = numbers[1];
-                this.build = numbers[1];
-                this.release = 1;
-            } else {
-                throw new IllegalArgumentException("failed to parse the Minecraft version for the given input-string: " + versionString);
-            }
+        Matcher bukkitVersionMatcher = BUKKIT_VERSION_PATTERN.matcher(versionString);
+        if (bukkitVersionMatcher.find()) {
+
+            this.major = Integer.parseInt(bukkitVersionMatcher.group(1));
+            this.minor = Integer.parseInt(bukkitVersionMatcher.group(3));
+            this.build = Integer.parseInt(bukkitVersionMatcher.group(5));
+            this.release = Integer.parseInt(bukkitVersionMatcher.group(8));
+            return;
         }
+
+        Matcher mcVersionMatcher = VERSION_PATTERN.matcher(versionString);
+        if (mcVersionMatcher.matches() && mcVersionMatcher.group(1) != null) {
+
+            String version = mcVersionMatcher.group(1);
+            int[] numbers = parseVersion(version);
+            this.major = numbers[0];
+            this.minor = numbers[1];
+            this.build = numbers[1];
+            this.release = 1;
+            return;
+        }
+
+        throw new IllegalArgumentException("failed to parse the Minecraft version for the given input-string: " + versionString);
     }
 
     public MinecraftVersion(int major, int minor, int build) {

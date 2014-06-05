@@ -4,7 +4,9 @@ import com.google.common.primitives.Primitives;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class PrettyPrinter {
 
@@ -22,8 +24,9 @@ public class PrettyPrinter {
 
         StringBuilder out = new StringBuilder();
         StringBuilder tabs = new StringBuilder();
+        HashSet<Object> previous = new HashSet<>();
 
-        print(out, tabs, 0, object, current, top, maxRecursions, true);
+        print(out, tabs, 0, object, current, top, maxRecursions, true, previous);
 
         return out.toString();
     }
@@ -35,7 +38,8 @@ public class PrettyPrinter {
                                 Class<?> current,   // The Class we're printing
                                 Class<?> top,       // The top class/we have to stop the recursion when we reach this class
                                 int hierarchyIndex, // The current hierarchy/recursion-index
-                                boolean first) {    // Whether or not this is the first object
+                                boolean first,
+                                Set<Object> previous) {    // Whether or not this is the first object
 
 
         if (current == null || current == Object.class || (top != null && current == top))
@@ -51,6 +55,8 @@ public class PrettyPrinter {
         for (int i = 0; i < rows; i++) {
             tabs.append("    ");
         }
+
+        previous.add(object);
 
         out.append("\n");
         out.append(tabs.toString().substring(4));
@@ -81,7 +87,7 @@ public class PrettyPrinter {
 
                 try {
                     Object value = field.get(object);
-                    printValue(out, tabs, rows, value, top, hierarchyIndex);
+                    printValue(out, tabs, rows, value, top, hierarchyIndex, previous);
                 } catch (Exception e) {
                     out.append(e.getMessage());
                 }
@@ -99,7 +105,7 @@ public class PrettyPrinter {
         out.append(tabs.toString().substring(4));
         out.append("}\n");
         --rows;
-        print(out, new StringBuilder(), rows, object, current.getSuperclass(), top, hierarchyIndex, first); // We have to clear the tabs
+        print(out, new StringBuilder(), rows, object, current.getSuperclass(), top, hierarchyIndex, first, previous); // We have to clear the tabs
     }
 
     private static void printValue(StringBuilder out,
@@ -107,7 +113,13 @@ public class PrettyPrinter {
                                    int rows,
                                    Object object,
                                    Class<?> top,
-                                   int hierarchyIndex) {
+                                   int hierarchyIndex,
+                                   Set<Object> previous) {
+
+        if (previous.contains(object)) {
+            out.append("<Previously visited Object - See hashCode " + object.hashCode() + ">");
+            return;
+        }
 
         Class<?> current = object.getClass();
 
@@ -116,17 +128,17 @@ public class PrettyPrinter {
         } else if (current.isPrimitive() || Primitives.isWrapperType(current) || current == String.class) {
             out.append(object.toString());
         } else if (Map.class.isAssignableFrom(current)) {
-            printMap(out, tabs, rows, (Map<Object, Object>) object, current, top, hierarchyIndex);
+            printMap(out, tabs, rows, (Map<Object, Object>) object, current, top, hierarchyIndex, previous);
         } else if (current.isArray()) {
-            printArray(out, tabs, rows, object, top, hierarchyIndex);
+            printArray(out, tabs, rows, object, top, hierarchyIndex, previous);
         } else if (Iterable.class.isAssignableFrom(current)) {
-            printIterable(out, tabs, rows, (Iterable) object, top, hierarchyIndex);
+            printIterable(out, tabs, rows, (Iterable) object, top, hierarchyIndex, previous);
         } else {
-            print(out, tabs, rows, object, object.getClass(), top, hierarchyIndex - 1, true);
+            print(out, tabs, rows, object, object.getClass(), top, hierarchyIndex - 1, true, previous);
         }
     }
 
-    private static void printMap(StringBuilder out, StringBuilder tabs, int rows, Map<Object, Object> map, Class<?> current, Class<?> top, int hierarchyIndex) {
+    private static void printMap(StringBuilder out, StringBuilder tabs, int rows, Map<Object, Object> map, Class<?> current, Class<?> top, int hierarchyIndex, Set<Object> previous) {
         out.append("[\n");
 
         boolean first = true;
@@ -134,9 +146,9 @@ public class PrettyPrinter {
         for (Map.Entry<Object, Object> entry : map.entrySet()) {
             out.append(tabs.toString());
             out.append(tabs.toString());
-            printValue(out, tabs, rows, entry.getKey(), top, hierarchyIndex - 1);
+            printValue(out, tabs, rows, entry.getKey(), top, hierarchyIndex - 1, previous);
             out.append(" = ");
-            printValue(out, tabs, rows, entry.getValue(), top, hierarchyIndex - 1);
+            printValue(out, tabs, rows, entry.getValue(), top, hierarchyIndex - 1, previous);
 
             if (first)
                 first = false;
@@ -150,7 +162,7 @@ public class PrettyPrinter {
         out.append("]");
     }
 
-    private static void printArray(StringBuilder out, StringBuilder tabs, int rows, Object array, Class<?> top, int hierarchyIndex) {
+    private static void printArray(StringBuilder out, StringBuilder tabs, int rows, Object array, Class<?> top, int hierarchyIndex, Set<Object> previous) {
         out.append("[\n");
 
         boolean first = true;
@@ -159,7 +171,7 @@ public class PrettyPrinter {
             out.append(tabs.toString());
             out.append(tabs.toString());
             try {
-                printValue(out, tabs, rows, Array.get(array, i), top, hierarchyIndex);
+                printValue(out, tabs, rows, Array.get(array, i), top, hierarchyIndex, previous);
             } catch (Exception e) {
                 out.append(e.getMessage());
             }
@@ -176,7 +188,7 @@ public class PrettyPrinter {
         out.append("]");
     }
 
-    private static void printIterable(StringBuilder out, StringBuilder tabs, int rows, Iterable iterable, Class<?> top, int hierarchyIndex) {
+    private static void printIterable(StringBuilder out, StringBuilder tabs, int rows, Iterable iterable, Class<?> top, int hierarchyIndex, Set<Object> previous) {
         out.append("(\n");
 
         boolean first = true;
@@ -184,7 +196,7 @@ public class PrettyPrinter {
         for (Object object : iterable) {
             out.append(tabs.toString());
             out.append(tabs.toString());
-            printValue(out, tabs, rows, object, top, hierarchyIndex);
+            printValue(out, tabs, rows, object, top, hierarchyIndex, previous);
 
             if (first)
                 first = false;

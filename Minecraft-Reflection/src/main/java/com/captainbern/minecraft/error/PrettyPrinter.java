@@ -41,12 +41,12 @@ public class PrettyPrinter {
         if (current == null || current == Object.class || (top != null && current == top))
             return;
 
-        rows++;
-
         if (hierarchyIndex < 0) {
             out.append("<Reached max recursions>");
             return;
         }
+
+        rows++;
 
         for (int i = 0; i < rows; i++) {
             tabs.append("    ");
@@ -56,42 +56,50 @@ public class PrettyPrinter {
         out.append(tabs.toString().substring(4));
         out.append("{\n");
 
-        out.append(tabs.toString());
-        out.append("Class = " + current.getCanonicalName() + "\n");
+        if (current != object.getClass()) {
+            out.append(tabs.toString());
+            out.append("Inherited from superclass " + current.getCanonicalName() + "\n");
+        } else {
+            out.append(tabs.toString());
+            out.append("Class = " + current.getCanonicalName() + "\n");
+        }
+
         out.append(tabs.toString());
         out.append("hashCode = " + Integer.toHexString(object.hashCode()) + "\n");
 
-        out.append(tabs.toString());
-        out.append("=== Fields ===" + "\n");
-
-        for (Field field : current.getDeclaredFields()) {
-            if (!field.isAccessible())
-                field.setAccessible(true);
-
+        if (current.getDeclaredFields().length > 0) {
             out.append(tabs.toString());
-            out.append(field.getName());
-            out.append(" = ");
+            out.append("=== Field-Dump ===" + "\n");
 
-            try {
-                Object value = field.get(object);
-                printValue(out, tabs, rows, value, top, hierarchyIndex);
-            } catch (Exception e) {
-                out.append(e.getMessage());
+            for (Field field : current.getDeclaredFields()) {
+                if (!field.isAccessible())
+                    field.setAccessible(true);
+
+                out.append(tabs.toString());
+                out.append(field.getName());
+                out.append(" = ");
+
+                try {
+                    Object value = field.get(object);
+                    printValue(out, tabs, rows, value, top, hierarchyIndex);
+                } catch (Exception e) {
+                    out.append(e.getMessage());
+                }
+
+                if (first) {
+                    first = false;
+                } else {
+                    out.append(", ");
+                }
+
+                out.append("\n");
             }
-
-            if (first) {
-                first = false;
-            } else {
-                out.append(", ");
-            }
-
-            out.append("\n");
         }
 
         out.append(tabs.toString().substring(4));
         out.append("}\n");
         --rows;
-        print(out, tabs, rows, object, current.getSuperclass(), top, hierarchyIndex, first);
+        print(out, new StringBuilder(), rows, object, current.getSuperclass(), top, hierarchyIndex, first); // We have to clear the tabs
     }
 
     private static void printValue(StringBuilder out,
@@ -105,7 +113,7 @@ public class PrettyPrinter {
 
         if (object == null) {
             out.append("<NULL>");
-        } else if (current.isPrimitive() || Primitives.isWrapperType(current)) {
+        } else if (current.isPrimitive() || Primitives.isWrapperType(current) || current == String.class) {
             out.append(object.toString());
         } else if (Map.class.isAssignableFrom(current)) {
             printMap(out, tabs, rows, (Map<Object, Object>) object, current, top, hierarchyIndex);

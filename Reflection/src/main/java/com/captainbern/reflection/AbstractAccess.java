@@ -167,7 +167,7 @@ public class AbstractAccess<T> implements Access<T> {
         return null;
     }
 
-    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<?> type) {
+    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type) {
         Field field = getFieldByNameAndType(name, type);
         return field == null ? null : (SafeField<T>) this.reflection.reflect(field);
     }
@@ -290,6 +290,17 @@ public class AbstractAccess<T> implements Access<T> {
         }
 
         return safeConstructors;
+    }
+
+    @Override
+    public <T> Constructor<T> getConstructor(Class... params) {
+        Constructor<T> constructor;
+        return null;
+    }
+
+    @Override
+    public <T> Constructor<T> getSafeConstructor(Class... params) {
+        return null;
     }
 
     @Override

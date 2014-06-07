@@ -122,7 +122,7 @@ public interface Access<T> extends Serializable {
      * @param <T>
      * @return
      */
-    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<?> type);
+    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type);
 
     /**
      * Returns a List of all the methods of the underlying class, keeping in mind the access-level
@@ -192,6 +192,22 @@ public interface Access<T> extends Serializable {
      * @return
      */
     public <T> List<SafeConstructor<T>> getSafeConstructors();
+
+    /**
+     * Returns a constructor which has the given params.
+     * @param params
+     * @param <T>
+     * @return
+     */
+    public <T> Constructor<T> getConstructor(Class... params);
+
+    /**
+     * Returns a constructor which has te given params as a SafeConstructor
+     * @param params
+     * @param <T>
+     * @return
+     */
+    public <T> Constructor<T> getSafeConstructor(Class... params);
 
     /**
      * Returns a List of all the constructors of the underlying class that match the matchers.

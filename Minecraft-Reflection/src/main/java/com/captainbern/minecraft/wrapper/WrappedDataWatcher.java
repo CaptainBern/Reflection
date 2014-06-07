@@ -75,10 +75,8 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
         if (readWrite != null)
             READ_WRITE_LOCK_FIELD = readWrite;
 
-        // In 1.7 netty has been added, together with this, the datawatcher has been changed to take
-        // an entity-instance in the constructor
         if (MinecraftReflection.isUsingNetty()) {
-
+            ENTITY_FIELD = dataWatcherTemplate.getSafeFieldByNameAndType("entity", MinecraftReflection.getEntityClass()).getAccessor();
         }
 
         initializeMethods();

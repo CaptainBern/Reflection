@@ -202,7 +202,7 @@ public interface Access<T> extends Serializable {
     public <T> Constructor<T> getConstructor(Class... params);
 
     /**
-     * Returns a constructor which has te given params as a SafeConstructor
+     * Returns a constructor which has the given params as a SafeConstructor
      * @param params
      * @param <T>
      * @return

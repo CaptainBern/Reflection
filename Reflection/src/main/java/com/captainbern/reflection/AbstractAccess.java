@@ -292,15 +292,20 @@ public class AbstractAccess<T> implements Access<T> {
         return safeConstructors;
     }
 
+    // TODO: Improve these.
     @Override
     public <T> Constructor<T> getConstructor(Class... params) {
-        Constructor<T> constructor;
-        return null;
+        try {
+            return (Constructor<T>) this.clazz.getConstructor(params);
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
     }
 
+    // TODO: Improve
     @Override
-    public <T> Constructor<T> getSafeConstructor(Class... params) {
-        return null;
+    public <T> SafeConstructor<T> getSafeConstructor(Class... params) {
+        return (SafeConstructor<T>) this.reflection.reflect(getConstructor(params));
     }
 
     @Override

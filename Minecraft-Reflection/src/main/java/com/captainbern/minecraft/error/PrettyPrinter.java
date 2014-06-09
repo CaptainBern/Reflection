@@ -8,6 +8,52 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A class used to print/parse objects
+ *
+ * Example output:
+ {
+     Class = com.captainbern.minecraft.error.PrettyPrinterTest
+     hashCode = 433c675d
+ }
+
+ {
+     Inherited from superclass com.captainbern.minecraft.error.TestClass
+     hashCode = 433c675d
+     === Field-Dump ===
+     someValue = lol
+     someInt = 15,
+     bool = true,
+     someLong = 1506877496847,
+     LOOK_I_M_A_LIST = (
+
+         {
+             Class = com.captainbern.minecraft.Dumper
+             hashCode = 377dca04
+             === Field-Dump ===
+             TAIL = └──
+             BRANCH = ├── ,
+             TREE = │,
+             instance = <Previously visited Object - See hashCode 930990596>,
+         }
+
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         <Previously visited Object - See hashCode 930990596>,
+         ),
+ }
+ */
 public class PrettyPrinter {
 
     public static int MAX_RECURSION_DEPTH = 3;
@@ -105,6 +151,7 @@ public class PrettyPrinter {
         out.append(tabs.toString().substring(4));
         out.append("}\n");
         --rows;
+
         print(out, new StringBuilder(), rows, object, current.getSuperclass(), top, hierarchyIndex, first, previous); // We have to clear the tabs
     }
 

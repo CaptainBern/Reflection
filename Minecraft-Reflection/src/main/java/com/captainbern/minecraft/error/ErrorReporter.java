@@ -2,7 +2,7 @@ package com.captainbern.minecraft.error;
 
 public interface ErrorReporter {
 
-    public void report(Object sender, String method);
+    public void report(Object sender, String method, Throwable throwable);
 
     public void report(Object sender, String method, Object... params);
 

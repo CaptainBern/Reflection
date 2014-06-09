@@ -1,5 +1,7 @@
 package com.captainbern.minecraft.reflection;
 
+import com.google.common.collect.ComparisonChain;
+
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,7 +10,7 @@ import java.util.regex.Pattern;
  * This class is used as a backup when we failed to retrieve the version of the version package.
  * This is mostly done because MCPC+ removes both the safeguard from the NMS classes and CraftBukkit classes.
  */
-public class MinecraftVersion implements Serializable {
+public class MinecraftVersion implements Serializable, Comparable<MinecraftVersion> {
 
     /**
      * A pattern used to obtain the version tag from the bukkit-version
@@ -75,8 +77,6 @@ public class MinecraftVersion implements Serializable {
             this.release = 1;
             return;
         }
-
-        throw new IllegalArgumentException("failed to parse the Minecraft version for the given input-string: " + versionString);
     }
 
     public MinecraftVersion(int major, int minor, int build) {
@@ -155,5 +155,18 @@ public class MinecraftVersion implements Serializable {
         }
 
         return false;
+    }
+
+    @Override
+    public int compareTo(MinecraftVersion o) {
+        if (o == null)
+            return 1;
+
+        return ComparisonChain
+                .start()
+                .compare(getMajor(), o.getMajor())
+                .compare(getMinor(), o.getMinor())
+                .compare(getBuild(), o.getBuild())
+                .result();
     }
 }

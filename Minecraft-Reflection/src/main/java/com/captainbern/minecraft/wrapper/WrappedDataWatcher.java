@@ -4,15 +4,19 @@ import com.captainbern.minecraft.reflection.MinecraftReflection;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeField;
+import com.captainbern.reflection.SafeMethod;
 import com.captainbern.reflection.accessor.ConstructorAccessor;
 import com.captainbern.reflection.accessor.FieldAccessor;
 import com.captainbern.reflection.accessor.MethodAccessor;
 
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
+import static com.captainbern.reflection.matcher.Matchers.withArguments;
+import static com.captainbern.reflection.matcher.Matchers.withReturnType;
 import static com.captainbern.reflection.matcher.Matchers.withType;
 
 public class WrappedDataWatcher extends AbstractWrapper implements Iterable<WrappedWatchableObject> {
@@ -44,6 +48,9 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
     public WrappedDataWatcher(final Object handle) {
         super(MinecraftReflection.getDataWatcherClass());
         this.handle = handle;
+
+        if (!IS_INITIALIZED)
+            initialize();
     }
 
     @Override
@@ -79,10 +86,33 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
             ENTITY_FIELD = dataWatcherTemplate.getSafeFieldByNameAndType("entity", MinecraftReflection.getEntityClass()).getAccessor();
         }
 
-        initializeMethods();
+        initializeMethods(dataWatcherTemplate);
     }
 
-    private static void initializeMethods() {
+    private static void initializeMethods(ClassTemplate dataWatcher) {
+        List<SafeMethod> methods = dataWatcher.getSafeMethods(withArguments(new Class[] {int.class, Object.class}));
 
+        try {
+            GET_KEY_VALUE_METHOD = ((SafeMethod<?>) dataWatcher.getSafeMethods(withReturnType(MinecraftReflection.getWatchableObjectClass())).get(0)).getAccessor();
+        } catch (Exception e) {
+
+        }
+
+        for (SafeMethod method : methods) {
+
+        }
+    }
+
+    private static Object newEntityHandle() {
+        try {
+            Class<?> dataWatcherClass = MinecraftReflection.getDataWatcherClass();
+            if (CREATE_CONSTRUCTOR == null)
+                CREATE_CONSTRUCTOR = new Reflection().reflect(dataWatcherClass.getConstructor(MinecraftReflection.getEntityClass())).getAccessor();
+
+            //return CREATE_CONSTRUCTOR.invoke()
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to create a new datawatcher");
+        }
     }
 }

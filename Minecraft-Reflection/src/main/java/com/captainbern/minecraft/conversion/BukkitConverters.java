@@ -21,10 +21,12 @@ public class BukkitConverters implements Converter {
 
     @Override
     public Object convert(Object bukkitHandle) {
+        if (bukkitHandle == null)
+            return null;
+
         Class<?> type = bukkitHandle instanceof Class ? (Class<?>) bukkitHandle : bukkitHandle.getClass();
 
         try {
-
             if (Primitives.isWrapperType(type) || type.isPrimitive()) {
                 return type;
             }

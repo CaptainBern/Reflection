@@ -25,27 +25,27 @@ public class MinecraftVersion implements Serializable, Comparable<MinecraftVersi
     /**
      * Represents the skin-update (aka the day Mojang decided to break NPC's)
      */
-    public static final MinecraftVersion SKIN_UPDATE = new MinecraftVersion(1, 7, 8, 1);
+    public static final MinecraftVersion SKIN_UPDATE = new MinecraftVersion(1, 7, 8);
 
     /**
      * Represents the world-update (aka the day Mojang decided minecraft needed canyons)
      */
-    public static final MinecraftVersion WORLD_UPDATE = new MinecraftVersion(1, 7, 2, 1);
+    public static final MinecraftVersion WORLD_UPDATE = new MinecraftVersion(1, 7, 2);
 
     /**
      * Represents the horse-update (aka the day Mojang decided to horsify Minecraft)
      */
-    public static final MinecraftVersion HORSE_UPDATE = new MinecraftVersion(1, 6, 1, 1);
+    public static final MinecraftVersion HORSE_UPDATE = new MinecraftVersion(1, 6, 1);
 
     /**
      * Represents the redstone-update (aka the day Mojang decided to be cool)
      */
-    public static final MinecraftVersion REDSTONE_UPDATE = new MinecraftVersion(1, 5, 0, 1);
+    public static final MinecraftVersion REDSTONE_UPDATE = new MinecraftVersion(1, 5, 0);
 
     /**
      * Represents the scary-update (aka the day Mojang scared us)
      */
-    public static final MinecraftVersion SCARY_UPDATE = new MinecraftVersion(1, 4, 2, 1);
+    public static final MinecraftVersion SCARY_UPDATE = new MinecraftVersion(1, 4, 2);
 
     private int major;
     private int minor;

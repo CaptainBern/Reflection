@@ -5,10 +5,12 @@ import com.captainbern.minecraft.reflection.providers.remapper.RemappedReflectio
 import com.captainbern.minecraft.reflection.providers.remapper.RemapperException;
 import com.captainbern.minecraft.reflection.utils.ClassCache;
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.accessor.MethodAccessor;
 import com.captainbern.reflection.provider.ReflectionProvider;
 import com.google.common.base.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.entity.Entity;
 
 import java.lang.reflect.Method;
 import java.util.regex.Matcher;
@@ -373,9 +375,13 @@ public class MinecraftReflection {
         return isUsingNetty;
     }
 
-    /**
-     * Other utility methods
-     */
+    public static Entity toBukkitEntity(Object nmsEntity) {
+        if (!getEntityClass().isAssignableFrom(nmsEntity.getClass()))
+            throw new IllegalArgumentException("The given object can't be cast to: " + getEntityClass().getCanonicalName());
+
+        MethodAccessor<Entity> toBukkitEntity = new Reflection().reflect(getEntityClass()).getSafeMethod("getBukkitEntity").getAccessor();
+        return toBukkitEntity.invoke(nmsEntity);
+    }
 
 }
 

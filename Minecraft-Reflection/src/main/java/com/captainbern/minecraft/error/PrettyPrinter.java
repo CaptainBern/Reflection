@@ -181,7 +181,7 @@ public class PrettyPrinter {
         } else if (Iterable.class.isAssignableFrom(current)) {
             printIterable(out, tabs, rows, (Iterable) object, top, hierarchyIndex, previous);
         } else {
-            print(out, tabs, rows, object, object.getClass(), top, hierarchyIndex - 1, true, previous);
+            print(out, new StringBuilder(), rows, object, object.getClass(), top, hierarchyIndex - 1, true, previous);
         }
     }
 

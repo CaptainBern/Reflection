@@ -104,13 +104,9 @@ public class MinecraftReflection {
                 if (packageMatcher.matches()) {
                     VERSION_TAG = packageMatcher.group(1);
                 } else {
-                    // This is more of a backup to check whether or not we even need
-                    // a version tag. Since the safeguard has been implemented
-                    // with the scary update.
+                    // This is more of a backup
                     MinecraftVersion version = new MinecraftVersion(Bukkit.getVersion());
-                    if (MinecraftVersion.SCARY_UPDATE.compareTo(version) <= 0) {
-                        VERSION_TAG = version.toSafeguardTag();
-                    }
+                    VERSION_TAG = version.toSafeguardTag();
                 }
 
                 handlePossiblePackageTrouble();

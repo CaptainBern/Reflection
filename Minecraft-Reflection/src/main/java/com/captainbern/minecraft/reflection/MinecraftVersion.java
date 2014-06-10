@@ -110,7 +110,10 @@ public class MinecraftVersion implements Serializable, Comparable<MinecraftVersi
     }
 
     public String toSafeguardTag() {
-        return "v" + this.major + "_" +this.minor + "_R" + (this.release < 1 ? "1" : release);
+        if (SCARY_UPDATE.compareTo(this) <= 0) {
+            return "v" + this.major + "_" +this.minor + "_R" + (this.release < 1 ? "1" : release);
+        }
+        return "";
     }
 
     private int[] parseVersion(final String version) {

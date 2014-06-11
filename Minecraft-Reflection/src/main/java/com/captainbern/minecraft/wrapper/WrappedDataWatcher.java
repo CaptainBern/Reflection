@@ -132,7 +132,7 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
                 watcher.setObject(0, 1);
 
                 if (watcher.getInteger(0) != 1) {
-                    throw new IllegalStateException("This cannot be!");
+                    throw new IllegalStateException("Something went wrong!");
                 }
             } catch (Exception e) {
                 UPDATE_KEY_VALUE_METHOD = methods.get(0).getAccessor();
@@ -149,7 +149,7 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
 
             return CREATE_CONSTRUCTOR.invoke(BukkitConverters.getInstance().convert(entity));
         } catch (Exception e) {
-            throw new RuntimeException("Unable to create a new datawatcher", e);
+            throw new RuntimeException("Unable to create a new DataWatcher", e);
         }
     }
 
@@ -232,7 +232,6 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
     }
 
     public void setObject(int index, Object newValue, boolean update) {
-        // Aquire write lock
         Lock writeLock = getReadWriteLock().writeLock();
         writeLock.lock();
 
@@ -245,7 +244,6 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
                 CREATE_KEY_VALUE_METHOD.invoke(this.getHandle(), index, newValue);
             }
 
-            // Handle invoking the method
         } catch (Exception e) {
         } finally {
             writeLock.unlock();

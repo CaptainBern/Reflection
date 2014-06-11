@@ -45,7 +45,7 @@ public class ClassMatcher extends AbstractMatcher<Class<?>> {
             return this;
         }
 
-        public Builder withConstructor(MemberMatcher.Builder builder) {
+        public Builder withConstructor(ConstructorMatcher.Builder builder) {
             return withConstructor(builder.build());
         }
 

@@ -17,6 +17,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ *
+ * // TODO: Create fallback methods!
+ *
  * To understand how this all works, please refer to the bottom of the file.
  *
  * This class should provide a pretty safe way of using Reflection with both NMS and CraftBukkit classes.
@@ -383,6 +386,13 @@ public class MinecraftReflection {
         return toBukkitEntity.invoke(nmsEntity);
     }
 
+    public static Class<?> getNbtBaseClass() {
+        try {
+            return getMinecraftClass("NBTBase");
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 /**

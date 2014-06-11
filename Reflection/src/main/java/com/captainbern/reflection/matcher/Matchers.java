@@ -142,6 +142,15 @@ public class Matchers {
         };
     }
 
+    public static AbstractMatcher<Class<?>> fromType(final Class<?> match) {
+        return new AbstractMatcher<Class<?>>() {
+            @Override
+            public boolean matches(Class<?> type) {
+                return type.equals(match);
+            }
+        };
+    }
+
     public static <T> Matcher<T> and(final Matcher<? super T> parent, final Matcher<? super T> other) {
         return new AndMatcher<>(parent, other);
     }

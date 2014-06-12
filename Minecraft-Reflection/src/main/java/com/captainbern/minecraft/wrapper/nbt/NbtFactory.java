@@ -9,13 +9,13 @@ import com.captainbern.reflection.accessor.MethodAccessor;
 import java.util.List;
 
 import static com.captainbern.reflection.matcher.Matchers.withArguments;
+import static com.captainbern.reflection.matcher.Matchers.withReturnType;
 
 public class NbtFactory {
 
-    private static MethodAccessor<Object> CREATE_TAG;
-    private static boolean withName;
+    private static MethodAccessor CREATE_TAG;
 
-    public static <T> NbtWrapper<T> createTag(NbtType type, String name) {
+    public static <T> WrappedNbtTag<T> createTag(NbtType type) {
         if (type == null)
             throw new IllegalArgumentException("Given type cannot be NULL!");
         if (type.equals(NbtType.TAG_END))
@@ -26,43 +26,22 @@ public class NbtFactory {
             ClassTemplate nbtBase = new Reflection().reflect(MinecraftReflection.getNbtBaseClass());
             List<SafeMethod<Object>> methods;
 
-            try {
-                methods = nbtBase.getSafeMethods(withArguments(new Class[]{byte.class, String.class}));
-                CREATE_TAG = methods.get(0).getAccessor();
-                withName = true;
-            } catch (Exception e) {
-                methods = nbtBase.getSafeMethods(withArguments(new Class[]{byte.class}));
-                CREATE_TAG = methods.get(0).getAccessor();
-                withName = false;
-            }
+            methods = nbtBase.getSafeMethods(withReturnType(MinecraftReflection.getNbtBaseClass()), withArguments(new Class[]{byte.class}));
+            CREATE_TAG = methods.get(0).getAccessor();
         }
 
-        if (withName) {
-            return createTagWithName(type, name);
-        } else {
-            return createTagSetNameAfter(type, name);
-        }
+            return createTagWithName(type);
     }
 
-    private static <T> NbtWrapper<T> createTagWithName(NbtType type, String name) {
-        Object handle = CREATE_TAG.invoke(null, type.getId(), name);
+    private static <T> WrappedNbtTag<T> createTagWithName(NbtType type) {
+        Object handle = CREATE_TAG.invokeStatic((byte) type.getId());
 
         switch (type) {
             case TAG_COMPOUND:
+                return (WrappedNbtTag<T>) new WrappedNbtTagCompound(handle);
             case TAG_LIST:
             default:
                 return new WrappedNbtElement<>(handle);
-        }
-    }
-
-    private static <T> NbtWrapper<T> createTagSetNameAfter(NbtType type, String name) {
-        Object handle = CREATE_TAG.invoke(null, type.getId());
-
-        switch (type) {
-            case TAG_COMPOUND:
-            case TAG_LIST:
-            default:
-                return new WrappedNbtElement<>(handle, name);
         }
     }
 }

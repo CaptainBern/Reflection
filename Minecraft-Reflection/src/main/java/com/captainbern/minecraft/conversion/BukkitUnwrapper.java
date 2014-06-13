@@ -7,17 +7,17 @@ import com.google.common.primitives.Primitives;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BukkitConverters implements Converter {
+public class BukkitUnwrapper implements Unwrapper {
 
-    private static BukkitConverters instance = new BukkitConverters();
+    private static BukkitUnwrapper instance = new BukkitUnwrapper();
 
-    private Map<Class<?>, Converter> converterMap = new HashMap<>();
+    private Map<Class<?>, Unwrapper> converterMap = new HashMap<>();
 
-    public static BukkitConverters getInstance() {
+    public static BukkitUnwrapper getInstance() {
         return instance;
     }
 
-    private BukkitConverters() {}
+    private BukkitUnwrapper() {}
 
     @Override
     public Object convert(Object bukkitHandle) {
@@ -31,12 +31,12 @@ public class BukkitConverters implements Converter {
                 return type;
             }
 
-            Converter converter = converterMap.get(type);
+            Unwrapper unwrapper = converterMap.get(type);
 
-            if (converter == null) {
+            if (unwrapper == null) {
                 final MethodAccessor<Object> accessor = new Reflection().reflect(type).getSafeMethod("getHandle").getAccessor();
 
-                converter = new Converter() {
+                unwrapper = new Unwrapper() {
 
                     @Override
                     public Object convert(Object toConvert) {
@@ -44,10 +44,10 @@ public class BukkitConverters implements Converter {
                     }
                 };
 
-                this.converterMap.put(type, converter);
+                this.converterMap.put(type, unwrapper);
             }
 
-            return converter;
+            return unwrapper;
         } catch (Exception e) {
             throw new RuntimeException("Failed to create/find a converter for: " + bukkitHandle.getClass().getCanonicalName());
         }

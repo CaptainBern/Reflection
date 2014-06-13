@@ -8,6 +8,23 @@ import static com.captainbern.reflection.matcher.Matchers.fromType;
 
 public class MethodMatcher extends MemberMatcher<Method> {
 
+    private AbstractMatcher<Class<?>> returnTypeMatcher;
+
+    private MethodMatcher() {
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    @Override
+    public boolean matches(Method method) {
+        if (super.matches(method)) {
+            // TODO Finish this
+        }
+        return false;
+    }
+
     public static class Builder extends MemberMatcher.Builder<MethodMatcher> {
 
         public Builder withReturnType(Class<?> returnType) {
@@ -29,21 +46,5 @@ public class MethodMatcher extends MemberMatcher<Method> {
         public MethodMatcher build() {
             return this.matcher;
         }
-    }
-
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
-    private AbstractMatcher<Class<?>> returnTypeMatcher;
-
-    private MethodMatcher() {}
-
-    @Override
-    public boolean matches(Method method) {
-        if (super.matches(method)) {
-             // TODO Finish this
-        }
-        return false;
     }
 }

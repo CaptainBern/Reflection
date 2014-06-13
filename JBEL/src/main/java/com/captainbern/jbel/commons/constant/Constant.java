@@ -34,10 +34,6 @@ public abstract class Constant implements Opcode {
         this.tag = tag;
     }
 
-    public byte getTag() {
-        return this.tag;
-    }
-
     public static Constant readConstant(DataInputStream codeStream) throws IOException, ClassFormatException {
         byte tag = codeStream.readByte();
         switch (tag) {
@@ -72,6 +68,10 @@ public abstract class Constant implements Opcode {
             default:
                 throw new ClassFormatException("Invalid tag type: " + tag);
         }
+    }
+
+    public byte getTag() {
+        return this.tag;
     }
 
     public abstract void write(DataOutputStream codeStream) throws IOException;

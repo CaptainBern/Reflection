@@ -65,11 +65,6 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
         initialize();
     }
 
-    @Override
-    public Iterator<WrappedWatchableObject> iterator() {
-        return getWatchableObjects().iterator();
-    }
-
     private static void initialize() {
         if (IS_INITIALIZED) {
             return;
@@ -91,8 +86,9 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
 
         // The ReadWriteLock
         FieldAccessor<ReadWriteLock> readWrite = dataWatcherTemplate.getSafeFieldByType(ReadWriteLock.class).getAccessor();
-        if (readWrite != null)
+        if (readWrite != null) {
             READ_WRITE_LOCK_FIELD = readWrite;
+        }
 
         if (MinecraftReflection.isUsingNetty()) {
             ENTITY_FIELD = dataWatcherTemplate.getSafeFieldByType(MinecraftReflection.getEntityClass()).getAccessor();
@@ -102,7 +98,7 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
     }
 
     private static void initializeMethods(ClassTemplate dataWatcher) {
-        List<SafeMethod> methods = dataWatcher.getSafeMethods(withArguments(new Class[] {int.class, Object.class}));
+        List<SafeMethod> methods = dataWatcher.getSafeMethods(withArguments(new Class[]{int.class, Object.class}));
 
         try {
             GET_KEY_VALUE_METHOD = ((SafeMethod<?>) dataWatcher.getSafeMethods(withReturnType(MinecraftReflection.getWatchableObjectClass())).get(0)).getAccessor();
@@ -144,8 +140,9 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
     private static Object newEntityHandle(Entity entity) {
         try {
             Class<?> dataWatcherClass = MinecraftReflection.getDataWatcherClass();
-            if (CREATE_CONSTRUCTOR == null)
+            if (CREATE_CONSTRUCTOR == null) {
                 CREATE_CONSTRUCTOR = new Reflection().reflect(dataWatcherClass).getSafeConstructor(MinecraftReflection.getEntityClass()).getAccessor();
+            }
 
             return CREATE_CONSTRUCTOR.invoke(BukkitConverters.getInstance().convert(entity));
         } catch (Exception e) {
@@ -153,9 +150,32 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
         }
     }
 
+    public static Integer getTypeID(Object value) {
+        initialize();
+        return TYPE_MAP.get(value);
+    }
+
+    public static Class<?> getTypeClass(int id) {
+        initialize();
+
+        for (Map.Entry<Class<?>, Integer> entry : TYPE_MAP.entrySet()) {
+            if (Objects.equal(entry.getValue(), id)) {
+                return entry.getKey();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Iterator<WrappedWatchableObject> iterator() {
+        return getWatchableObjects().iterator();
+    }
+
     public Entity getEntity() {
-        if (!MinecraftReflection.isUsingNetty())
+        if (!MinecraftReflection.isUsingNetty()) {
             throw new IllegalStateException("This method is only supported in 1.7.x and above!");
+        }
         try {
             return MinecraftReflection.toBukkitEntity(ENTITY_FIELD.get(this.getHandle()));
         } catch (Exception e) {
@@ -164,8 +184,9 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
     }
 
     public void setEntity(Entity entity) {
-        if (!MinecraftReflection.isUsingNetty())
+        if (!MinecraftReflection.isUsingNetty()) {
             throw new IllegalStateException("This method is only supported in 1.7.x and above!");
+        }
 
         try {
             ENTITY_FIELD.set(this.getHandle(), BukkitConverters.getInstance().convert(entity));
@@ -189,8 +210,9 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
     }
 
     protected Map<Integer, Object> getWatchableObjectMap() {
-        if (watchableObjects == null)
+        if (watchableObjects == null) {
             watchableObjects = VALUE_MAP_ACCESSOR.get(this.getHandle());
+        }
         return this.watchableObjects;
     }
 
@@ -258,7 +280,7 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
         return (Short) getObject(index);
     }
 
-    public Integer getInteger(int index){
+    public Integer getInteger(int index) {
         return (Integer) getObject(index);
     }
 
@@ -299,11 +321,11 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
 
     public Map<Integer, WrappedWatchableObject> asMap() {
         if (mapView == null) {
-             mapView = new HashMap<>();
+            mapView = new HashMap<>();
 
-             for (WrappedWatchableObject object : getWatchableObjects()) {
-                 mapView.put(object.getIndex(), object);
-             }
+            for (WrappedWatchableObject object : getWatchableObjects()) {
+                mapView.put(object.getIndex(), object);
+            }
         }
         return mapView;
     }
@@ -322,22 +344,5 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
         } finally {
             readLock.unlock();
         }
-    }
-
-    public static Integer getTypeID(Object value) {
-        initialize();
-        return TYPE_MAP.get(value);
-    }
-
-    public static Class<?> getTypeClass(int id) {
-        initialize();
-
-        for (Map.Entry<Class<?>, Integer> entry : TYPE_MAP.entrySet()) {
-            if (Objects.equal(entry.getValue(), id)) {
-                return entry.getKey();
-            }
-        }
-
-        return null;
     }
 }

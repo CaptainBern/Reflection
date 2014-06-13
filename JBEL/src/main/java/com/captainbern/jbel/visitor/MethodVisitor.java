@@ -10,7 +10,7 @@ public class MethodVisitor {
     protected MethodVisitor methodVisitor;
 
     public MethodVisitor(int api, MethodVisitor methodVisitor) {
-        if(api != Opcode.JBEL_1) {
+        if (api != Opcode.JBEL_1) {
             throw new IllegalArgumentException();
         }
         this.api = api;
@@ -18,13 +18,13 @@ public class MethodVisitor {
     }
 
     public void visitAttribute(Attribute attribute) {
-        if(this.methodVisitor != null) {
+        if (this.methodVisitor != null) {
             this.methodVisitor.visitAttribute(attribute);
         }
     }
 
     public void visitEnd() {
-        if(this.methodVisitor != null) {
+        if (this.methodVisitor != null) {
             this.methodVisitor.visitEnd();
         }
     }

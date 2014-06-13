@@ -24,8 +24,7 @@ public interface Mnemonics {
     /**
      * An array with a size of 255. It contains 203 valid opcodes
      */
-    String[] OPCODES = {
-            "nop",              /* 0 */
+    String[] OPCODES = {"nop",              /* 0 */
             "aconst_null",      /* 1 */
             "iconst_m1",        /* 2 */
             "iconst_0",         /* 3 */

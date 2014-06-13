@@ -2,14 +2,15 @@ package com.captainbern.reflection.utils;
 
 public class Assert {
 
-    private Assert() {}
+    private Assert() {
+    }
 
     public static void assertTrue(boolean expression) {
         assertTrue(expression, null);
     }
 
     public static void assertTrue(boolean expression, String message) {
-        if(!expression) {
+        if (!expression) {
             throwAssertionError(message);
         }
     }
@@ -23,7 +24,7 @@ public class Assert {
     }
 
     public static void throwAssertionError(String message) {
-        if(message == null) {
+        if (message == null) {
             throw new AssertionError();
         } else {
             throw new AssertionError(message);
@@ -31,15 +32,15 @@ public class Assert {
     }
 
     public static void assertEquals(Object actual, Object expected, String message) {
-        if(expected == null && actual == null) {
+        if (expected == null && actual == null) {
             return;
-        } else if(!actual.equals(expected)) {
+        } else if (!actual.equals(expected)) {
             throwEqualsError(message, expected, actual);
         }
     }
 
     public static void throwEqualsError(String message, Object expected, Object actual) {
-        if(message == null) {
+        if (message == null) {
             throw new AssertionError(format("Was given: %s<%s> but expected: %s<%s>!", expected, String.valueOf(expected), actual, String.valueOf(actual)));
         } else {
             throw new AssertionError(message);
@@ -55,7 +56,7 @@ public class Assert {
     }
 
     public static void assertNull(Object object, String message) {
-        if(object != null) {
+        if (object != null) {
             throwNotNull(object, message);
         }
     }
@@ -66,7 +67,7 @@ public class Assert {
 
     private static void throwNotNull(Object object, String message) {
         String pretty = "";
-        if(message != null) {
+        if (message != null) {
             pretty = message + " ";
         }
         throwAssertionError(format(pretty + "expected null but got: %s", object));
@@ -77,17 +78,17 @@ public class Assert {
     }
 
     public static void assertElementIndex(int index, int size, String message) {
-        if(index < 0 || index >= size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(formatIndexError(index, size, String.valueOf(message)));
         }
     }
 
     private static String formatIndexError(int index, int size, String desc) {
-        if(index < 0) {
+        if (index < 0) {
             return format("%s \'%s\' must not be negative!", desc, index);
-        } else if(size < 0) {
+        } else if (size < 0) {
             throw new IllegalArgumentException("Negative size: " + size);
-        } else if(index >= size) {
+        } else if (index >= size) {
             return format("%s (%s) must be less then size (%s)", desc, index, size);
         }
         return null;
@@ -103,7 +104,7 @@ public class Assert {
 
         while (index < params.length) {
             int place = message.indexOf("%s");
-            if(place == -1) {
+            if (place == -1) {
                 break;
             }
             builder.append(message.substring(messageStart, place));
@@ -111,9 +112,9 @@ public class Assert {
             messageStart = place + 2;
         }
 
-        if(index < params.length) {
+        if (index < params.length) {
             builder.append(" {");
-            while(index < params.length) {
+            while (index < params.length) {
                 builder.append(", ");
                 builder.append(params[index++]);
             }

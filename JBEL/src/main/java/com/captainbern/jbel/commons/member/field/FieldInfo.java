@@ -20,10 +20,10 @@
 package com.captainbern.jbel.commons.member.field;
 
 import com.captainbern.jbel.ConstantPool;
-import com.captainbern.jbel.commons.member.Member;
 import com.captainbern.jbel.Opcode;
 import com.captainbern.jbel.commons.attribute.Attribute;
 import com.captainbern.jbel.commons.exception.ClassFormatException;
+import com.captainbern.jbel.commons.member.Member;
 
 import java.io.DataInputStream;
 import java.io.IOException;

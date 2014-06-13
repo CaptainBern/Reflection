@@ -51,8 +51,8 @@ public class ConstantPool implements Opcode {
 
     public final void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeShort(this.size);
-        for(int i = 1; i < this.size; i++) {
-            if(this.constantPool[i] != null) {
+        for (int i = 1; i < this.size; i++) {
+            if (this.constantPool[i] != null) {
                 this.constantPool[i].write(codeStream);
             }
         }
@@ -62,13 +62,13 @@ public class ConstantPool implements Opcode {
         return this.constantPool;
     }
 
-    public int getSize() {
-        return this.size;
-    }
-
     public void setConstantPool(Constant[] constantPool) {
         this.constantPool = constantPool;
         this.size = this.constantPool == null ? 0 : this.constantPool.length;
+    }
+
+    public int getSize() {
+        return this.size;
     }
 
     public void setConstant(int index, Constant constant) {
@@ -93,8 +93,7 @@ public class ConstantPool implements Opcode {
             throw new ClassFormatException("Constant pool at index \'" + index + "\' is NULL.");
         }
         if (constant.getTag() != tag) {
-            throw new ClassFormatException("Expected class \'" + CONSTANT_NAMES[tag]
-                    + "\' at index \'" + index + "\' and got \'" + constant + "\'");
+            throw new ClassFormatException("Expected class \'" + CONSTANT_NAMES[tag] + "\' at index \'" + index + "\' and got \'" + constant + "\'");
         }
         return constant;
     }
@@ -140,7 +139,7 @@ public class ConstantPool implements Opcode {
     }
 
     public LongConstant getLong(int index) throws ClassFormatException {
-         return (LongConstant) getConstant(index, CONSTANT_Long);
+        return (LongConstant) getConstant(index, CONSTANT_Long);
     }
 
     public void setLong(int index, LongConstant constant) {

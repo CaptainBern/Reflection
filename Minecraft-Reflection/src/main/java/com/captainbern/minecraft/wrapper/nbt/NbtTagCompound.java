@@ -13,7 +13,11 @@ public interface NbtTagCompound extends NbtTagBase<Map<String, NbtTagBase<?>>>, 
 
     public abstract <T> NbtTagBase<T> getValue(String key);
 
-    public abstract <T> NbtTagCompound put(@Nonnull String key, @Nonnull NbtTagBase<T> value);
+    public abstract <T> NbtTagCompound put(
+            @Nonnull
+            String key,
+            @Nonnull
+            NbtTagBase<T> value);
 
     public abstract byte getByte(String key);
 

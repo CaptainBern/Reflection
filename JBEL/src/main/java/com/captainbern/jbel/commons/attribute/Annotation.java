@@ -36,7 +36,7 @@ public class Annotation extends Attribute {
         super(tag, index, length, constantPool);
         tableSize = codeStream.readUnsignedShort();
         this.entries = new AnnotationEntry[tableSize];
-        for(int i = 0; i < tableSize; i++) {
+        for (int i = 0; i < tableSize; i++) {
             this.entries[i] = AnnotationEntry.read(codeStream, constantPool, isRuntimeVisible);
         }
     }
@@ -47,12 +47,12 @@ public class Annotation extends Attribute {
         setEntryTable(entries);
     }
 
-    public void setEntryTable(AnnotationEntry[] entries) {
-        this.entries = entries;
-    }
-
     public AnnotationEntry[] getEntryTable() {
         return this.entries;
+    }
+
+    public void setEntryTable(AnnotationEntry[] entries) {
+        this.entries = entries;
     }
 
     public boolean isRuntimeVisible() {
@@ -60,11 +60,12 @@ public class Annotation extends Attribute {
     }
 
     protected void writeAnnotations(DataOutputStream codeStream) throws IOException {
-        if(this.entries == null)
+        if (this.entries == null) {
             return;
+        }
 
         codeStream.writeShort(this.tableSize);
-        for(int i = 0; i < this.tableSize; i++) {
+        for (int i = 0; i < this.tableSize; i++) {
             this.entries[i].write(codeStream);
         }
     }

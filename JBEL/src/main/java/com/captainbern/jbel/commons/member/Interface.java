@@ -12,7 +12,7 @@ public class Interface implements Opcode {
     private ConstantPool constantPool;
 
     public Interface(int index, ConstantPool constantPool) {
-         this.index = index;
+        this.index = index;
         this.constantPool = constantPool;
     }
 

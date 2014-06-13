@@ -40,7 +40,7 @@ public class LineNumberTable extends Attribute implements Opcode {
         this(index, length, (LineNumber[]) null, constantPool);
         this.lineNumberTableLength = codeStream.readUnsignedShort();
         this.lineNumbers = new LineNumber[this.lineNumberTableLength];
-        for(int i = 0; i < lineNumberTableLength; i++) {
+        for (int i = 0; i < lineNumberTableLength; i++) {
             this.lineNumbers[i] = new LineNumber(codeStream);
         }
     }
@@ -67,7 +67,7 @@ public class LineNumberTable extends Attribute implements Opcode {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.lineNumberTableLength);
-        for(int i = 0; i < this.lineNumberTableLength; i++) {
+        for (int i = 0; i < this.lineNumberTableLength; i++) {
             this.lineNumbers[i].write(codeStream);
         }
     }

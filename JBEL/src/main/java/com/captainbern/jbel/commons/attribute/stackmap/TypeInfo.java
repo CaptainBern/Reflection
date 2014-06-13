@@ -34,8 +34,9 @@ public class TypeInfo implements Opcode {
 
     public TypeInfo(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
         this(codeStream.readByte(), -1, constantPool);
-        if(hasIndex())
+        if (hasIndex()) {
             setIndex(codeStream.readShort());
+        }
         setConstantPool(constantPool);
     }
 
@@ -50,8 +51,9 @@ public class TypeInfo implements Opcode {
     }
 
     public void setType(byte type) {
-        if(type < ITEM_Top || type > ITEM_Uninitialized)
+        if (type < ITEM_Top || type > ITEM_Uninitialized) {
             throw new IllegalArgumentException("Illegal StackMapType for type: " + type);
+        }
 
         this.type = type;
     }
@@ -84,7 +86,8 @@ public class TypeInfo implements Opcode {
 
     public void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeByte(this.type);
-        if(hasIndex())
+        if (hasIndex()) {
             codeStream.writeShort(this.index);
+        }
     }
 }

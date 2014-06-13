@@ -13,40 +13,33 @@ import java.util.regex.Pattern;
 public class MinecraftVersion implements Serializable, Comparable<MinecraftVersion> {
 
     /**
-     * A pattern used to obtain the version tag from the bukkit-version
-     */
-    private static final Pattern BUKKIT_VERSION_PATTERN = Pattern.compile("([0-9]+)(\\.)([0-9]+)(\\.)([0-9]+)(-)(R)([0-9]+)");
-
-    /**
-     * In case the above pattern fails, we will use this.
-     */
-    private static final Pattern VERSION_PATTERN = Pattern.compile(".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)");
-
-    /**
      * Represents the skin-update (aka the day Mojang decided to break NPC's)
      */
     public static final MinecraftVersion SKIN_UPDATE = new MinecraftVersion(1, 7, 8);
-
     /**
      * Represents the world-update (aka the day Mojang decided minecraft needed canyons)
      */
     public static final MinecraftVersion WORLD_UPDATE = new MinecraftVersion(1, 7, 2);
-
     /**
      * Represents the horse-update (aka the day Mojang decided to horsify Minecraft)
      */
     public static final MinecraftVersion HORSE_UPDATE = new MinecraftVersion(1, 6, 1);
-
     /**
      * Represents the redstone-update (aka the day Mojang decided to be cool)
      */
     public static final MinecraftVersion REDSTONE_UPDATE = new MinecraftVersion(1, 5, 0);
-
     /**
      * Represents the scary-update (aka the day Mojang scared us)
      */
     public static final MinecraftVersion SCARY_UPDATE = new MinecraftVersion(1, 4, 2);
-
+    /**
+     * A pattern used to obtain the version tag from the bukkit-version
+     */
+    private static final Pattern BUKKIT_VERSION_PATTERN = Pattern.compile("([0-9]+)(\\.)([0-9]+)(\\.)([0-9]+)(-)(R)([0-9]+)");
+    /**
+     * In case the above pattern fails, we will use this.
+     */
+    private static final Pattern VERSION_PATTERN = Pattern.compile(".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)");
     private int major;
     private int minor;
     private int build;
@@ -111,7 +104,7 @@ public class MinecraftVersion implements Serializable, Comparable<MinecraftVersi
 
     public String toSafeguardTag() {
         if (SCARY_UPDATE.compareTo(this) <= 0) {
-            return "v" + this.major + "_" +this.minor + "_R" + (this.release < 1 ? "1" : release);
+            return "v" + this.major + "_" + this.minor + "_R" + (this.release < 1 ? "1" : release);
         }
         return "";
     }
@@ -143,10 +136,12 @@ public class MinecraftVersion implements Serializable, Comparable<MinecraftVersi
 
     @Override
     public boolean equals(Object other) {
-        if (other == null)
+        if (other == null) {
             return false;
-        if (other == this)
+        }
+        if (other == this) {
             return true;
+        }
 
         if (other instanceof MinecraftVersion) {
             MinecraftVersion otherVersion = (MinecraftVersion) other;
@@ -162,14 +157,10 @@ public class MinecraftVersion implements Serializable, Comparable<MinecraftVersi
 
     @Override
     public int compareTo(MinecraftVersion o) {
-        if (o == null)
+        if (o == null) {
             return 1;
+        }
 
-        return ComparisonChain
-                .start()
-                .compare(getMajor(), o.getMajor())
-                .compare(getMinor(), o.getMinor())
-                .compare(getBuild(), o.getBuild())
-                .result();
+        return ComparisonChain.start().compare(getMajor(), o.getMajor()).compare(getMinor(), o.getMinor()).compare(getBuild(), o.getBuild()).result();
     }
 }

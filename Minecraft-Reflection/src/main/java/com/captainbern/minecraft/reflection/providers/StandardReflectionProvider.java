@@ -32,6 +32,6 @@ public class StandardReflectionProvider extends DefaultReflectionProvider {
 
     @Override
     public int hashCode() {
-        return toString().hashCode() ^ super.hashCode();
+        return toString().hashCode()^super.hashCode();
     }
 }

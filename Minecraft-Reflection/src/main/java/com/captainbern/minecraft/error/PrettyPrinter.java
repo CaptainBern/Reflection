@@ -10,49 +10,49 @@ import java.util.Set;
 
 /**
  * A class used to print/parse objects
- *
+ * <p/>
  * Example output:
- {
-     Class = com.captainbern.minecraft.error.PrettyPrinterTest
-     hashCode = 433c675d
- }
-
- {
-     Inherited from superclass com.captainbern.minecraft.error.TestClass
-     hashCode = 433c675d
-     === Field-Dump ===
-     someValue = lol
-     someInt = 15,
-     bool = true,
-     someLong = 1506877496847,
-     LOOK_I_M_A_LIST = (
-
-         {
-             Class = com.captainbern.minecraft.Dumper
-             hashCode = 377dca04
-             === Field-Dump ===
-             TAIL = └──
-             BRANCH = ├── ,
-             TREE = │,
-             instance = <Previously visited Object - See hashCode 930990596>,
-         }
-
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         <Previously visited Object - See hashCode 930990596>,
-         ),
- }
+ * {
+ * Class = com.captainbern.minecraft.error.PrettyPrinterTest
+ * hashCode = 433c675d
+ * }
+ * <p/>
+ * {
+ * Inherited from superclass com.captainbern.minecraft.error.TestClass
+ * hashCode = 433c675d
+ * === Field-Dump ===
+ * someValue = lol
+ * someInt = 15,
+ * bool = true,
+ * someLong = 1506877496847,
+ * LOOK_I_M_A_LIST = (
+ * <p/>
+ * {
+ * Class = com.captainbern.minecraft.Dumper
+ * hashCode = 377dca04
+ * === Field-Dump ===
+ * TAIL = └──
+ * BRANCH = ├── ,
+ * TREE = │,
+ * instance = <Previously visited Object - See hashCode 930990596>,
+ * }
+ * <p/>
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * <Previously visited Object - See hashCode 930990596>,
+ * ),
+ * }
  */
 public class PrettyPrinter {
 
@@ -84,12 +84,12 @@ public class PrettyPrinter {
                                 Class<?> current,   // The Class we're printing
                                 Class<?> top,       // The top class/we have to stop the recursion when we reach this class
                                 int hierarchyIndex, // The current hierarchy/recursion-index
-                                boolean first,
-                                Set<Object> previous) {    // Whether or not this is the first object
+                                boolean first, Set<Object> previous) {    // Whether or not this is the first object
 
 
-        if (current == null || current == Object.class || (top != null && current == top))
+        if (current == null || current == Object.class || (top != null && current == top)) {
             return;
+        }
 
         if (hierarchyIndex < 0) {
             out.append("<Reached max recursions>");
@@ -124,8 +124,9 @@ public class PrettyPrinter {
             out.append("=== Field-Dump ===" + "\n");
 
             for (Field field : current.getDeclaredFields()) {
-                if (!field.isAccessible())
+                if (!field.isAccessible()) {
                     field.setAccessible(true);
+                }
 
                 out.append(tabs.toString());
                 out.append(field.getName());
@@ -155,13 +156,7 @@ public class PrettyPrinter {
         print(out, new StringBuilder(), rows, object, current.getSuperclass(), top, hierarchyIndex, first, previous); // We have to clear the tabs
     }
 
-    private static void printValue(StringBuilder out,
-                                   StringBuilder tabs,
-                                   int rows,
-                                   Object object,
-                                   Class<?> top,
-                                   int hierarchyIndex,
-                                   Set<Object> previous) {
+    private static void printValue(StringBuilder out, StringBuilder tabs, int rows, Object object, Class<?> top, int hierarchyIndex, Set<Object> previous) {
 
         if (previous.contains(object)) {
             out.append("<Previously visited Object - See hashCode " + object.hashCode() + ">");
@@ -197,10 +192,11 @@ public class PrettyPrinter {
             out.append(" = ");
             printValue(out, tabs, rows, entry.getValue(), top, hierarchyIndex - 1, previous);
 
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 out.append(", ");
+            }
 
             out.append("\n");
         }
@@ -223,10 +219,11 @@ public class PrettyPrinter {
                 out.append(e.getMessage());
             }
 
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 out.append(", ");
+            }
 
             out.append("\n");
         }
@@ -245,10 +242,11 @@ public class PrettyPrinter {
             out.append(tabs.toString());
             printValue(out, tabs, rows, object, top, hierarchyIndex, previous);
 
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 out.append(", ");
+            }
 
             out.append("\n");
         }

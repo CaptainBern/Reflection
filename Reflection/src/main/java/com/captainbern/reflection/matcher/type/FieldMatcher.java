@@ -8,6 +8,25 @@ import static com.captainbern.reflection.matcher.Matchers.fromType;
 
 public class FieldMatcher extends MemberMatcher<Field> {
 
+    private AbstractMatcher<Class<?>> typeMatch;
+
+    private FieldMatcher() {
+        super();
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    @Override
+    public boolean matches(Field value) {
+        if (super.matches(value)) {
+            return typeMatch.matches(value.getType());
+        }
+        // No match
+        return false;
+    }
+
     public static class Builder extends MemberMatcher.Builder<FieldMatcher> {
 
         @Override
@@ -29,24 +48,5 @@ public class FieldMatcher extends MemberMatcher<Field> {
         public FieldMatcher build() {
             return this.matcher;
         }
-    }
-
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
-    private AbstractMatcher<Class<?>> typeMatch;
-
-    private FieldMatcher() {
-        super();
-    }
-
-    @Override
-    public boolean matches(Field value) {
-        if (super.matches(value)) {
-            return typeMatch.matches(value.getType());
-        }
-        // No match
-        return false;
     }
 }

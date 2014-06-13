@@ -31,13 +31,8 @@ public enum NbtType {
     TAG_COMPOUND(10, Map.class),
 
     TAG_INT_ARRAY(11, int[].class);
-
-    protected final int id;
-    protected final Class<?> type;
-
     protected static NbtType[] registry;
     protected static Map<Class<?>, NbtType> classToTypeRegistry;
-
     static {
         registry = new NbtType[values().length];
         classToTypeRegistry = new HashMap<>();
@@ -52,27 +47,18 @@ public enum NbtType {
             }
         }
     }
+    protected final int id;
+    protected final Class<?> type;
 
     private NbtType(int id, Class<?> type) {
         this.id = id;
         this.type = type;
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    public Class<?> getType() {
-        return this.type;
-    }
-
-    public boolean canStore() {
-        return this.equals(TAG_COMPOUND) || this.equals(TAG_LIST);
-    }
-
     public static NbtType getTypeForId(int id) {
-        if (id < 0 || id > registry.length)
+        if (id < 0 || id > registry.length) {
             throw new IllegalArgumentException("Invalid NBT-Opcode: " + id);
+        }
 
         return registry[id];
     }
@@ -85,5 +71,17 @@ public enum NbtType {
         }
 
         throw new RuntimeException("Failed to find a matching NbtType for class: " + type.getCanonicalName());
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public Class<?> getType() {
+        return this.type;
+    }
+
+    public boolean canStore() {
+        return this.equals(TAG_COMPOUND) || this.equals(TAG_LIST);
     }
 }

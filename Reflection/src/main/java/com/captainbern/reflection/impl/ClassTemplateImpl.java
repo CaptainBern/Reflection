@@ -51,7 +51,7 @@ public class ClassTemplateImpl<T> extends AbstractAccess<T> implements ClassTemp
     @Override
     public List<ClassTemplate> getSuperClasses() {
         List<ClassTemplate> classes = new ArrayList<>();
-        for(Class<?> clazz : super.getAllSuperClasses()) {
+        for (Class<?> clazz : super.getAllSuperClasses()) {
             classes.add(super.reflection.reflect(clazz));
         }
         return classes;

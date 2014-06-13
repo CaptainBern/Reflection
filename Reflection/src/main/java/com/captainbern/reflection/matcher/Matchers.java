@@ -39,7 +39,7 @@ public class Matchers {
         return new AbstractMatcher<Member>() {
             @Override
             public boolean matches(Member type) {
-                return (type.getModifiers() & modifiers) == modifiers;
+                return (type.getModifiers()&modifiers) == modifiers;
             }
         };
     }
@@ -48,7 +48,7 @@ public class Matchers {
         return new AbstractMatcher<Member>() {
             @Override
             public boolean matches(Member type) {
-                return(type.getModifiers() & modifiers) == 0;
+                return (type.getModifiers()&modifiers) == 0;
             }
         };
     }
@@ -159,7 +159,7 @@ public class Matchers {
         return new OrMatcher<>(parent, other);
     }
 
-    public static <T> Matcher<T> combine(final List<Matcher<? super T>> matchers){
+    public static <T> Matcher<T> combine(final List<Matcher<? super T>> matchers) {
         return new CombinedMatcher<>(matchers);
     }
 
@@ -170,6 +170,7 @@ public class Matchers {
     /**
      * And "and" matcher. This allows one to "combine" 2 matchers. Will return true or false
      * depending of the result of it's child-matchers.
+     *
      * @param <T>
      */
     private static class AndMatcher<T> extends AbstractMatcher<T> {
@@ -189,9 +190,7 @@ public class Matchers {
 
         @Override
         public boolean equals(Object other) {
-            return other instanceof AndMatcher
-                    && ((AndMatcher) other).parent.equals(parent)
-                    && ((AndMatcher) other).other.equals(other);
+            return other instanceof AndMatcher && ((AndMatcher) other).parent.equals(parent) && ((AndMatcher) other).other.equals(other);
         }
 
         @Override
@@ -202,6 +201,7 @@ public class Matchers {
 
     /**
      * And "or" matcher. Will return true when one of it's child-matchers returns true.
+     *
      * @param <T>
      */
     private static class OrMatcher<T> extends AbstractMatcher<T> {
@@ -221,9 +221,7 @@ public class Matchers {
 
         @Override
         public boolean equals(Object other) {
-            return other instanceof OrMatcher
-                    && ((OrMatcher) other).parent.equals(parent)
-                    && ((OrMatcher) other).other.equals(other);
+            return other instanceof OrMatcher && ((OrMatcher) other).parent.equals(parent) && ((OrMatcher) other).other.equals(other);
         }
 
         @Override
@@ -234,6 +232,7 @@ public class Matchers {
 
     /**
      * A combined matcher. This allows one to combine a list of matchers into one "and" matcher.
+     *
      * @param <T>
      */
     private static class CombinedMatcher<T> extends AbstractMatcher<T> {
@@ -246,17 +245,17 @@ public class Matchers {
 
         @Override
         public boolean matches(T type) {
-            for(int i = 0; i < this.matchers.size(); i++) {
-                if(!this.matchers.get(i).matches(type))
+            for (int i = 0; i < this.matchers.size(); i++) {
+                if (!this.matchers.get(i).matches(type)) {
                     return false;
+                }
             }
             return true;
         }
 
         @Override
         public boolean equals(Object other) {
-            return other instanceof CombinedMatcher
-                    && ((CombinedMatcher) other).matchers.equals(this.matchers);
+            return other instanceof CombinedMatcher && ((CombinedMatcher) other).matchers.equals(this.matchers);
         }
 
         @Override
@@ -264,7 +263,7 @@ public class Matchers {
             StringBuilder builder = new StringBuilder();
             builder.append("combined");
             int index = 0;
-            while(index < this.matchers.size()) {
+            while (index < this.matchers.size()) {
                 builder.append("(");
                 while (index < this.matchers.size()) {
                     builder.append(", ");

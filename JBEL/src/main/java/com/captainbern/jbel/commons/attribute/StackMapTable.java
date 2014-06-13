@@ -41,7 +41,7 @@ public class StackMapTable extends Attribute {
         this(index, length, (StackMapTableEntry[]) null, constantPool);
         this.mapLength = codeStream.readUnsignedShort();
         this.entries = new StackMapTableEntry[this.mapLength];
-        for(int i = 0; i < this.mapLength; i++) {
+        for (int i = 0; i < this.mapLength; i++) {
             this.entries[i] = new StackMapTableEntry(codeStream, constantPool);
         }
     }
@@ -68,7 +68,7 @@ public class StackMapTable extends Attribute {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.mapLength);
-        for(int i = 0; i < this.mapLength; i++) {
+        for (int i = 0; i < this.mapLength; i++) {
             try {
                 this.entries[i].write(codeStream);
             } catch (ClassFormatException e) {

@@ -18,7 +18,7 @@ public class Dissembler {
 
         try {
             DataInputStream codeStream = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(code)));
-            while(codeStream.available() > 0) {
+            while (codeStream.available() > 0) {
                 index = code.length - codeStream.available();
                 byte opCode = codeStream.readByte();
             }

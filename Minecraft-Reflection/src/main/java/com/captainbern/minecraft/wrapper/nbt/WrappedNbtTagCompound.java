@@ -29,7 +29,11 @@ public class WrappedNbtTagCompound implements WrappedNbtTag<Map<String, NbtTagBa
     }
 
     @Override
-    public <T> NbtTagCompound put(@Nonnull String key, @Nonnull NbtTagBase<T> value) {
+    public <T> NbtTagCompound put(
+            @Nonnull
+            String key,
+            @Nonnull
+            NbtTagBase<T> value) {
         return null;
     }
 

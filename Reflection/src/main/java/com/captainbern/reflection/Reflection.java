@@ -125,7 +125,7 @@ public class Reflection {
      */
     public List<ClassTemplate<?>> reflectClasses(final List<Class<?>> classes) {
         List<ClassTemplate<?>> classTemplates = new ArrayList<>();
-        for(Class<?> clazz : classes) {
+        for (Class<?> clazz : classes) {
             classTemplates.add(reflect(clazz));
         }
         return classTemplates;
@@ -149,7 +149,7 @@ public class Reflection {
 
     public List<SafeConstructor<?>> reflectConstructors(final List<Constructor> constructors) {
         List<SafeConstructor<?>> safeConstructors = new ArrayList<>();
-        for(Constructor constructor : constructors) {
+        for (Constructor constructor : constructors) {
             safeConstructors.add(reflect(constructor));
         }
         return safeConstructors;

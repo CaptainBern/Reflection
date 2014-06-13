@@ -27,7 +27,6 @@ import com.captainbern.jbel.commons.exception.ClassFormatException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.lang.*;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -44,44 +43,6 @@ public class Attribute implements Opcode {
         this.nameIndex = index;
         this.length = length;
         this.constantPool = constantPool;
-    }
-
-    public String getTag() {
-        return this.tag;
-    }
-
-    public ConstantPool getConstantPool() {
-        return this.constantPool;
-    }
-
-    public void setConstantPool(ConstantPool constantPool) {
-        this.constantPool = constantPool;
-    }
-
-    public int getNameIndex() {
-        return this.nameIndex;
-    }
-
-    public void setNameIndex(int nameIndex) {
-        this.nameIndex = nameIndex;
-    }
-
-    public int getLength() {
-        return this.length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public String getName() throws ClassFormatException {
-        Utf8Constant constant = this.constantPool.getUtf8(this.nameIndex);
-        return constant.getString();
-    }
-
-    public void write(DataOutputStream codeStream) throws IOException {
-        codeStream.writeShort(this.nameIndex);
-        codeStream.writeInt(this.length);
     }
 
     public static Attribute readAttribute(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
@@ -140,7 +101,7 @@ public class Attribute implements Opcode {
     }
 
     public static Attribute getAttribute(ArrayList<Attribute> attributes, String name) {
-        if(attributes == null) {
+        if (attributes == null) {
             return null;
         }
 
@@ -149,7 +110,7 @@ public class Attribute implements Opcode {
             Attribute attribute = iterator.next();
 
             try {
-                if(attribute.getName().equals(name)) {
+                if (attribute.getName().equals(name)) {
                     return attribute;
                 }
             } catch (ClassFormatException e) {
@@ -158,5 +119,43 @@ public class Attribute implements Opcode {
         }
 
         return null;
+    }
+
+    public String getTag() {
+        return this.tag;
+    }
+
+    public ConstantPool getConstantPool() {
+        return this.constantPool;
+    }
+
+    public void setConstantPool(ConstantPool constantPool) {
+        this.constantPool = constantPool;
+    }
+
+    public int getNameIndex() {
+        return this.nameIndex;
+    }
+
+    public void setNameIndex(int nameIndex) {
+        this.nameIndex = nameIndex;
+    }
+
+    public int getLength() {
+        return this.length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public String getName() throws ClassFormatException {
+        Utf8Constant constant = this.constantPool.getUtf8(this.nameIndex);
+        return constant.getString();
+    }
+
+    public void write(DataOutputStream codeStream) throws IOException {
+        codeStream.writeShort(this.nameIndex);
+        codeStream.writeInt(this.length);
     }
 }

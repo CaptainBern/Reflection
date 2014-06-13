@@ -41,7 +41,7 @@ public class Synthetic extends Attribute implements Opcode {
 
     public Synthetic(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException {
         this(index, length, (byte[]) null, constantPool);
-        if(length > 0) {
+        if (length > 0) {
             byte[] bytes = new byte[length];
             codeStream.readFully(bytes);
         }
@@ -63,7 +63,8 @@ public class Synthetic extends Attribute implements Opcode {
 
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
-        if(this.length > 0)
+        if (this.length > 0) {
             codeStream.write(this.bytes, 0, this.length);
+        }
     }
 }

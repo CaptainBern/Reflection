@@ -44,41 +44,41 @@ public class StackMapTableEntry implements Opcode {
     public StackMapTableEntry(DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         this(codeStream.read(), -1, -1, null, -1, null, constantPool);
 
-        if(isWithinBounds(this.frameType, SAME_FRAME, SAME_FRAME_MAX)) {
+        if (isWithinBounds(this.frameType, SAME_FRAME, SAME_FRAME_MAX)) {
             this.offset = this.frameType - SAME_FRAME;
-        } else if(isWithinBounds(this.frameType, SAME_LOCALS_1_STACK_ITEM, SAME_LOCALS_1_STACK_ITEM_MAX)) {
+        } else if (isWithinBounds(this.frameType, SAME_LOCALS_1_STACK_ITEM, SAME_LOCALS_1_STACK_ITEM_MAX)) {
             this.offset = this.frameType - SAME_LOCALS_1_STACK_ITEM;
             this.numberOfStackItems = 1;
             this.stack = new TypeInfo[1];
             this.stack[0] = new TypeInfo(codeStream, constantPool);
-        } else if(this.frameType == SAME_LOCALS_1_STACK_ITEM_EXTENDED) {
+        } else if (this.frameType == SAME_LOCALS_1_STACK_ITEM_EXTENDED) {
             this.offset = codeStream.readShort();
             this.numberOfStackItems = 1;
             this.stack = new TypeInfo[1];
             this.stack[0] = new TypeInfo(codeStream, constantPool);
-        } else if(isWithinBounds(this.frameType, CHOP_FRAME, CHOP_FRAME_MAX)) {
+        } else if (isWithinBounds(this.frameType, CHOP_FRAME, CHOP_FRAME_MAX)) {
             this.offset = codeStream.readShort();
-        } else if(this.frameType == SAME_FRAME_EXTENDED) {
+        } else if (this.frameType == SAME_FRAME_EXTENDED) {
             this.offset = codeStream.readShort();
-        } else if(isWithinBounds(this.frameType, APPEND_FRAME, APPEND_FRAME_MAX)) {
+        } else if (isWithinBounds(this.frameType, APPEND_FRAME, APPEND_FRAME_MAX)) {
             this.offset = codeStream.readShort();
             this.numberOfLocals = this.frameType - 251;
             this.localFrames = new TypeInfo[this.numberOfLocals];
-            for(int i = 0; i < this.numberOfLocals; i++) {
+            for (int i = 0; i < this.numberOfLocals; i++) {
                 this.localFrames[i] = new TypeInfo(codeStream, constantPool);
             }
-        } else if(this.frameType == FULL_FRAME) {
+        } else if (this.frameType == FULL_FRAME) {
             this.offset = codeStream.readShort();
 
             this.numberOfLocals = codeStream.readShort();
             this.localFrames = new TypeInfo[this.numberOfLocals];
-            for(int i = 0; i < this.numberOfLocals; i++) {
+            for (int i = 0; i < this.numberOfLocals; i++) {
                 this.localFrames[i] = new TypeInfo(codeStream, constantPool);
             }
 
             this.numberOfStackItems = codeStream.readShort();
             this.stack = new TypeInfo[this.numberOfStackItems];
-            for(int i = 0; i < this.numberOfStackItems; i++) {
+            for (int i = 0; i < this.numberOfStackItems; i++) {
                 this.stack[i] = new TypeInfo(codeStream, constantPool);
             }
         } else {
@@ -94,6 +94,13 @@ public class StackMapTableEntry implements Opcode {
         this.numberOfStackItems = numberOfStackItems;
         this.stack = stack;
         this.constantPool = constantPool;
+    }
+
+    /**
+     * Utility method
+     */
+    private static boolean isWithinBounds(int number, int min, int max) {
+        return number >= min && number <= max;
     }
 
     public int getFrameType() {
@@ -155,43 +162,36 @@ public class StackMapTableEntry implements Opcode {
     public void write(DataOutputStream codeStream) throws IOException, ClassFormatException {
         codeStream.write(this.frameType);
 
-        if(isWithinBounds(this.frameType, SAME_FRAME, SAME_FRAME_MAX)) {
+        if (isWithinBounds(this.frameType, SAME_FRAME, SAME_FRAME_MAX)) {
             // Do nothing
-        } else if(isWithinBounds(this.frameType, SAME_LOCALS_1_STACK_ITEM, SAME_LOCALS_1_STACK_ITEM_MAX)) {
+        } else if (isWithinBounds(this.frameType, SAME_LOCALS_1_STACK_ITEM, SAME_LOCALS_1_STACK_ITEM_MAX)) {
             this.stack[0].write(codeStream);
-        } else if(this.frameType == SAME_LOCALS_1_STACK_ITEM_EXTENDED) {
+        } else if (this.frameType == SAME_LOCALS_1_STACK_ITEM_EXTENDED) {
             codeStream.writeShort(this.offset);
             this.stack[0].write(codeStream);
-        } else if(isWithinBounds(this.frameType, CHOP_FRAME, CHOP_FRAME_MAX)) {
+        } else if (isWithinBounds(this.frameType, CHOP_FRAME, CHOP_FRAME_MAX)) {
             codeStream.writeShort(this.offset);
-        } else if(this.frameType == SAME_FRAME_EXTENDED) {
+        } else if (this.frameType == SAME_FRAME_EXTENDED) {
             codeStream.writeShort(this.offset);
-        } else if(isWithinBounds(this.frameType, APPEND_FRAME, APPEND_FRAME_MAX)) {
+        } else if (isWithinBounds(this.frameType, APPEND_FRAME, APPEND_FRAME_MAX)) {
             codeStream.writeShort(this.offset);
-            for(int i = 0; i < this.numberOfLocals; i++) {
+            for (int i = 0; i < this.numberOfLocals; i++) {
                 this.localFrames[i].write(codeStream);
             }
-        } else if(this.frameType == FULL_FRAME) {
+        } else if (this.frameType == FULL_FRAME) {
             codeStream.writeShort(this.offset);
 
             codeStream.writeShort(this.numberOfLocals);
-            for(int i = 0; i < this.numberOfLocals; i++) {
+            for (int i = 0; i < this.numberOfLocals; i++) {
                 this.localFrames[i].write(codeStream);
             }
 
             codeStream.writeShort(this.numberOfStackItems);
-            for(int i = 0; i < this.numberOfStackItems; i++) {
+            for (int i = 0; i < this.numberOfStackItems; i++) {
                 this.stack[i].write(codeStream);
             }
         } else {
             throw new ClassFormatException("Invalid Class-format! Failed to parse frame-type: " + this.frameType);
         }
-    }
-
-    /**
-     * Utility method
-     */
-    private static boolean isWithinBounds(int number, int min, int max) {
-        return number >= min && number <= max;
     }
 }

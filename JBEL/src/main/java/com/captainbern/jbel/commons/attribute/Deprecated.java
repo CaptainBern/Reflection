@@ -41,7 +41,7 @@ public class Deprecated extends Attribute implements Opcode {
 
     public Deprecated(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException {
         this(index, length, (byte[]) null, constantPool);
-        if(length > 0) {
+        if (length > 0) {
             this.bytes = new byte[length];
             codeStream.readFully(bytes);
         }
@@ -63,7 +63,7 @@ public class Deprecated extends Attribute implements Opcode {
     @Override
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
-        if(this.length > 0) {
+        if (this.length > 0) {
             codeStream.write(this.bytes, 0, this.length);
         }
     }

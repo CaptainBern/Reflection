@@ -26,6 +26,6 @@ public abstract class AbstractMatcher<T> implements Matcher<T> {
     }
 
     public Matcher<T> or(final Matcher<? super T> other) {
-         return Matchers.or(this, other);
+        return Matchers.or(this, other);
     }
 }

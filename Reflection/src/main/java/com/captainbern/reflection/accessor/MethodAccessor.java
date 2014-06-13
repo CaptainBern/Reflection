@@ -23,20 +23,23 @@ import com.captainbern.reflection.SafeMethod;
 
 /**
  * An interface for weak-access to methods.
+ *
  * @param <T> The return type of the underlying method.
  */
 public interface MethodAccessor<T> {
 
     /**
      * Invokes the underlying method for the given instance with the given arguments.
+     *
      * @param instance The instance or null for static methods.
-     * @param args The arguments to pass into to instantiate the underlying method.
+     * @param args     The arguments to pass into to instantiate the underlying method.
      * @return The value.
      */
     public T invoke(Object instance, Object... args);
 
     /**
      * Invokes the underlying method static with the given arguments.
+     *
      * @param args The arguments to pass into to instantiate the underlying method.
      * @return The value.
      */
@@ -44,6 +47,7 @@ public interface MethodAccessor<T> {
 
     /**
      * Returns the underlying method as a ReflectedMethod.
+     *
      * @return The underlying method as a ReflectedMethod.
      */
     public SafeMethod<T> getMethod();

@@ -110,8 +110,9 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
             }
         }
 
-        if (type != null && !type.equals(Object.class))
+        if (type != null && !type.equals(Object.class)) {
             return getRemappedMethodName(type, name, args);
+        }
 
         return name;
     }

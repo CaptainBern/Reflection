@@ -15,10 +15,11 @@ public class HelloWorldTest {
     public void test() throws IOException, ClassFormatException {
         ClassReader reader = new ClassReader(HelloWorld.class.getCanonicalName());
 
-        for(Constant constant : reader.getConstantPool().getConstantPool()) {
-            if(constant instanceof Utf8Constant) {
-                if(((Utf8Constant) constant).getString().equals("Hello World!"))
+        for (Constant constant : reader.getConstantPool().getConstantPool()) {
+            if (constant instanceof Utf8Constant) {
+                if (((Utf8Constant) constant).getString().equals("Hello World!")) {
                     ((Utf8Constant) constant).setString("Changed!");         // Don't use this, it's just POC
+                }
                 continue;
             }
         }

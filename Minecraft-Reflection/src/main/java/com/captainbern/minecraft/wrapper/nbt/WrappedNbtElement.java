@@ -23,8 +23,9 @@ public class WrappedNbtElement<T> implements WrappedNbtTag<T> {
     private NbtType type;
 
     public WrappedNbtElement(Object handle) {
-        if (!MinecraftReflection.getNbtBaseClass().isAssignableFrom(handle.getClass()))
+        if (!MinecraftReflection.getNbtBaseClass().isAssignableFrom(handle.getClass())) {
             throw new IllegalArgumentException("Cannot create a wrapped nbt element with: " + handle.getClass().getCanonicalName());
+        }
 
         this.handle = handle;
     }
@@ -42,13 +43,15 @@ public class WrappedNbtElement<T> implements WrappedNbtTag<T> {
             synchronized (this) {
                 ClassTemplate nbtTemplate = new Reflection().reflect(this.handle.getClass());
 
-                if (nbtTemplate == null)
+                if (nbtTemplate == null) {
                     throw new IllegalStateException("Nbt template is NULL!");  // Should never happen
+                }
 
                 SafeField<T> field = nbtTemplate.getSafeFieldByType(getType().getType());
 
-                if (field == null)
+                if (field == null) {
                     throw new RuntimeException("Failed to retrieve a valid field accessor for: " + this + "@" + this.handle);
+                }
 
                 accessor = WrappedNbtElement.accessors[index] = field.getAccessor();
             }

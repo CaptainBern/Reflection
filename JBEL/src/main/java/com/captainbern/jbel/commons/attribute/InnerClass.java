@@ -49,28 +49,28 @@ public class InnerClass {
         return this.innerClassInfoIndex;
     }
 
-    public int getOuterClassInfoIndex() {
-        return this.outerClassInfoIndex;
-    }
-
-    public int getInnerNameIndex() {
-        return this.innerNameIndex;
-    }
-
-    public int getInnerClassAccessFlags() {
-        return this.innerClassAccessFlags;
-    }
-
     public void setInnerClassInfoIndex(int innerClassInfoIndex) {
         this.innerClassInfoIndex = innerClassInfoIndex;
+    }
+
+    public int getOuterClassInfoIndex() {
+        return this.outerClassInfoIndex;
     }
 
     public void setOuterClassInfoIndex(int outerClassInfoIndex) {
         this.outerClassInfoIndex = outerClassInfoIndex;
     }
 
+    public int getInnerNameIndex() {
+        return this.innerNameIndex;
+    }
+
     public void setInnerNameIndex(int innerNameIndex) {
         this.innerNameIndex = innerNameIndex;
+    }
+
+    public int getInnerClassAccessFlags() {
+        return this.innerClassAccessFlags;
     }
 
     public void setInnerClassAccessFlags(int innerClassAccessFlags) {

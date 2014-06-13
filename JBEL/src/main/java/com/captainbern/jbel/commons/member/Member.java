@@ -50,7 +50,7 @@ public class Member implements Opcode {
         this(codeStream.readUnsignedShort(), codeStream.readUnsignedShort(), codeStream.readUnsignedShort(), null, constantPool);
         this.attributeCount = codeStream.readUnsignedShort();
         this.attributes = new ArrayList<>();
-        for(int i = 0; i < attributeCount; i++) {
+        for (int i = 0; i < attributeCount; i++) {
             this.attributes.add(Attribute.readAttribute(codeStream, constantPool));
         }
     }
@@ -118,11 +118,11 @@ public class Member implements Opcode {
         codeStream.writeShort(this.accessFlags);
         codeStream.writeShort(this.nameIndex);
         codeStream.writeShort(this.descriptorIndex);
-        if(this.attributes == null) {
+        if (this.attributes == null) {
             codeStream.writeShort(0);
         } else {
             codeStream.writeShort(this.attributes.size());
-            for(int i = 0; i < this.attributes.size(); i++) {
+            for (int i = 0; i < this.attributes.size(); i++) {
                 this.attributes.get(i).write(codeStream);
             }
         }

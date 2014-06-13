@@ -17,13 +17,14 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
     protected Method method;
 
     public SafeMethodImpl(final Reflection reflection, final Method method) {
-        if(method == null)
+        if (method == null) {
             throw new IllegalArgumentException("Method can't be NULL!");
+        }
 
         this.reflection = reflection;
         this.method = method;
 
-        if(!this.method.isAccessible()) {
+        if (!this.method.isAccessible()) {
             try {
                 this.method.setAccessible(true);
             } catch (SecurityException e) {
@@ -103,8 +104,9 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
             @Override
             public T invoke(Object instance, Object... args) {
 
-                if(SafeMethodImpl.this.method == null)
+                if (SafeMethodImpl.this.method == null) {
                     throw new RuntimeException("Method is NULL!");
+                }
 
                 try {
                     return (T) SafeMethodImpl.this.method.invoke(instance, args);
@@ -136,9 +138,6 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
 
     @Override
     public boolean isOverridable() {
-        return !(Modifier.isFinal(this.method.getModifiers())
-                || Modifier.isPrivate(this.method.getModifiers())
-                || Modifier.isStatic(this.method.getModifiers())
-                || Modifier.isFinal(this.method.getDeclaringClass().getModifiers()));
+        return !(Modifier.isFinal(this.method.getModifiers()) || Modifier.isPrivate(this.method.getModifiers()) || Modifier.isStatic(this.method.getModifiers()) || Modifier.isFinal(this.method.getDeclaringClass().getModifiers()));
     }
 }

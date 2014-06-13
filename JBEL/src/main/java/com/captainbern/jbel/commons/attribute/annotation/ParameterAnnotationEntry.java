@@ -49,7 +49,7 @@ public class ParameterAnnotationEntry {
 
     public void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeShort(this.tableLength);
-        for(int i = 0; i < this.tableLength; i++) {
+        for (int i = 0; i < this.tableLength; i++) {
             this.entries[i].write(codeStream);
         }
     }

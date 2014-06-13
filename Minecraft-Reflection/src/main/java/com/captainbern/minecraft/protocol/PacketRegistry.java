@@ -54,7 +54,7 @@ public class PacketRegistry {
         MethodAccessor<Map<Integer, Class<?>>> inboundPackets = (MethodAccessor<Map<Integer, Class<?>>>) ((SafeMethod) enumProtocol.getSafeMethods(withReturnType(Map.class), withArgumentCount(0)).get(0)).getAccessor();
         MethodAccessor<Map<Integer, Class<?>>> outboundPackets = (MethodAccessor<Map<Integer, Class<?>>>) ((SafeMethod) enumProtocol.getSafeMethods(withReturnType(Map.class), withArgumentCount(0)).get(1)).getAccessor();
 
-        for(Object protocolType : protocolTypes) {
+        for (Object protocolType : protocolTypes) {
             clientPackets.add(inboundPackets.invoke(protocolType)); // client packets
             serverPackets.add(outboundPackets.invoke(protocolType)); // server packets
         }
@@ -66,7 +66,7 @@ public class PacketRegistry {
             clientPackets = temp;
         }
 
-        for(int i = 0; i < protocolTypes.length; i++) {
+        for (int i = 0; i < protocolTypes.length; i++) {
             Enum<?> protocolType = (Enum<?>) protocolTypes[i];
             setPackets(clientPackets.get(i), Protocol.fromVanilla(protocolType), Sender.CLIENT);
             setPackets(serverPackets.get(i), Protocol.fromVanilla(protocolType), Sender.SERVER);
@@ -74,15 +74,15 @@ public class PacketRegistry {
     }
 
     protected void setPackets(Map<Integer, Class<?>> map, Protocol protocol, Sender sender) {
-        for(Map.Entry<Integer, Class<?>> entry : map.entrySet()) {
+        for (Map.Entry<Integer, Class<?>> entry : map.entrySet()) {
             PacketType type = PacketType.getTypeFrom(protocol, sender, entry.getKey());
 
             typeToClass.put(type, entry.getValue());
-            if(sender == Sender.CLIENT) {
+            if (sender == Sender.CLIENT) {
                 clientPackets.add(type);
             }
 
-            if(sender == Sender.SERVER) {
+            if (sender == Sender.SERVER) {
                 serverPackets.add(type);
             }
         }
@@ -91,8 +91,9 @@ public class PacketRegistry {
     private int sum(Iterable<? extends Map<Integer, Class<?>>> maps) {
         int count = 0;
 
-        for (Map<Integer, Class<?>> map : maps)
+        for (Map<Integer, Class<?>> map : maps) {
             count += map.size();
+        }
         return count;
     }
 }

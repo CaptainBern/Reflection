@@ -18,24 +18,25 @@ public class FieldIterator<T> implements Iterable<T> {
     }
 
     protected void registerFields(Class<T> clazz) {
-        try{
+        try {
             for (Field entry : this.getClass().getFields()) {
                 if (Modifier.isStatic(entry.getModifiers()) && clazz.isAssignableFrom(entry.getType())) {
                     T value = (T) entry.get(null);
-                    if (value == null)
+                    if (value == null) {
                         throw new IllegalArgumentException("Field " + entry + " was NULL. Remember to " +
                                 "construct the object after the field has been declared.");
+                    }
                     registerKeyWithValue(value, entry.getName());
                 }
             }
 
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     protected boolean registerKeyWithValue(T key, String value) {
-        if(!values.containsKey(key)) {
+        if (!values.containsKey(key)) {
             values.put(key, value);
             return true;
         }

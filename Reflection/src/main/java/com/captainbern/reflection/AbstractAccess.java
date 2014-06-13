@@ -47,6 +47,79 @@ public class AbstractAccess<T> implements Access<T> {
         this.forceAccess = forceAccess;
     }
 
+    /**
+     * Utility methods...
+     */
+
+    protected static List<Class<?>> getAllSuperClasses(final Class<?> clazz) {
+        List<Class<?>> result = new ArrayList<>();
+        if (clazz != null && (INCLUDE_OBJECT || !clazz.equals(Object.class))) {
+            result.add(clazz);
+            result.addAll(getAllSuperClasses(clazz.getSuperclass()));
+            for (Class<?> iface : clazz.getInterfaces()) {
+                result.addAll(getAllSuperClasses(iface));
+            }
+        }
+        return result;
+    }
+
+    protected static List<Field> getFields(final Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        Collections.addAll(fields, clazz.getDeclaredFields());
+        return fields;
+    }
+
+    protected static List<Field> getAllFields(final Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        for (final Class<?> superClass : getAllSuperClasses(clazz)) {
+            fields.addAll(getFields(superClass));
+        }
+        return fields;
+    }
+
+    protected static List<Method> getMethods(final Class<?> clazz) {
+        List<Method> methods = new ArrayList<>();
+        Collections.addAll(methods, clazz.getDeclaredMethods());
+        return methods;
+    }
+
+    protected static List<Method> getAllMethods(final Class<?> clazz) {
+        List<Method> methods = new ArrayList<>();
+        for (final Class<?> superClass : getAllSuperClasses(clazz)) {
+            methods.addAll(getMethods(superClass));
+        }
+        return methods;
+    }
+
+    protected static List<Constructor> getConstructors(final Class<?> clazz) {
+        List<Constructor> constructors = new ArrayList<>();
+        Collections.addAll(constructors, clazz.getDeclaredConstructors());
+        return constructors;
+    }
+
+    protected static List<Constructor> getAllConstructors(final Class<?> clazz) {
+        List<Constructor> constructors = new ArrayList<>();
+        for (Class<?> superClass : getAllSuperClasses(clazz)) {
+            constructors.addAll(getConstructors(superClass));
+        }
+        return constructors;
+    }
+
+    protected static <T> List<T> match(final List<T> classes, final Matcher<? super T>... matchers) {
+        if (classes.isEmpty()) {
+            return classes;
+        } else {
+            List<T> elements = new ArrayList<>();
+            Matcher<T> combinedMatcher = Matchers.combine(Arrays.asList(matchers));
+            for (T clazz : classes) {
+                if (combinedMatcher.matches(clazz)) {
+                    elements.add(clazz);
+                }
+            }
+            return elements;
+        }
+    }
+
     @Override
     public Class<T> getReflectedClass() {
         return this.clazz;
@@ -83,8 +156,9 @@ public class AbstractAccess<T> implements Access<T> {
     public List<SafeField<?>> getSafeFields() {
         List<Field> fields = getFields();
 
-        if (fields.size() < 0)
+        if (fields.size() < 0) {
             return null;
+        }
 
         List<SafeField<?>> safeFields = new ArrayList<>();
         for (Field field : fields) {
@@ -102,8 +176,9 @@ public class AbstractAccess<T> implements Access<T> {
     public List<SafeField<?>> getSafeFields(final Matcher<? super Field>... matchers) {
         List<Field> fields = getFields(matchers);
 
-        if (fields.size() < 0)
+        if (fields.size() < 0) {
             return null;
+        }
 
         List<SafeField<?>> safeFields = new ArrayList<>();
         for (Field field : fields) {
@@ -193,8 +268,9 @@ public class AbstractAccess<T> implements Access<T> {
     public List<SafeMethod<?>> getSafeMethods() {
         List<Method> methods = getMethods();
 
-        if (methods.size() < 0)
+        if (methods.size() < 0) {
             return null;
+        }
 
         List<SafeMethod<?>> safeMethods = new ArrayList<>();
         for (Method method : methods) {
@@ -213,8 +289,9 @@ public class AbstractAccess<T> implements Access<T> {
     public List<SafeMethod<?>> getSafeMethods(final Matcher<? super Method>... matchers) {
         List<Method> methods = getMethods(matchers);
 
-        if (methods.size() < 0)
+        if (methods.size() < 0) {
             return null;
+        }
 
         List<SafeMethod<?>> safeMethods = new ArrayList<>();
         for (Method method : methods) {
@@ -281,8 +358,9 @@ public class AbstractAccess<T> implements Access<T> {
     public <T> List<SafeConstructor<T>> getSafeConstructors() {
         List<Constructor> constructors = getConstructors();
 
-        if (constructors.size() < 0)
+        if (constructors.size() < 0) {
             return null;
+        }
 
         List<SafeConstructor<T>> safeConstructors = new ArrayList<>();
         for (Constructor constructor : constructors) {
@@ -317,8 +395,9 @@ public class AbstractAccess<T> implements Access<T> {
     public <T> List<SafeConstructor<T>> getSafeConstructors(final Matcher<? super Constructor>... matchers) {
         List<Constructor> constructors = getConstructors(matchers);
 
-        if (constructors.size() < 0)
+        if (constructors.size() < 0) {
             return null;
+        }
 
         List<SafeConstructor<T>> safeConstructors = new ArrayList<>();
         for (Constructor constructor : constructors) {
@@ -350,78 +429,5 @@ public class AbstractAccess<T> implements Access<T> {
     @Override
     public Type getType() {
         return this.getReflectedClass().getGenericSuperclass();
-    }
-
-    /**
-     * Utility methods...
-     */
-
-    protected static List<Class<?>> getAllSuperClasses(final Class<?> clazz) {
-        List<Class<?>> result = new ArrayList<>();
-        if (clazz != null && (INCLUDE_OBJECT || !clazz.equals(Object.class))) {
-            result.add(clazz);
-            result.addAll(getAllSuperClasses(clazz.getSuperclass()));
-            for (Class<?> iface : clazz.getInterfaces()) {
-                result.addAll(getAllSuperClasses(iface));
-            }
-        }
-        return result;
-    }
-
-    protected static List<Field> getFields(final Class<?> clazz) {
-        List<Field> fields = new ArrayList<>();
-        Collections.addAll(fields, clazz.getDeclaredFields());
-        return fields;
-    }
-
-    protected static List<Field> getAllFields(final Class<?> clazz) {
-        List<Field> fields = new ArrayList<>();
-        for (final Class<?> superClass : getAllSuperClasses(clazz)) {
-            fields.addAll(getFields(superClass));
-        }
-        return fields;
-    }
-
-    protected static List<Method> getMethods(final Class<?> clazz) {
-        List<Method> methods = new ArrayList<>();
-        Collections.addAll(methods, clazz.getDeclaredMethods());
-        return methods;
-    }
-
-    protected static List<Method> getAllMethods(final Class<?> clazz) {
-        List<Method> methods = new ArrayList<>();
-        for (final Class<?> superClass : getAllSuperClasses(clazz)) {
-            methods.addAll(getMethods(superClass));
-        }
-        return methods;
-    }
-
-    protected static List<Constructor> getConstructors(final Class<?> clazz) {
-        List<Constructor> constructors = new ArrayList<>();
-        Collections.addAll(constructors, clazz.getDeclaredConstructors());
-        return constructors;
-    }
-
-    protected static List<Constructor> getAllConstructors(final Class<?> clazz) {
-        List<Constructor> constructors = new ArrayList<>();
-        for (Class<?> superClass : getAllSuperClasses(clazz)) {
-            constructors.addAll(getConstructors(superClass));
-        }
-        return constructors;
-    }
-
-    protected static <T> List<T> match(final List<T> classes, final Matcher<? super T>... matchers) {
-        if (classes.isEmpty()) {
-            return classes;
-        } else {
-            List<T> elements = new ArrayList<>();
-            Matcher<T> combinedMatcher = Matchers.combine(Arrays.asList(matchers));
-            for(T clazz : classes) {
-                if(combinedMatcher.matches(clazz)) {
-                    elements.add(clazz);
-                }
-            }
-            return elements;
-        }
     }
 }

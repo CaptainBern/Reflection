@@ -17,11 +17,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
  * // TODO: Create fallback methods!
- *
+ * <p/>
  * To understand how this all works, please refer to the bottom of the file.
- *
+ * <p/>
  * This class should provide a pretty safe way of using Reflection with both NMS and CraftBukkit classes.
  * It can never be 100% safe of course but it may be a better alternative compared to all those other
  * "ReflectionUtils" out there.
@@ -29,50 +28,41 @@ import java.util.regex.Pattern;
 public class MinecraftReflection {
 
     /**
+     * Pattern
+     */
+    private static final Pattern PACKAGE_VERSION_MATCHER = Pattern.compile(".*\\.(v\\d+_\\d+_\\w*\\d+)");
+    /**
      * The CraftBukkit class-cache
      */
     private static ClassCache CRAFTBUKKIT_REFLECTION;
-
     /**
      * The Minecraft class-cache
      */
     private static ClassCache MINECRAFT_REFLECTION;
-
     /**
      * The Craftbukkit package
      */
     private static String CRAFTBUKKIT_PACKAGE;
-
     /**
      * The Minecraft package
      */
     private static String MINECRAFT_PACKAGE;
-
     /**
      * The Minecraft package-prefix
      */
     private static String MINECRAFT_PACKAGE_PREFIX = "net.minecraft.server";
-
     /**
      * The MinecraftForge Entity-package
      */
     private static String FORGE_ENTITY_PACKAGE = "net.minecraft.entity";
-
     /**
      * The Version tag
      */
     private static String VERSION_TAG;
-
     /**
      * Are we initializing or not?
      */
     private static boolean initializing = false;
-
-    /**
-     * Pattern
-     */
-    private static final Pattern PACKAGE_VERSION_MATCHER = Pattern.compile(".*\\.(v\\d+_\\d+_\\w*\\d+)");
-
     private static Boolean isUsingNetty;
 
     private MinecraftReflection() {
@@ -81,11 +71,13 @@ public class MinecraftReflection {
 
     /**
      * Returns the Version tag, used by the safeguard
+     *
      * @return The version tag used by the safeguard.
      */
     public static String getVersionTag() {
-        if (VERSION_TAG == null)
+        if (VERSION_TAG == null) {
             initializePackages();
+        }
         return VERSION_TAG;
     }
 
@@ -93,8 +85,9 @@ public class MinecraftReflection {
      * Initializes both the craftbukkit and minecraft packages.
      */
     protected static void initializePackages() {
-        if (initializing)
+        if (initializing) {
             throw new IllegalStateException("Already initializing the packages!");
+        }
 
         initializing = true;
         Server craftServer = Bukkit.getServer();
@@ -146,6 +139,7 @@ public class MinecraftReflection {
     /**
      * Returns the last part of the package of a given string, in this case it *should* return the version tag
      * used by the safeguard
+     *
      * @param clazz
      * @return
      */
@@ -153,14 +147,16 @@ public class MinecraftReflection {
         String fullName = clazz.getCanonicalName();
         int index = fullName.lastIndexOf(".");
 
-        if (index > 0)
+        if (index > 0) {
             return fullName.substring(0, index);
-        else
+        } else {
             return ""; // Default package
+        }
     }
 
     /**
      * "Combines" 2 packages, keeping in mind if one of both packages is NULL.
+     *
      * @param part1
      * @param part2
      * @return
@@ -191,28 +187,33 @@ public class MinecraftReflection {
 
     /**
      * Returns the (versioned) CraftBukkit package.
+     *
      * @return
      */
     public static String getCraftBukkitPackage() {
-        if (CRAFTBUKKIT_PACKAGE == null)
+        if (CRAFTBUKKIT_PACKAGE == null) {
             initializePackages();
+        }
 
         return CRAFTBUKKIT_PACKAGE;
     }
 
     /**
      * Returns the (versioned) Minecraft package.
+     *
      * @return
      */
     public static String getMinecraftPackage() {
-        if (MINECRAFT_PACKAGE == null)
+        if (MINECRAFT_PACKAGE == null) {
             initializePackages();
+        }
 
         return MINECRAFT_PACKAGE;
     }
 
     /**
      * Returns a class with the given name, using the context ClassLoader.
+     *
      * @param className
      * @return
      * @throws ClassNotFoundException
@@ -227,15 +228,13 @@ public class MinecraftReflection {
 
     /**
      * Returns a CraftBukkit class with the given name.
+     *
      * @param className
      * @return
      */
     public static Class<?> getCraftBukkitClass(final String className) {
         if (CRAFTBUKKIT_REFLECTION == null) {
-            ReflectionConfiguration configuration = new ReflectionConfiguration.Builder()
-                    .withClassLoader(MinecraftReflection.class.getClassLoader())
-                    .withPackagePrefix(getCraftBukkitPackage())
-                    .build();
+            ReflectionConfiguration configuration = new ReflectionConfiguration.Builder().withClassLoader(MinecraftReflection.class.getClassLoader()).withPackagePrefix(getCraftBukkitPackage()).build();
 
             ReflectionProvider provider = null;
 
@@ -259,15 +258,13 @@ public class MinecraftReflection {
 
     /**
      * Returns a Minecraft class with the given name.
+     *
      * @param className
      * @return
      */
     public static Class<?> getMinecraftClass(final String className) {
         if (MINECRAFT_REFLECTION == null) {
-            ReflectionConfiguration configuration = new ReflectionConfiguration.Builder()
-                    .withClassLoader(MinecraftReflection.class.getClassLoader())
-                    .withPackagePrefix(getMinecraftPackage())
-                    .build();
+            ReflectionConfiguration configuration = new ReflectionConfiguration.Builder().withClassLoader(MinecraftReflection.class.getClassLoader()).withPackagePrefix(getMinecraftPackage()).build();
 
             ReflectionProvider provider = null;
 
@@ -290,15 +287,17 @@ public class MinecraftReflection {
     }
 
     protected static Class<?> setCraftBukkitClass(final String key, final Class<?> value) {
-        if (CRAFTBUKKIT_REFLECTION == null)
+        if (CRAFTBUKKIT_REFLECTION == null) {
             getCraftServerClass(); // This will initialize the CraftBukkit Reflection
+        }
         CRAFTBUKKIT_REFLECTION.set(key, value);
         return value;
     }
 
     protected static Class<?> setMinecraftClass(final String key, final Class<?> value) {
-        if (MINECRAFT_REFLECTION == null)
+        if (MINECRAFT_REFLECTION == null) {
             getMinecraftServerClass(); // This will initialize the Minecraft Reflection
+        }
         MINECRAFT_REFLECTION.set(key, value);
         return value;
     }
@@ -379,8 +378,9 @@ public class MinecraftReflection {
     }
 
     public static Entity toBukkitEntity(Object nmsEntity) {
-        if (!getEntityClass().isAssignableFrom(nmsEntity.getClass()))
+        if (!getEntityClass().isAssignableFrom(nmsEntity.getClass())) {
             throw new IllegalArgumentException("The given object can't be cast to: " + getEntityClass().getCanonicalName());
+        }
 
         MethodAccessor<Entity> toBukkitEntity = new Reflection().reflect(getEntityClass()).getSafeMethod("getBukkitEntity").getAccessor();
         return toBukkitEntity.invoke(nmsEntity);

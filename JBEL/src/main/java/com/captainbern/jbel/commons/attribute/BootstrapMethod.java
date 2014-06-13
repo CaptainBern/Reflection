@@ -33,7 +33,7 @@ public class BootstrapMethod {
         this.methodIndex = codeStream.readUnsignedShort();
         this.numberOfArguments = codeStream.readUnsignedShort();
         this.arguments = new int[this.numberOfArguments];
-        for(int i = 0; i < this.numberOfArguments; i++) {
+        for (int i = 0; i < this.numberOfArguments; i++) {
             this.arguments[i] = codeStream.readUnsignedShort();
         }
     }
@@ -68,7 +68,7 @@ public class BootstrapMethod {
     public void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeShort(this.methodIndex);
         codeStream.writeShort(this.numberOfArguments);
-        for(int i = 0; i < this.numberOfArguments; i++) {
+        for (int i = 0; i < this.numberOfArguments; i++) {
             codeStream.writeShort(this.arguments[i]);
         }
     }

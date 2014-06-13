@@ -13,16 +13,18 @@ public class BukkitConverters implements Converter {
 
     private Map<Class<?>, Converter> converterMap = new HashMap<>();
 
+    private BukkitConverters() {
+    }
+
     public static BukkitConverters getInstance() {
         return instance;
     }
 
-    private BukkitConverters() {}
-
     @Override
     public Object convert(Object bukkitHandle) {
-        if (bukkitHandle == null)
+        if (bukkitHandle == null) {
             return null;
+        }
 
         Class<?> type = bukkitHandle instanceof Class ? (Class<?>) bukkitHandle : bukkitHandle.getClass();
 

@@ -15,8 +15,9 @@ public class ReportDescription {
     }
 
     public String format(Object[] objects) {
-        if (objects == null || objects.length < 1)
+        if (objects == null || objects.length < 1) {
             return toString();
+        }
 
         MessageFormat format = new MessageFormat(this.format);
         return format.format(objects);

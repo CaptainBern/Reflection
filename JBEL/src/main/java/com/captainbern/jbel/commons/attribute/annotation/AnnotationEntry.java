@@ -34,26 +34,25 @@ public class AnnotationEntry implements Opcode {
 
     private final int index;
     private final ConstantPool constantPool;
+    private final boolean runtimeVisible;
     private LinkedList<ElementValuePair> elementValuePairs = null;
 
-    private final boolean runtimeVisible;
+    public AnnotationEntry(int index, ConstantPool constantPool, boolean runtimeVisible) {
+        this.index = index;
+        this.constantPool = constantPool;
+        this.runtimeVisible = runtimeVisible;
+    }
 
     public static AnnotationEntry read(DataInputStream codeStream, ConstantPool constantPool, boolean visible) throws IOException {
         final AnnotationEntry annotationEntry = new AnnotationEntry(codeStream.readUnsignedShort(), constantPool, visible);
         annotationEntry.elementValuePairs = new LinkedList<>();
         final int valuePairs = codeStream.readUnsignedShort();
 
-        for(int i = 0; i < valuePairs; i++) {
+        for (int i = 0; i < valuePairs; i++) {
             annotationEntry.addElementValue(new ElementValuePair(codeStream.readUnsignedShort(), ElementValue.read(codeStream, constantPool), constantPool));
         }
 
         return annotationEntry;
-    }
-
-    public AnnotationEntry(int index, ConstantPool constantPool, boolean runtimeVisible) {
-        this.index = index;
-        this.constantPool = constantPool;
-        this.runtimeVisible = runtimeVisible;
     }
 
     public int getIndex() {
@@ -83,7 +82,7 @@ public class AnnotationEntry implements Opcode {
     public void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeShort(this.index);
         codeStream.writeShort(this.elementValuePairs.size());
-        for(ElementValuePair pair : this.elementValuePairs) {
+        for (ElementValuePair pair : this.elementValuePairs) {
             pair.write(codeStream);
         }
     }

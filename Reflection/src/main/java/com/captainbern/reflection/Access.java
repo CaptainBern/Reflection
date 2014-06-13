@@ -35,18 +35,21 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns the reflected class. This is the class we're currently working with.
+     *
      * @return
      */
     public Class<T> getReflectedClass();
 
     /**
      * Returns a List of all the super-classes of the underlying class.
+     *
      * @return
      */
     public List<Class<?>> getAllSuperClasses();
 
     /**
      * Returns a List of all the super-classes of the underlying class that match the matchers.
+     *
      * @param matchers
      * @return
      */
@@ -54,24 +57,28 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a List of all the public of the reflected class.
+     *
      * @return
      */
     public List<Field> getFields();
 
     /**
      * Returns a List of all the fields of the reflected class, as a SafeField
+     *
      * @return
      */
     public List<SafeField<?>> getSafeFields();
 
     /**
      * Returns a list of all the fields that match the given matchers.
+     *
      * @return
      */
     public List<Field> getFields(final Matcher<? super Field>... matchers);
 
     /**
      * Returns a list of all the fields that match the given matchers as SafeFields
+     *
      * @param matchers
      * @return
      */
@@ -79,6 +86,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a field which matches the given name
+     *
      * @param name
      * @return
      */
@@ -86,6 +94,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a field which matches the given name as a SafeField.
+     *
      * @param name
      * @param <T>
      * @return
@@ -94,6 +103,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns the first field found that matches the given type
+     *
      * @param type
      * @return
      */
@@ -101,6 +111,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns the first field found that matches the given type as a SafeField
+     *
      * @param type
      * @param <T>
      * @return
@@ -109,6 +120,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a field which matches the name and type
+     *
      * @param name
      * @param type
      * @return
@@ -117,6 +129,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a field which matches the given name and type as a SafeField
+     *
      * @param name
      * @param type
      * @param <T>
@@ -126,18 +139,21 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a List of all the methods of the underlying class, keeping in mind the access-level
+     *
      * @return
      */
     public List<Method> getMethods();
 
     /**
      * Returns a List of all the methods of the underlying class as SafeMethods
+     *
      * @return
      */
     public List<SafeMethod<?>> getSafeMethods();
 
     /**
      * Returns a List of all the methods that match the matchers.
+     *
      * @param matchers
      * @return
      */
@@ -145,6 +161,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a List of all the methods that match the matchers as SafeMethods
+     *
      * @param matchers
      * @return
      */
@@ -152,6 +169,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a method with the given name
+     *
      * @param name
      * @return
      */
@@ -159,6 +177,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a SafeMethod with the given name
+     *
      * @param name
      * @return
      */
@@ -166,6 +185,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a method with the given name and parameters
+     *
      * @param name
      * @param params
      * @return
@@ -174,6 +194,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a SafeMethod with the given name and parameters
+     *
      * @param name
      * @param params
      * @return
@@ -182,12 +203,14 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a List of all the constructors of the underlying class, keeping in mind the access-level
+     *
      * @return
      */
     public List<Constructor> getConstructors();
 
     /**
      * Returns a List of all the constructors of the underlying class as SafeConstructors
+     *
      * @param <T>
      * @return
      */
@@ -195,6 +218,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a constructor which has the given params.
+     *
      * @param params
      * @param <T>
      * @return
@@ -203,6 +227,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a constructor which has the given params as a SafeConstructor
+     *
      * @param params
      * @param <T>
      * @return
@@ -211,6 +236,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a List of all the constructors of the underlying class that match the matchers.
+     *
      * @param matchers
      * @return
      */
@@ -218,6 +244,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a List of all the constructors of the underlying class that match the matchers as SafeConstructors
+     *
      * @param matchers
      * @param <T>
      * @return
@@ -226,6 +253,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Whether or not this reflected class is assignable from {@param clazz}
+     *
      * @param clazz
      * @return
      */
@@ -233,6 +261,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Whether or not this class is assignable from {@param object}
+     *
      * @param object
      * @return
      */
@@ -240,6 +269,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns whether or not the reflected class is an instance of the given object.
+     *
      * @param object
      * @return
      */
@@ -247,6 +277,7 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns the type of this class. (GenericSuperClass)
+     *
      * @return
      */
     public Type getType();

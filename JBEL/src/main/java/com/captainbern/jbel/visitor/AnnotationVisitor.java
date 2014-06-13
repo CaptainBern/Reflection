@@ -9,7 +9,7 @@ public class AnnotationVisitor {
     protected AnnotationVisitor annotationVisitor;
 
     public AnnotationVisitor(int api, AnnotationVisitor annotationVisitor) {
-        if(api != Opcode.JBEL_1) {
+        if (api != Opcode.JBEL_1) {
             throw new IllegalArgumentException();
         }
         this.api = api;
@@ -17,7 +17,7 @@ public class AnnotationVisitor {
     }
 
     public void visitEnd() {
-        if(this.annotationVisitor != null) {
+        if (this.annotationVisitor != null) {
             this.annotationVisitor.visitEnd();
         }
     }

@@ -35,7 +35,7 @@ public class ParameterAnnotation extends Attribute {
         this(tag, index, length, (ParameterAnnotationEntry[]) null, constantPool);
         this.paramTableLength = codeStream.readUnsignedByte();
         this.parameterAnnotationEntries = new ParameterAnnotationEntry[this.paramTableLength];
-        for(int i = 0; i < this.paramTableLength; i++) {
+        for (int i = 0; i < this.paramTableLength; i++) {
             this.parameterAnnotationEntries[i] = new ParameterAnnotationEntry(codeStream, constantPool);
         }
     }
@@ -45,13 +45,13 @@ public class ParameterAnnotation extends Attribute {
         setParameterAnnotationEntries(entries);
     }
 
+    public ParameterAnnotationEntry[] getParameterAnnotationEntries() {
+        return this.parameterAnnotationEntries;
+    }
+
     public void setParameterAnnotationEntries(ParameterAnnotationEntry[] entries) {
         this.parameterAnnotationEntries = entries;
         this.paramTableLength = entries == null ? 0 : entries.length;
-    }
-
-    public ParameterAnnotationEntry[] getParameterAnnotationEntries() {
-        return this.parameterAnnotationEntries;
     }
 
     public int getParamTableLength() {
@@ -62,7 +62,7 @@ public class ParameterAnnotation extends Attribute {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.paramTableLength);
-        for(int i = 0; i < this.paramTableLength; i++) {
+        for (int i = 0; i < this.paramTableLength; i++) {
             this.parameterAnnotationEntries[i].write(codeStream);
         }
     }

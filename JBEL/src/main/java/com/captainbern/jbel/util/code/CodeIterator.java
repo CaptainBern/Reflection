@@ -25,13 +25,14 @@ public class CodeIterator implements Opcode {
     }
 
     public void move(int index) {
-        if (index > this.size)
+        if (index > this.size) {
             throw new IndexOutOfBoundsException();
+        }
 
         this.currentPosition = index;
     }
 
     public int getByteAt(int index) {
-        return this.byteCode[index] & 0xFF;
+        return this.byteCode[index]&0xFF;
     }
 }

@@ -70,7 +70,7 @@ public class Exceptions extends Attribute implements Opcode {
 
     public String[] getExceptionsAsString() throws ClassFormatException {
         String[] names = new String[this.exceptionCount];
-        for(int i = 0; i < this.exceptionCount; i++) {
+        for (int i = 0; i < this.exceptionCount; i++) {
             names[i] = this.constantPool.getUtf8(this.constantPool.getClass(exceptions[i]).getNameIndex()).getString();
         }
         return names;
@@ -79,7 +79,7 @@ public class Exceptions extends Attribute implements Opcode {
     @Override
     public void write(DataOutputStream codeStream) throws IOException {
         codeStream.writeShort(this.exceptionCount);
-        for(int i = 0; i < this.exceptionCount; i++) {
+        for (int i = 0; i < this.exceptionCount; i++) {
             codeStream.writeShort(this.exceptions[i]);
         }
     }

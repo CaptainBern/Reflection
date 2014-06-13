@@ -30,18 +30,20 @@ public class WrappedWatchableObject extends AbstractWrapper {
     public WrappedWatchableObject(int index, Object value) {
         super(MinecraftReflection.getWatchableObjectClass());
 
-        if (value == null)
+        if (value == null) {
             throw new IllegalArgumentException("Given value can't be NULL!");
+        }
 
         Integer typeId = WrappedDataWatcher.getTypeID(value);
 
         if (typeId != null) {
-            if (CREATE_CONSTRUCTOR == null)
+            if (CREATE_CONSTRUCTOR == null) {
                 try {
                     CREATE_CONSTRUCTOR = new Reflection().reflect(MinecraftReflection.getWatchableObjectClass()).getSafeConstructor(int.class, int.class, Object.class).getAccessor();
                 } catch (Exception e) {
                     throw new RuntimeException("Failed to retrieve the constructor!");
                 }
+            }
 
             try {
                 loadFromObject(CREATE_CONSTRUCTOR.invoke(typeId, index, value));
@@ -53,22 +55,12 @@ public class WrappedWatchableObject extends AbstractWrapper {
         }
     }
 
-    protected void loadFromObject(Object handle) {
-        initialize();
-
-        setHandle(handle);
-
-        Class<?> handleClass = handle.getClass();
-        if (!MinecraftReflection.getWatchableObjectClass().isAssignableFrom(handleClass)) {
-            throw new ClassCastException("Cannot cast: " + handleClass.getCanonicalName() + " to: " + MinecraftReflection.getWatchableObjectClass().getCanonicalName());
-        }
-    }
-
     protected static void initialize() {
-        if (IS_INITIALIZED)
+        if (IS_INITIALIZED) {
             return;
-        else
+        } else {
             IS_INITIALIZED = true;
+        }
 
         ClassTemplate watchableObjectTemplate = new Reflection().reflect(MinecraftReflection.getWatchableObjectClass());
 
@@ -83,6 +75,17 @@ public class WrappedWatchableObject extends AbstractWrapper {
 
         VALUE_ACCESSOR = watchableObjectTemplate.getSafeFieldByType(Object.class).getAccessor();
         DIRTY_STATE_ACCESSOR = watchableObjectTemplate.getSafeFieldByType(boolean.class).getAccessor();
+    }
+
+    protected void loadFromObject(Object handle) {
+        initialize();
+
+        setHandle(handle);
+
+        Class<?> handleClass = handle.getClass();
+        if (!MinecraftReflection.getWatchableObjectClass().isAssignableFrom(handleClass)) {
+            throw new ClassCastException("Cannot cast: " + handleClass.getCanonicalName() + " to: " + MinecraftReflection.getWatchableObjectClass().getCanonicalName());
+        }
     }
 
     public int getId() {
@@ -110,11 +113,13 @@ public class WrappedWatchableObject extends AbstractWrapper {
     }
 
     public void setValue(Object value, boolean update) {
-        if (value == null)
+        if (value == null) {
             throw new IllegalArgumentException("Cannot watch a NULL value!");
+        }
 
-        if (update)
+        if (update) {
             setDirty(true);
+        }
 
         VALUE_ACCESSOR.set(this.getHandle(), value);
     }

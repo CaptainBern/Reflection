@@ -38,6 +38,15 @@ public class ArrayElementValue extends ElementValue {
         this.values = elementValues;
     }
 
+    public static ArrayElementValue read(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
+        final int size = codeStream.readUnsignedShort();
+        ElementValue[] array = new ElementValue[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = ElementValue.read(codeStream, constantPool);
+        }
+        return new ArrayElementValue(array, constantPool);
+    }
+
     public int size() {
         return this.values.length;
     }
@@ -46,20 +55,11 @@ public class ArrayElementValue extends ElementValue {
         return this.values;
     }
 
-    public static ArrayElementValue read(DataInputStream codeStream, ConstantPool constantPool) throws IOException {
-        final int size = codeStream.readUnsignedShort();
-        ElementValue[] array = new ElementValue[size];
-        for(int i = 0; i < size; i++) {
-            array[i] = ElementValue.read(codeStream, constantPool);
-        }
-        return new ArrayElementValue(array, constantPool);
-    }
-
     @Override
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.values.length);
-        for(int i = 0; i < this.values.length; i++) {
+        for (int i = 0; i < this.values.length; i++) {
             this.values[i].write(codeStream);
         }
     }

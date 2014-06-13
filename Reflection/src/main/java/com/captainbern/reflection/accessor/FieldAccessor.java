@@ -23,12 +23,14 @@ import com.captainbern.reflection.SafeField;
 
 /**
  * An interface for weak access to fields and allows various operations to be done easier.
+ *
  * @param <T> The type of the underlying field.
  */
 public interface FieldAccessor<T> {
 
     /**
      * Retrieves the value of the underlying field for the given instance.
+     *
      * @param instance The instance or null for a static field.
      * @return The value of the underlying field.
      */
@@ -36,32 +38,37 @@ public interface FieldAccessor<T> {
 
     /**
      * Retrieves the value of the underlying field static.
+     *
      * @return The value of the underlying field.
      */
     public T getStatic();
 
     /**
-     * Sets the value of the underlying field for the given instance.
-     * @param instance The instance or null for a static field.
-     * @param value The value that will be assigned to the underlying field.
-     */
-    public void set(Object instance, T value);
-
-    /**
      * Sets the value of the underlying field static.
+     *
      * @param value The value that will be assigned to the underlying field.
      */
     public void setStatic(T value);
 
     /**
+     * Sets the value of the underlying field for the given instance.
+     *
+     * @param instance The instance or null for a static field.
+     * @param value    The value that will be assigned to the underlying field.
+     */
+    public void set(Object instance, T value);
+
+    /**
      * Transfers the value of the field of the given instance to the given destination.
+     *
      * @param from The object to transfer the field value from.
-     * @param to  The object to transfer the field value to.
+     * @param to   The object to transfer the field value to.
      */
     public void transfer(Object from, Object to);
 
     /**
      * Returns the underlying field as a ReflectedField.
+     *
      * @return The underlying field as a ReflectedField.
      */
     public SafeField<T> getField();

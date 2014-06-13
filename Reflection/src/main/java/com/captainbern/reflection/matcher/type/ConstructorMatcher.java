@@ -4,6 +4,18 @@ import java.lang.reflect.Constructor;
 
 public class ConstructorMatcher extends MemberMatcher<Constructor> {
 
+    private ConstructorMatcher() {
+    }
+
+    @Override
+    public boolean matches(Constructor constructor) {
+        if (super.matches(constructor)) {
+
+        }
+
+        return false;
+    }
+
     public static class Builder extends MemberMatcher.Builder<ConstructorMatcher> {
 
         @Override
@@ -15,16 +27,5 @@ public class ConstructorMatcher extends MemberMatcher<Constructor> {
         public ConstructorMatcher build() {
             return this.matcher;
         }
-    }
-
-    private ConstructorMatcher() {}
-
-    @Override
-    public boolean matches(Constructor constructor) {
-        if (super.matches(constructor)) {
-
-        }
-
-        return false;
     }
 }

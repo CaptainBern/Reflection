@@ -25,6 +25,7 @@ public interface Matcher<T> extends Serializable {
 
     /**
      * Matches the given type. (Return true if it matches, false otherwise)
+     *
      * @param type
      * @return
      */
@@ -32,6 +33,7 @@ public interface Matcher<T> extends Serializable {
 
     /**
      * Returns true of the if both this and the given matcher return true.
+     *
      * @param otherMatcher
      * @return
      */
@@ -39,6 +41,7 @@ public interface Matcher<T> extends Serializable {
 
     /**
      * Returns true if this or the given matcher return true.
+     *
      * @param otherMatcher
      * @return
      */

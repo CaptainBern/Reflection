@@ -29,12 +29,14 @@ public interface ClassTemplate<T> extends Access<T>, Serializable {
 
     /**
      * Created a new instance of this (reflected) class.
+     *
      * @return
      */
     public T newInstance();
 
     /**
      * Returns a List of all the Super classes of this class.
+     *
      * @return
      */
     public List<ClassTemplate> getSuperClasses();

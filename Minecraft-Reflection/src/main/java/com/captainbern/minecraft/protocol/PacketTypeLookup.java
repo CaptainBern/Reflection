@@ -18,24 +18,24 @@ public class PacketTypeLookup {
     public final HashMap<Integer, PacketType> LOGIN_SERVER = Maps.newHashMap();
 
     public HashMap<Integer, PacketType> getLookup(Protocol protocol, Sender sender) {
-        switch(protocol) {
-            case HANDSHAKING :
+        switch (protocol) {
+            case HANDSHAKING:
                 return sender == Sender.CLIENT ? HANDSHAKE_CLIENT : HANDSHAKE_SERVER;
-            case PLAY :
+            case PLAY:
                 return sender == Sender.CLIENT ? PLAY_CLIENT : PLAY_SERVER;
-            case STATUS :
+            case STATUS:
                 return sender == Sender.CLIENT ? STATUS_CLIENT : STATUS_SERVER;
-            case LOGIN :
+            case LOGIN:
                 return sender == Sender.CLIENT ? LOGIN_CLIENT : LOGIN_SERVER;
-            default :
+            default:
                 System.err.print("Error: Unable to identify protocol: " + protocol);
                 return null;
         }
     }
 
     public PacketTypeLookup addPacketType(Iterable<? extends PacketType> types) {
-        for(PacketType type : types) {
-            if(type.getId() != PacketType.UNKNOWN_PACKET) {
+        for (PacketType type : types) {
+            if (type.getId() != PacketType.UNKNOWN_PACKET) {
                 getLookup(type.getProtocol(), type.getSender()).put(type.getId(), type);
             }
         }

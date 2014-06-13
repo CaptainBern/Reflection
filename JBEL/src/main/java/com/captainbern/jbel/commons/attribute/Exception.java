@@ -46,7 +46,7 @@ public class Exception {
     }
 
     public void setStartPC(int startPC) {
-       this.startPc = startPC;
+        this.startPc = startPC;
     }
 
     public int getEndCP() {

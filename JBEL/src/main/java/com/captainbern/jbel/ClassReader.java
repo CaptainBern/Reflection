@@ -46,6 +46,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Constructs a new ClassReader with the given bytes.
+     *
      * @param bytes
      * @throws IOException
      * @throws ClassFormatException
@@ -131,6 +132,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Constructs a new ClassReader from the given InputStream.
+     *
      * @param inputStream
      * @throws IOException
      * @throws ClassFormatException
@@ -141,6 +143,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Converts a given InputStream to a byte-array. (or pure bytecode)
+     *
      * @param inputStream
      * @param close
      * @return
@@ -175,6 +178,7 @@ public class ClassReader implements Opcode {
     /**
      * Returns the bytecode of this ClassReader. This allows one to easily edit a specific value and create a
      * new class with the given bytes.
+     *
      * @return
      */
     public byte[] getByteCode() {
@@ -197,6 +201,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Writes this class to a file.
+     *
      * @param file
      * @throws IOException
      */
@@ -214,14 +219,16 @@ public class ClassReader implements Opcode {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {
-            if (dataStream == null)
+            if (dataStream == null) {
                 return;
+            }
             dataStream.close();
         }
     }
 
     /**
      * Writes this class to the given DataOutputStream
+     *
      * @param codeStream
      * @throws IOException
      */
@@ -281,6 +288,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Defines a new class. Editing classes has never been this easy (and unsafe you moron)!
+     *
      * @return
      */
     public Class defineClass() {
@@ -293,6 +301,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns the magic of this class. This is always 0xCAFEBABE.
+     *
      * @return
      */
     public int getMagic() {
@@ -301,6 +310,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns the minor version of this class.
+     *
      * @return
      */
     public int getMinor() {
@@ -309,6 +319,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns the major version of this class.
+     *
      * @return
      */
     public int getMajor() {
@@ -317,6 +328,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns a ConstantPool object of this class.
+     *
      * @return
      */
     public ConstantPool getConstantPool() {
@@ -325,6 +337,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns the access-flags of this class.
+     *
      * @return
      */
     public int getAccessFlags() {
@@ -333,6 +346,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns the name of this class.
+     *
      * @return
      */
     public String getClassName() {
@@ -346,6 +360,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns the location of the name in the ConstantPool.
+     *
      * @return
      */
     public int getClassNameIndex() {
@@ -354,6 +369,7 @@ public class ClassReader implements Opcode {
 
     /**
      * returns the name of the SuperClass of this class.
+     *
      * @return
      */
     public String getSuperClassName() {
@@ -367,6 +383,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns the location of the SuperClassName in the ConstantPool.
+     *
      * @return
      */
     public int getSuperClassNameIndex() {
@@ -375,6 +392,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns an array of interfaces of this class.
+     *
      * @return
      */
     public ArrayList<Interface> getInterfaces() {
@@ -383,6 +401,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns an array of fields of this class.
+     *
      * @return
      */
     public ArrayList<FieldInfo> getFields() {
@@ -391,6 +410,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns an array of methods of this class.
+     *
      * @return
      */
     public ArrayList<MethodInfo> getMethods() {
@@ -399,6 +419,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Returns an array of attributes of this class.
+     *
      * @return
      */
     public ArrayList<Attribute> getAttributes() {
@@ -421,17 +442,17 @@ public class ClassReader implements Opcode {
 
         visitor.visitConstantPool(this.constantPool);
 
-        for(Interface iface : this.interfaces) {
+        for (Interface iface : this.interfaces) {
             visitor.visitInterface(iface);
         }
         visitor.visitInterfaces(this.interfaces);
 
-        for(FieldInfo field : this.fields) {
+        for (FieldInfo field : this.fields) {
             visitField(visitor, field);
         }
         visitor.visitFields(this.fields);
 
-        for(Attribute attribute : this.attributes) {
+        for (Attribute attribute : this.attributes) {
             visitor.visitAttribute(attribute);
         }
         visitor.visitAttributes(this.attributes);
@@ -439,6 +460,7 @@ public class ClassReader implements Opcode {
 
     /**
      * Visits a specific field.
+     *
      * @param visitor
      * @param field
      * @throws ClassFormatException
@@ -449,8 +471,8 @@ public class ClassReader implements Opcode {
         String descriptor = field.getDescriptor();
         String signature = null;
 
-        for(Attribute attribute : field.getAttributes()) {
-            if(attribute instanceof Signature) {
+        for (Attribute attribute : field.getAttributes()) {
+            if (attribute instanceof Signature) {
                 signature = ((Signature) attribute).getSignature();
             }
         }

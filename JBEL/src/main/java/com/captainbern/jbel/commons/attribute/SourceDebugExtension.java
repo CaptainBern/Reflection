@@ -40,7 +40,7 @@ public class SourceDebugExtension extends Attribute implements Opcode {
         this(index, lenght, (DebugExtension[]) null, constantPool);
         this.sourceDebugExtensionsCount = codeStream.readUnsignedShort();
         this.debugExtensions = new DebugExtension[this.sourceDebugExtensionsCount];
-        for(int i = 0; i < this.sourceDebugExtensionsCount; i++) {
+        for (int i = 0; i < this.sourceDebugExtensionsCount; i++) {
             this.debugExtensions[i] = new DebugExtension(codeStream);
         }
     }
@@ -67,7 +67,7 @@ public class SourceDebugExtension extends Attribute implements Opcode {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.sourceDebugExtensionsCount);
-        for(int i = 0; i < this.sourceDebugExtensionsCount; i++) {
+        for (int i = 0; i < this.sourceDebugExtensionsCount; i++) {
             this.debugExtensions[i].write(codeStream);
         }
     }

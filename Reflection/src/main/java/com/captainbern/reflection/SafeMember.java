@@ -27,12 +27,14 @@ public interface SafeMember extends Member, Serializable {
 
     /**
      * Returns the underlying member.
+     *
      * @return
      */
     public Member member();
 
     /**
      * In case the member is a method or a constructor, this will return how many arguments it takes.
+     *
      * @return
      */
     public int getArgumentCount();
@@ -40,48 +42,56 @@ public interface SafeMember extends Member, Serializable {
     /**
      * In case the member is a method or a constructor, this will return the arguments in
      * the form of a ReflectedClass.
+     *
      * @return
      */
     public List<ClassTemplate<?>> getArguments();
 
     /**
      * Returns the type of this member as a ReflectedClass.
+     *
      * @return
      */
     public ClassTemplate<?> getType();
 
     /**
      * Returns the modifiers of this member.
+     *
      * @return
      */
     public int getModifiers();
 
     /**
      * Sets the modifiers of this member.
+     *
      * @param mods
      */
     public void setModifiers(int mods);
 
     /**
      * Returns whether or not this Class is public
+     *
      * @return
      */
     public boolean isPublic();
 
     /**
      * Returns whether or not this Class is private
+     *
      * @return
      */
     public boolean isPrivate();
 
     /**
      * Returns whether or not this Class is protected
+     *
      * @return
      */
     public boolean isProtected();
 
     /**
      * Returns whether or not this Class is static
+     *
      * @return
      */
     public boolean isStatic();

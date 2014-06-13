@@ -44,7 +44,7 @@ public class InnerClasses extends Attribute implements Opcode {
         this(index, length, (InnerClass[]) null, constantPool);
         this.numberOfInnerClasses = codeStream.readUnsignedShort();
         this.innerClasses = new InnerClass[this.numberOfInnerClasses];
-        for(int i = 0; i < this.numberOfInnerClasses; i++) {
+        for (int i = 0; i < this.numberOfInnerClasses; i++) {
             this.innerClasses[i] = new InnerClass(codeStream);
         }
     }
@@ -71,7 +71,7 @@ public class InnerClasses extends Attribute implements Opcode {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.numberOfInnerClasses);
-        for(int i = 0; i < this.numberOfInnerClasses; i++) {
+        for (int i = 0; i < this.numberOfInnerClasses; i++) {
             this.innerClasses[i].write(codeStream);
         }
     }

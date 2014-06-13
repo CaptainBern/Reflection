@@ -15,7 +15,7 @@ public class MethodParameters extends Attribute {
         this(index, length, (MethodParameter[]) null, constantPool);
         this.parameterCount = codeStream.readUnsignedShort();
         this.parameters = new MethodParameter[this.parameterCount];
-        for(int i = 0; i < this.parameterCount; i++) {
+        for (int i = 0; i < this.parameterCount; i++) {
             this.parameters[i] = new MethodParameter(codeStream);
         }
     }
@@ -42,7 +42,7 @@ public class MethodParameters extends Attribute {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.parameterCount);
-        for(int i = 0; i < this.parameterCount; i++) {
+        for (int i = 0; i < this.parameterCount; i++) {
             this.parameters[i].write(codeStream);
         }
     }

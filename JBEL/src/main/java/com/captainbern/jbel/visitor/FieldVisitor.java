@@ -13,7 +13,7 @@ public class FieldVisitor {
     }
 
     public FieldVisitor(int api, FieldVisitor fieldVisitor) {
-        if(api != Opcode.JBEL_1) {
+        if (api != Opcode.JBEL_1) {
             throw new IllegalArgumentException();
         }
         this.api = api;
@@ -21,7 +21,7 @@ public class FieldVisitor {
     }
 
     public void visitEnd() {
-        if(this.fieldVisitor != null) {
+        if (this.fieldVisitor != null) {
             this.fieldVisitor.visitEnd();
         }
     }

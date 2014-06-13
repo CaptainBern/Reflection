@@ -44,7 +44,7 @@ public class LocalVariableTypeTable extends Attribute implements Opcode {
         this(index, length, (LocalVariable[]) null, constantPool);
         this.localVariableTypeTableLength = codeStream.readUnsignedShort();
         this.variables = new LocalVariable[this.localVariableTypeTableLength];
-        for(int i = 0; i < this.localVariableTypeTableLength; i++) {
+        for (int i = 0; i < this.localVariableTypeTableLength; i++) {
             this.variables[i] = new LocalVariable(codeStream);
         }
     }
@@ -63,7 +63,7 @@ public class LocalVariableTypeTable extends Attribute implements Opcode {
     }
 
     public void setVariables(LocalVariable[] variables) {
-        this.localVariableTypeTableLength = variables == null ? 0: variables.length;
+        this.localVariableTypeTableLength = variables == null ? 0 : variables.length;
         this.variables = variables;
     }
 
@@ -71,7 +71,7 @@ public class LocalVariableTypeTable extends Attribute implements Opcode {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.localVariableTypeTableLength);
-        for(int i = 0; i < this.localVariableTypeTableLength; i++) {
+        for (int i = 0; i < this.localVariableTypeTableLength; i++) {
             this.variables[i].write(codeStream);
         }
     }

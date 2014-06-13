@@ -35,13 +35,14 @@ public class SafeFieldImpl<T> implements SafeField<T> {
     protected Field field;
 
     public SafeFieldImpl(final Reflection reflection, final Field field) {
-        if(field == null)
+        if (field == null) {
             throw new IllegalArgumentException("Field can't be NULL!");
+        }
 
         this.reflection = reflection;
         this.field = field;
 
-        if(!this.field.isAccessible()) {
+        if (!this.field.isAccessible()) {
             try {
                 this.field.setAccessible(true);
             } catch (SecurityException e) {
@@ -61,11 +62,13 @@ public class SafeFieldImpl<T> implements SafeField<T> {
             @Override
             public T get(Object instance) {
                 try {
-                    if(SafeFieldImpl.this.field == null)
+                    if (SafeFieldImpl.this.field == null) {
                         throw new RuntimeException("Field is NULL!");
+                    }
 
-                    if(instance == null && !Modifier.isStatic(SafeFieldImpl.this.field.getModifiers()))
+                    if (instance == null && !Modifier.isStatic(SafeFieldImpl.this.field.getModifiers())) {
                         throw new IllegalArgumentException("Non-static fields require a valid instance passed in!");
+                    }
 
                     return (T) field.get(instance);
                 } catch (IllegalAccessException e) {
@@ -81,11 +84,13 @@ public class SafeFieldImpl<T> implements SafeField<T> {
             @Override
             public void set(Object instance, T value) {
                 try {
-                    if(SafeFieldImpl.this.field == null)
+                    if (SafeFieldImpl.this.field == null) {
                         throw new RuntimeException("Field is NULL!");
+                    }
 
-                    if(!Modifier.isStatic(getModifiers()) && value == null)
+                    if (!Modifier.isStatic(getModifiers()) && value == null) {
                         throw new IllegalArgumentException("Non-static fields require a valid instance passed-in!");
+                    }
 
                     field.set(instance, value);
                 } catch (IllegalAccessException e) {
@@ -100,8 +105,9 @@ public class SafeFieldImpl<T> implements SafeField<T> {
 
             @Override
             public void transfer(Object from, Object to) {
-                if(field == null)
+                if (field == null) {
                     throw new IllegalStateException("Field is NULL!");
+                }
 
                 set(to, get(from));
             }

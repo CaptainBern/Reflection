@@ -36,7 +36,7 @@ public class StackMap extends Attribute implements Opcode {
     public StackMap(int index, int length, DataInputStream codeStream, ConstantPool constantPool) throws IOException, ClassFormatException {
         this(index, length, (StackMapEntry[]) null, constantPool);
         this.mapLength = codeStream.readUnsignedShort();
-        for(int i = 0; i < this.mapLength; i++) {
+        for (int i = 0; i < this.mapLength; i++) {
             this.entries[i] = new StackMapEntry(codeStream, constantPool);
         }
     }
@@ -63,7 +63,7 @@ public class StackMap extends Attribute implements Opcode {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.mapLength);
-        for(int i = 0; i < this.mapLength; i++) {
+        for (int i = 0; i < this.mapLength; i++) {
             this.entries[i].write(codeStream);
         }
     }

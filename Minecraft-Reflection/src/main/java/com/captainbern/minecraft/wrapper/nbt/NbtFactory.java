@@ -16,10 +16,12 @@ public class NbtFactory {
     private static MethodAccessor CREATE_TAG;
 
     public static <T> WrappedNbtTag<T> createTag(NbtType type) {
-        if (type == null)
+        if (type == null) {
             throw new IllegalArgumentException("Given type cannot be NULL!");
-        if (type.equals(NbtType.TAG_END))
+        }
+        if (type.equals(NbtType.TAG_END)) {
             throw new IllegalArgumentException("Cannot create an NbtTag with TAG_END!");
+        }
 
         if (CREATE_TAG == null) {
 
@@ -30,7 +32,7 @@ public class NbtFactory {
             CREATE_TAG = methods.get(0).getAccessor();
         }
 
-            return createTagWithName(type);
+        return createTagWithName(type);
     }
 
     private static <T> WrappedNbtTag<T> createTagWithName(NbtType type) {

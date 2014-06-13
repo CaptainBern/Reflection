@@ -36,13 +36,14 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
     protected Constructor<T> constructor;
 
     public SafeConstructorImpl(final Reflection reflection, final Constructor<T> constructor) {
-        if(constructor == null)
+        if (constructor == null) {
             throw new IllegalArgumentException("Constructor can't be NULL!");
+        }
 
         this.reflection = reflection;
         this.constructor = constructor;
 
-        if(!constructor.isAccessible()) {
+        if (!constructor.isAccessible()) {
             try {
                 constructor.setAccessible(true);
             } catch (SecurityException e) {
@@ -61,8 +62,9 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
         return new ConstructorAccessor<T>() {
             @Override
             public T invoke(Object... args) {
-                if(SafeConstructorImpl.this.constructor == null)
+                if (SafeConstructorImpl.this.constructor == null) {
                     throw new RuntimeException("Constructor is NULL!");
+                }
 
                 try {
                     return SafeConstructorImpl.this.constructor.newInstance(args);

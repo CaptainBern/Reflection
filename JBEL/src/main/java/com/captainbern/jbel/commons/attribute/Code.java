@@ -52,13 +52,13 @@ public class Code extends Attribute implements Opcode {
 
         this.exceptionTableLength = codeStream.readUnsignedShort();
         this.exceptionTable = new Exception[this.exceptionTableLength];
-        for(int i = 0; i < this.exceptionTableLength; i++) {
-             this.exceptionTable[i] = new Exception(codeStream);
+        for (int i = 0; i < this.exceptionTableLength; i++) {
+            this.exceptionTable[i] = new Exception(codeStream);
         }
 
         this.attributeCount = codeStream.readUnsignedShort();
         this.attributes = new Attribute[this.attributeCount];
-        for(int i = 0; i < this.attributeCount; i++) {
+        for (int i = 0; i < this.attributeCount; i++) {
             this.attributes[i] = Attribute.readAttribute(codeStream, constantPool);
         }
 
@@ -177,12 +177,12 @@ public class Code extends Attribute implements Opcode {
         codeStream.write(this.code, 0, this.codeLength);
 
         codeStream.writeShort(this.exceptionTableLength);
-        for(int i = 0; i < this.exceptionTableLength; i++) {
+        for (int i = 0; i < this.exceptionTableLength; i++) {
             this.exceptionTable[i].write(codeStream);
         }
 
         codeStream.writeShort(this.attributeCount);
-        for(int i = 0; i < this.attributeCount; i++) {
+        for (int i = 0; i < this.attributeCount; i++) {
             this.attributes[i].write(codeStream);
         }
     }

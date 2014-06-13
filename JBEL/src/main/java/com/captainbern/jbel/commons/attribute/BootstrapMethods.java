@@ -40,7 +40,7 @@ public class BootstrapMethods extends Attribute implements Opcode {
         this(index, length, (BootstrapMethod[]) null, constantPool);
         this.bootstrapMethodCount = codeStream.readUnsignedShort();
         this.bootstrapMethods = new BootstrapMethod[this.bootstrapMethodCount];
-        for(int i = 0; i < this.bootstrapMethodCount; i++) {
+        for (int i = 0; i < this.bootstrapMethodCount; i++) {
             this.bootstrapMethods[i] = new BootstrapMethod(codeStream);
         }
     }
@@ -66,7 +66,7 @@ public class BootstrapMethods extends Attribute implements Opcode {
     public void write(DataOutputStream codeStream) throws IOException {
         super.write(codeStream);
         codeStream.writeShort(this.bootstrapMethodCount);
-        for(int i = 0; i < this.bootstrapMethodCount; i++) {
+        for (int i = 0; i < this.bootstrapMethodCount; i++) {
             this.bootstrapMethods[i].write(codeStream);
         }
     }

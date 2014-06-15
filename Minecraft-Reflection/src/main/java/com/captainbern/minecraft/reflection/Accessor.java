@@ -70,4 +70,15 @@ public class Accessor<T> {
     }
 
 
+    public T read(int index) {
+        return null;
+    }
+
+    public void write(int index, T value) {
+
+    }
+
+    public Accessor<T> withType(T type) {
+        return null;
+    }
 }

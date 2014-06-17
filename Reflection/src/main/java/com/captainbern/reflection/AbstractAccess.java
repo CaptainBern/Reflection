@@ -126,7 +126,7 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public <T> SafeField<T> getSafeFieldByName(final String name) {
+    public SafeField<T> getSafeFieldByName(final String name) {
         Field field = getFieldByName(name);
         return field == null ? null : (SafeField<T>) this.reflection.reflect(field);
     }
@@ -143,7 +143,7 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public <T> SafeField<T> getSafeFieldByType(Class<T> type) {
+    public SafeField<T> getSafeFieldByType(Class<T> type) {
         List<SafeField<?>> fields = getSafeFields(withType(type));
         if (fields.size() > 0) {
             return (SafeField<T>) fields.get(0);
@@ -167,7 +167,7 @@ public class AbstractAccess<T> implements Access<T> {
         return null;
     }
 
-    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type) {
+    public SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type) {
         Field field = getFieldByNameAndType(name, type);
         return field == null ? null : (SafeField<T>) this.reflection.reflect(field);
     }
@@ -278,7 +278,7 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public <T> List<SafeConstructor<T>> getSafeConstructors() {
+    public List<SafeConstructor<T>> getSafeConstructors() {
         List<Constructor> constructors = getConstructors();
 
         if (constructors.size() < 0)
@@ -294,7 +294,7 @@ public class AbstractAccess<T> implements Access<T> {
 
     // TODO: Improve these.
     @Override
-    public <T> Constructor<T> getConstructor(Class... params) {
+    public Constructor<T> getConstructor(Class... params) {
         try {
             return (Constructor<T>) this.clazz.getConstructor(params);
         } catch (NoSuchMethodException e) {
@@ -304,7 +304,7 @@ public class AbstractAccess<T> implements Access<T> {
 
     // TODO: Improve
     @Override
-    public <T> SafeConstructor<T> getSafeConstructor(Class... params) {
+    public SafeConstructor<T> getSafeConstructor(Class... params) {
         return (SafeConstructor<T>) this.reflection.reflect(getConstructor(params));
     }
 
@@ -314,7 +314,7 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public <T> List<SafeConstructor<T>> getSafeConstructors(final Matcher<? super Constructor>... matchers) {
+    public List<SafeConstructor<T>> getSafeConstructors(final Matcher<? super Constructor>... matchers) {
         List<Constructor> constructors = getConstructors(matchers);
 
         if (constructors.size() < 0)

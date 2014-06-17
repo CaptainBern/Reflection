@@ -87,14 +87,12 @@ public interface Access<T> extends Serializable {
     /**
      * Returns a field which matches the given name as a SafeField.
      * @param name
-     * @param <T>
      * @return
      */
-    public <T> SafeField<T> getSafeFieldByName(final String name);
+    public SafeField<T> getSafeFieldByName(final String name);
 
     /**
      * Returns the first field found that matches the given type
-     * @param type
      * @return
      */
     public Field getFieldByType(final Class<?> type);
@@ -102,10 +100,9 @@ public interface Access<T> extends Serializable {
     /**
      * Returns the first field found that matches the given type as a SafeField
      * @param type
-     * @param <T>
      * @return
      */
-    public <T> SafeField<T> getSafeFieldByType(final Class<T> type);
+    public SafeField<T> getSafeFieldByType(final Class<T> type);
 
     /**
      * Returns a field which matches the name and type
@@ -119,10 +116,9 @@ public interface Access<T> extends Serializable {
      * Returns a field which matches the given name and type as a SafeField
      * @param name
      * @param type
-     * @param <T>
      * @return
      */
-    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type);
+    public SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type);
 
     /**
      * Returns a List of all the methods of the underlying class, keeping in mind the access-level
@@ -188,26 +184,23 @@ public interface Access<T> extends Serializable {
 
     /**
      * Returns a List of all the constructors of the underlying class as SafeConstructors
-     * @param <T>
      * @return
      */
-    public <T> List<SafeConstructor<T>> getSafeConstructors();
+    public List<SafeConstructor<T>> getSafeConstructors();
 
     /**
      * Returns a constructor which has the given params.
      * @param params
-     * @param <T>
      * @return
      */
-    public <T> Constructor<T> getConstructor(Class... params);
+    public Constructor<T> getConstructor(Class... params);
 
     /**
      * Returns a constructor which has the given params as a SafeConstructor
      * @param params
-     * @param <T>
      * @return
      */
-    public <T> SafeConstructor<T> getSafeConstructor(Class... params);
+    public SafeConstructor<T> getSafeConstructor(Class... params);
 
     /**
      * Returns a List of all the constructors of the underlying class that match the matchers.
@@ -219,10 +212,9 @@ public interface Access<T> extends Serializable {
     /**
      * Returns a List of all the constructors of the underlying class that match the matchers as SafeConstructors
      * @param matchers
-     * @param <T>
      * @return
      */
-    public <T> List<SafeConstructor<T>> getSafeConstructors(final Matcher<? super Constructor>... matchers);
+    public List<SafeConstructor<T>> getSafeConstructors(final Matcher<? super Constructor>... matchers);
 
     /**
      * Whether or not this reflected class is assignable from {@param clazz}

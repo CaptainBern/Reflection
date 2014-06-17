@@ -62,7 +62,7 @@ public class Reflection {
         return reflect(clazz, false);
     }
 
-    public <T> ClassTemplate<T> reflect(final String className, boolean forceAccess) {
+    public ClassTemplate reflect(final String className, boolean forceAccess) {
         if (className == null) {
             throw new IllegalArgumentException("Class name may not be NULL!");
         }
@@ -74,7 +74,7 @@ public class Reflection {
         }
     }
 
-    public <T> ClassTemplate<T> reflect(final String className) {
+    public ClassTemplate reflect(final String className) {
         return reflect(className, false);
     }
 

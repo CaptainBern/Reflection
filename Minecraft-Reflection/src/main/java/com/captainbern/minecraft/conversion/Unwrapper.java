@@ -2,5 +2,5 @@ package com.captainbern.minecraft.conversion;
 
 public interface Unwrapper {
 
-    public  Object convert(Object toConvert);
+    public  Object unwrap(Object toConvert);
 }

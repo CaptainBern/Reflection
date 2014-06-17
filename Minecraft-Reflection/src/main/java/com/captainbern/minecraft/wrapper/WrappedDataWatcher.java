@@ -147,7 +147,7 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
             if (CREATE_CONSTRUCTOR == null)
                 CREATE_CONSTRUCTOR = new Reflection().reflect(dataWatcherClass).getSafeConstructor(MinecraftReflection.getEntityClass()).getAccessor();
 
-            return CREATE_CONSTRUCTOR.invoke(BukkitUnwrapper.getInstance().convert(entity));
+            return CREATE_CONSTRUCTOR.invoke(BukkitUnwrapper.getInstance().unwrap(entity));
         } catch (Exception e) {
             throw new RuntimeException("Unable to create a new DataWatcher", e);
         }
@@ -168,7 +168,7 @@ public class WrappedDataWatcher extends AbstractWrapper implements Iterable<Wrap
             throw new IllegalStateException("This method is only supported in 1.7.x and above!");
 
         try {
-            ENTITY_FIELD.set(this.getHandle(), BukkitUnwrapper.getInstance().convert(entity));
+            ENTITY_FIELD.set(this.getHandle(), BukkitUnwrapper.getInstance().unwrap(entity));
         } catch (Exception e) {
             throw new RuntimeException("Failed to set the entity!");
         }

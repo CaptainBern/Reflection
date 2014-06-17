@@ -20,7 +20,7 @@ public class BukkitUnwrapper implements Unwrapper {
     private BukkitUnwrapper() {}
 
     @Override
-    public Object convert(Object bukkitHandle) {
+    public Object unwrap(Object bukkitHandle) {
         if (bukkitHandle == null)
             return null;
 
@@ -39,7 +39,7 @@ public class BukkitUnwrapper implements Unwrapper {
                 unwrapper = new Unwrapper() {
 
                     @Override
-                    public Object convert(Object toConvert) {
+                    public Object unwrap(Object toConvert) {
                         return accessor.invoke(toConvert);
                     }
                 };

@@ -75,7 +75,7 @@ public class MinecraftVersion implements Serializable, Comparable<MinecraftVersi
             this.minor = numbers[1];
             this.build = numbers[1];
             this.release = 1;
-            return;
+            return;   // Hurray for redundant returns!
         }
     }
 

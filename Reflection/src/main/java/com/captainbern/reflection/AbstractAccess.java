@@ -126,7 +126,7 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public SafeField<T> getSafeFieldByName(final String name) {
+    public <T> SafeField<T> getSafeFieldByName(final String name) {
         Field field = getFieldByName(name);
         return field == null ? null : (SafeField<T>) this.reflection.reflect(field);
     }
@@ -143,7 +143,7 @@ public class AbstractAccess<T> implements Access<T> {
     }
 
     @Override
-    public SafeField<T> getSafeFieldByType(Class<T> type) {
+    public <T> SafeField<T> getSafeFieldByType(Class<T> type) {
         List<SafeField<?>> fields = getSafeFields(withType(type));
         if (fields.size() > 0) {
             return (SafeField<T>) fields.get(0);
@@ -167,7 +167,7 @@ public class AbstractAccess<T> implements Access<T> {
         return null;
     }
 
-    public SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type) {
+    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type) {
         Field field = getFieldByNameAndType(name, type);
         return field == null ? null : (SafeField<T>) this.reflection.reflect(field);
     }

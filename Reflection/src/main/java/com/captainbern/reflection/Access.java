@@ -89,7 +89,7 @@ public interface Access<T> extends Serializable {
      * @param name
      * @return
      */
-    public SafeField<T> getSafeFieldByName(final String name);
+    public <T> SafeField<T> getSafeFieldByName(final String name);
 
     /**
      * Returns the first field found that matches the given type
@@ -102,7 +102,7 @@ public interface Access<T> extends Serializable {
      * @param type
      * @return
      */
-    public SafeField<T> getSafeFieldByType(final Class<T> type);
+    public <T> SafeField<T> getSafeFieldByType(final Class<T> type);
 
     /**
      * Returns a field which matches the name and type
@@ -118,7 +118,7 @@ public interface Access<T> extends Serializable {
      * @param type
      * @return
      */
-    public SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type);
+    public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type);
 
     /**
      * Returns a List of all the methods of the underlying class, keeping in mind the access-level

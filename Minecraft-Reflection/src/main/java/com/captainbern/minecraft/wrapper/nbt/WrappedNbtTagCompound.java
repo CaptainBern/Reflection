@@ -141,7 +141,7 @@ public class WrappedNbtTagCompound implements WrappedNbtTag<Map<String, NbtTagBa
 
     @Override
     public <T> NbtTagList<T> getList(String key) {
-        return (NbtTagList<T>) getValue(key);
+        return (NbtTagList<T>) ((NbtTagBase) getValue(key));
     }
 
     @Override

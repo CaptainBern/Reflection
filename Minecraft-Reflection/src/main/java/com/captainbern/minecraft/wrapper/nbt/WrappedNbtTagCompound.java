@@ -32,7 +32,7 @@ public class WrappedNbtTagCompound implements WrappedNbtTag<Map<String, NbtTagBa
     }
 
     @Override
-    public <T> NbtTagCompound putObject(String key, Object value) {
+    public NbtTagCompound putObject(String key, Object value) {
         if (value == null) {
             remove(key);
         } else if (value instanceof NbtTagBase) {
@@ -210,7 +210,7 @@ public class WrappedNbtTagCompound implements WrappedNbtTag<Map<String, NbtTagBa
                     if (nbtTagBase == null)
                         return null;
 
-                    return NbtFactory.fromNbtBase(nbtTagBase);
+                    return NbtFactory.fromNbtBase(nbtTagBase).getHandle();
                 }
             };
         }

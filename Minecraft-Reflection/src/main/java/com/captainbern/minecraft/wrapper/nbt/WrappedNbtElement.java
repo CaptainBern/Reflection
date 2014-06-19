@@ -1,6 +1,7 @@
 package com.captainbern.minecraft.wrapper.nbt;
 
 import com.captainbern.minecraft.reflection.MinecraftReflection;
+import com.captainbern.minecraft.reflection.utils.Accessor;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeField;

@@ -9,7 +9,7 @@ public class BukkitConverters {
         return new Converter<WrappedDataWatcher>() {
             @Override
             public WrappedDataWatcher getWrapped(Object object) {
-                if (MinecraftReflection.getDataWatcherClass().isAssignableFrom(object.getClass())) {
+                if (object != null && MinecraftReflection.getDataWatcherClass().isAssignableFrom(object.getClass())) {
                     return new WrappedDataWatcher(object);
                 } else if (object instanceof WrappedDataWatcher) {
                     return (WrappedDataWatcher) object;

@@ -3,10 +3,8 @@ package com.captainbern.minecraft.reflection.utils;
 import com.captainbern.minecraft.conversion.Converter;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
-import com.captainbern.reflection.ReflectionUtils;
 import com.captainbern.reflection.SafeField;
 import com.captainbern.reflection.accessor.FieldAccessor;
-import com.google.common.collect.ImmutableList;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -48,20 +46,16 @@ public class Accessor<T> {
         if (index < 0 || index > this.fields.size())
             throw new IndexOutOfBoundsException("Index out of bounds for: " + index);
 
-        if (handle == null)
+        if (this.handle == null)
             throw new IllegalStateException("Handle is NULL!");
 
         try {
             FieldAccessor accessor = new Reflection().reflect(this.fields.get(index)).getAccessor();
 
             Object result = accessor.get(this.handle);
-
-            if (needConversion())
-                return this.converter.getWrapped(result);
-            else
-                return (T) result;
+            return needConversion() ? this.converter.getWrapped(result) : (T) result;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to read field at index: " + index + " with accessor: " + this);
+            throw new RuntimeException("Failed to read field at index: " + index + " with accessor: " + this, e);
         }
     }
 
@@ -69,7 +63,7 @@ public class Accessor<T> {
         if (index < 0 || index > this.fields.size())
             throw new IndexOutOfBoundsException("Index out of bounds for: " + index);
 
-        if (handle == null)
+        if (this.handle == null)
             throw new IllegalStateException("Handle is NULL!");
 
         SafeField safeField = new Reflection().reflect(this.fields.get(index));
@@ -80,7 +74,7 @@ public class Accessor<T> {
         try {
             accessor.set(this.handle, object);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to write value: " + object + "to the field at index:" + index + " with accessor: " + this);
+            throw new RuntimeException("Failed to write value: " + object + "to the field at index:" + index + " with accessor: " + this, e);
         }
 
         return this;
@@ -90,7 +84,7 @@ public class Accessor<T> {
         return withType(type, null);
     }
 
-    public <TType> Accessor<TType> withType(Class type, Converter<T> converter) {
+    public <TType> Accessor<TType> withType(Class type, Converter<TType> converter) {
         Accessor<TType> accessor = this.cache.get(type);
 
         if (accessor == null) {
@@ -112,7 +106,7 @@ public class Accessor<T> {
         accessor = accessor.withHandle(handle);
 
         if (!Objects.equals(accessor.converter, converter)) {
-            withConverter(converter);
+            accessor = accessor.withConverter(converter);
         }
 
         return accessor;
@@ -155,9 +149,7 @@ public class Accessor<T> {
 
     protected <T> Accessor<T> withConverter(Converter<T> converter) {
         Accessor accessor = withHandle(this.handle);
-
         accessor.setConverter(converter);
-
         return accessor;
     }
 

@@ -7,6 +7,7 @@ import com.captainbern.reflection.SafeMethod;
 import com.captainbern.reflection.accessor.MethodAccessor;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.captainbern.reflection.matcher.Matchers.withArguments;
 import static com.captainbern.reflection.matcher.Matchers.withReturnType;
@@ -43,5 +44,50 @@ public class NbtFactory {
             default:
                 return new WrappedNbtElement<>(handle);
         }
+    }
+
+    public static <T> WrappedNbtTag<T> fromNbtBase(NbtTagBase<T> nbtTagBase) {
+        if (nbtTagBase instanceof WrappedNbtTag) {
+            return (WrappedNbtTag<T>) nbtTagBase;
+        } else {
+            if (nbtTagBase.getType().equals(NbtType.TAG_COMPOUND)) {
+
+                WrappedNbtTagCompound compound = (WrappedNbtTagCompound) NbtFactory.<Map<String, NbtTagBase<?>>>createTag(NbtType.TAG_COMPOUND);
+                T value = nbtTagBase.getValue();
+
+                compound.setValue((Map<String, NbtTagBase<?>>) value);
+                return (WrappedNbtTag<T>) compound;
+
+            } else if (nbtTagBase.getType().equals(NbtType.TAG_LIST)) {
+
+                WrappedNbtTagList<T> list = (WrappedNbtTagList<T>) NbtFactory.<List<NbtTagBase<T>>>createTag(NbtType.TAG_LIST);
+                list.setValue((List<NbtTagBase<T>>) nbtTagBase.getValue());
+
+                return (WrappedNbtTag<T>) list;
+
+            } else {
+
+                WrappedNbtTag<T> nbtTag = fromNbtBase(nbtTagBase);
+                nbtTag.setValue(nbtTagBase.getValue());
+
+                return nbtTag;
+            }
+        }
+    }
+
+    public static <T> WrappedNbtTag<T> fromNmsHandle(Object nmsHandle) {
+        WrappedNbtElement<T> element = new WrappedNbtElement<>(nmsHandle);
+
+        if (element.getType().equals(NbtType.TAG_COMPOUND)) {
+            return (WrappedNbtTag<T>) new WrappedNbtTagCompound(nmsHandle);
+        } else if (element.getType().equals(NbtType.TAG_LIST)) {
+            return (WrappedNbtTag<T>) new WrappedNbtTagList<>(nmsHandle);
+        } else {
+            return element;
+        }
+    }
+
+    public static <T> WrappedNbtTag<T> forObject(Object object) {
+        return null;
     }
 }

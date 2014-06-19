@@ -1,4 +1,6 @@
 package com.captainbern.minecraft.wrapper.nbt;
 
-public class NbtTagList<T> {
+import java.util.List;
+
+public interface NbtTagList<T> extends NbtTagBase<List<NbtTagBase<T>>>, Iterable<T> {
 }

@@ -138,7 +138,7 @@ public class Accessor<T> {
         return accessor;
     }
 
-    protected Accessor<T> withHandle(Object handle) {
+    public Accessor<T> withHandle(Object handle) {
         Accessor<T> accessor = new Accessor<>();
 
         accessor.initialize(this);

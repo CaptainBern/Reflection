@@ -1,6 +1,7 @@
 package com.captainbern.minecraft.conversion;
 
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.accessor.FieldAccessor;
 import com.captainbern.reflection.accessor.MethodAccessor;
 import com.google.common.primitives.Primitives;
 
@@ -34,22 +35,26 @@ public class BukkitUnwrapper implements Unwrapper {
             Unwrapper unwrapper = converterMap.get(type);
 
             if (unwrapper == null) {
-                final MethodAccessor<Object> accessor = new Reflection().reflect(type).getSafeMethod("getHandle").getAccessor();
+                final FieldAccessor<Object> accessor = new Reflection().reflect(type).getSafeFieldByName("handle").getAccessor();
 
                 unwrapper = new Unwrapper() {
 
                     @Override
                     public Object unwrap(Object toConvert) {
-                        return accessor.invoke(toConvert);
+                        return accessor.get(toConvert);
                     }
                 };
 
                 this.converterMap.put(type, unwrapper);
             }
 
-            return unwrapper;
+            return unwrapper.unwrap(bukkitHandle);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create/find a converter for: " + bukkitHandle.getClass().getCanonicalName());
+            throw new RuntimeException("Failed to create/find a converter for: " + type.getCanonicalName(), e);
         }
+    }
+
+    protected static Unwrapper getFieldUnwrapper(Class<?> type) {
+        return null;
     }
 }

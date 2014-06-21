@@ -23,7 +23,6 @@ public class NbtFactory {
     protected static MethodAccessor CREATE_TAG;
     protected static Accessor<NbtTagBase<?>> ITEMSTACK_ACCESSOR;
 
-
     /**
      * This method will cast a given NbtTagBase to NbtTagCompound when a valid parameter is passed in.
      * @param nbtTagBase
@@ -268,6 +267,14 @@ public class NbtFactory {
 
     public static void writeToItemStack(ItemStack itemStack, NbtTagCompound compound) {
         getItemStackAccessor(itemStack).write(0, compound);
+    }
+
+    public static void saveItemStack(NbtTagCompound tagCompound) {
+
+    }
+
+    public static ItemStack loadItemStack(NbtTagCompound tagCompound) {
+        return null;
     }
 
     private static void verifyItemStack(ItemStack itemStack) {

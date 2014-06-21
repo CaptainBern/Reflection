@@ -32,29 +32,56 @@ public class BukkitUnwrapper implements Unwrapper {
                 return type;
             }
 
-            Unwrapper unwrapper = converterMap.get(type);
+            return unwrap(type, bukkitHandle);
 
-            if (unwrapper == null) {
-                final FieldAccessor<Object> accessor = new Reflection().reflect(type).getSafeFieldByName("handle").getAccessor();
-
-                unwrapper = new Unwrapper() {
-
-                    @Override
-                    public Object unwrap(Object toConvert) {
-                        return accessor.get(toConvert);
-                    }
-                };
-
-                this.converterMap.put(type, unwrapper);
-            }
-
-            return unwrapper.unwrap(bukkitHandle);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create/find a converter for: " + type.getCanonicalName(), e);
         }
     }
 
-    protected static Unwrapper getFieldUnwrapper(Class<?> type) {
-        return null;
+    private Object unwrap(Class<?> type, Object handle) {
+        try {
+            Unwrapper unwrapper = this.converterMap.get(type);
+
+            if (unwrapper == null) {
+
+                try {
+
+                    unwrapper = getMethodUnwrapper(type);
+                    unwrapper.unwrap(handle); // Test it
+                } catch (Exception e) { // We failed, let's if we get more luck with fields...
+                    unwrapper = getFieldUnwrapper(type);
+                    unwrapper.unwrap(handle);
+                }
+            }
+
+            this.converterMap.put(type, unwrapper);
+
+            return unwrapper.unwrap(handle);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to unwrap: " + handle + "(" + type.getCanonicalName() + ")");
+        }
+    }
+
+    protected Unwrapper getFieldUnwrapper(Class<?> type) {
+        final FieldAccessor<Object> accessor = new Reflection().reflect(type).getSafeFieldByName("handle").getAccessor();
+
+        return new Unwrapper() {
+            @Override
+            public Object unwrap(Object toConvert) {
+                return accessor.get(toConvert);
+            }
+        };
+    }
+
+    protected Unwrapper getMethodUnwrapper(Class<?> type) {
+        final MethodAccessor<Object> accessor = new Reflection().reflect(type).getSafeMethod("getHandle").getAccessor();
+
+        return new Unwrapper() {
+            @Override
+            public Object unwrap(Object toConvert) {
+                return accessor.invoke(toConvert);
+            }
+        };
     }
 }

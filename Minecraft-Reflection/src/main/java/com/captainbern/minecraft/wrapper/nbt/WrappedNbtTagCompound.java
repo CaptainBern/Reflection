@@ -227,4 +227,9 @@ public class WrappedNbtTagCompound implements WrappedNbtTag<Map<String, NbtTagBa
             }
         }
     }
+    
+    @Override
+    public String toString() {
+        return this.handle.toString();
+    }
 }

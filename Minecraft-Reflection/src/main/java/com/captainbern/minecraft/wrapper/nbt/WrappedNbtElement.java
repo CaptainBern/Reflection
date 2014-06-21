@@ -100,6 +100,6 @@ public class WrappedNbtElement<T> implements WrappedNbtTag<T> {
 
     @Override
     public String toString() {
-        return this.getType().toString() + ":" + getValue();
+        return this.handle.toString();
     }
 }

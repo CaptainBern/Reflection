@@ -4,7 +4,9 @@ import com.captainbern.minecraft.reflection.providers.StandardReflectionProvider
 import com.captainbern.minecraft.reflection.providers.remapper.RemappedReflectionProvider;
 import com.captainbern.minecraft.reflection.providers.remapper.RemapperException;
 import com.captainbern.minecraft.reflection.utils.ClassCache;
+import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.SafeMethod;
 import com.captainbern.reflection.accessor.MethodAccessor;
 import com.captainbern.reflection.provider.ReflectionProvider;
 import com.google.common.base.Strings;
@@ -315,6 +317,10 @@ public class MinecraftReflection {
         return getCraftBukkitClass("entity.CraftEntity");
     }
 
+    public static Class<?> getCraftPlayerClass() {
+        return getCraftBukkitClass("entity.CraftPlayer");
+    }
+
     public static Class<?> getCraftItemStackClass() {
         return getCraftBukkitClass("inventory.CraftItemStack");
     }
@@ -384,6 +390,35 @@ public class MinecraftReflection {
 
         MethodAccessor<Entity> toBukkitEntity = new Reflection().reflect(getEntityClass()).getSafeMethod("getBukkitEntity").getAccessor();
         return toBukkitEntity.invoke(nmsEntity);
+    }
+
+    public static Class<?> getEntityPlayerClass() {
+        try {
+            return getMinecraftClass("EntityPlayer");
+        } catch (Exception e) {
+            Class<?> craftPlayer = getCraftPlayerClass();
+
+            ClassTemplate template = new Reflection().reflect(craftPlayer);
+            SafeMethod<Object> handle = template.getSafeMethod("getHandle");
+
+            return setMinecraftClass("EntityPlayer", handle.member().getReturnType());
+        }
+    }
+
+    public static Class<?> getPlayerConnectionClass() {
+        try {
+            return getMinecraftClass("PlayerConnection");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Class<?> getAttributeSnapshotClass() {
+        try {
+            return getMinecraftClass("AttributeSnapshot");
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static Class<?> getNbtBaseClass() {

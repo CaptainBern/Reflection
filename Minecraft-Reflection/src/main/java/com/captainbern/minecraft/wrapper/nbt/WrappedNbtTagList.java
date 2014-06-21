@@ -205,4 +205,9 @@ public class WrappedNbtTagList<T> implements WrappedNbtTag<List<NbtTagBase<T>>>,
         if (lastElement != null)
             this.setListType(lastElement.getType());
     }
+
+    @Override
+    public String toString() {
+        return this.handle.toString();
+    }
 }

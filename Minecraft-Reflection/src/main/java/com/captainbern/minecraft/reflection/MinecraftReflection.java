@@ -409,7 +409,15 @@ public class MinecraftReflection {
         try {
             return getMinecraftClass("PlayerConnection");
         } catch (Exception e) {
-            return null;
+            return null; // TODO: Create fallback
+        }
+    }
+
+    public static Class<?> getNetworkManagerClass() {
+        try {
+            return getMinecraftClass("NetworkManager");
+        } catch (Exception e) {
+            return null; // TODO: Create fallback
         }
     }
 

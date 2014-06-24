@@ -9,6 +9,8 @@ import com.captainbern.minecraft.reflection.utils.Accessor;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
 
+import java.util.Collection;
+
 public class WrappedPacket {
 
     private Object handle;
@@ -155,5 +157,9 @@ public class WrappedPacket {
 
     public Accessor<WrappedDataWatcher> getDataWatchers() {
         return this.modifier.withType(MinecraftReflection.getDataWatcherClass(), BukkitConverters.getDataWatcherConverter());
+    }
+
+    public Accessor<Collection<WrappedWatchableObject>> getWatchableObjectLists() {
+        return this.modifier.withType(Collection.class, BukkitConverters.getListConverter(MinecraftReflection.getWatchableObjectClass(), BukkitConverters.getWatchableObjectConverter()));
     }
 }

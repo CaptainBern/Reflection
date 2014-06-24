@@ -1,9 +1,15 @@
 package com.captainbern.minecraft.conversion;
 
+import com.captainbern.minecraft.collection.WrapperList;
 import com.captainbern.minecraft.reflection.MinecraftReflection;
 import com.captainbern.minecraft.wrapper.WrappedDataWatcher;
+import com.captainbern.minecraft.wrapper.WrappedWatchableObject;
 import com.captainbern.minecraft.wrapper.nbt.NbtFactory;
 import com.captainbern.minecraft.wrapper.nbt.NbtTagBase;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class BukkitConverters {
 
@@ -66,4 +72,59 @@ public class BukkitConverters {
         };
     }
 
+    public static Converter<WrappedWatchableObject> getWatchableObjectConverter() {
+        return new IgnoreNullConverter<WrappedWatchableObject>() {
+            @Override
+            public WrappedWatchableObject getWrappedValue(Object object) {
+                if (object != null && MinecraftReflection.getWatchableObjectClass().isAssignableFrom(object.getClass()))
+                    return new WrappedWatchableObject(object);
+                else if (object instanceof WrappedWatchableObject)
+                    return (WrappedWatchableObject) object;
+                else
+                    throw new IllegalArgumentException("Invalid type " + object.getClass());
+            }
+
+            @Override
+            public Object getUnWrappedValue(Class<?> type, WrappedWatchableObject wrapperType) {
+                return null;
+            }
+        };
+    }
+
+    public static <T> Converter<List<T>> getListConverter(final Class<?> unwrapped, final Converter<T> converter) {
+        return new IgnoreNullConverter<List<T>>() {
+            @Override
+            public List<T> getWrappedValue(Object object) {
+                if (object instanceof Collection) {
+                    List<T> items = new ArrayList<T>();
+
+                    for (Object item : (Collection<Object>) object) {
+                        T result = converter.getWrapped(item);
+
+                        if (item != null)
+                            items.add(result);
+                    }
+                    return items;
+                }
+
+                return null;
+            }
+
+            @Override
+            public Object getUnWrappedValue(Class<?> type, List<T> wrapperType) {
+                Collection<Object> newContainer = new ArrayList<>();
+
+                // Convert each object
+                for (T position : wrapperType) {
+                    Object converted = converter.getUnWrapped(type, position);
+
+                    if (position == null)
+                        newContainer.add(null);
+                    else if (converted != null)
+                        newContainer.add(converted);
+                }
+                return newContainer;
+            }
+        };
+    }
 }

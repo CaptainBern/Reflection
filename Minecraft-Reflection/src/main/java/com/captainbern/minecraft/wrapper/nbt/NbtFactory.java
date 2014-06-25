@@ -20,8 +20,20 @@ import static com.captainbern.reflection.matcher.Matchers.withReturnType;
 
 public class NbtFactory {
 
+    // An Internal method used to create WrappedNbtTags
     protected static MethodAccessor CREATE_TAG;
+
+    // An Accessor used to easily access the Nbt-field of an ItemStack, in order to be able to read/write Nbt to it
     protected static Accessor<NbtTagBase<?>> ITEMSTACK_ACCESSOR;
+
+    // This method is used to save an ItemStack to a given NbtTagCompound
+    protected static MethodAccessor<Object> ITEMSTACK_SAVE;
+
+    // Used to load an ItemStack from a given NbtTagCompound
+    protected static MethodAccessor<Object> ITEMSTACK_LOAD;
+
+    // Better known as the "asBukkitCopy" method inside the CraftItemStack class
+    protected static MethodAccessor<ItemStack> TO_BUKKIT_ITEMSTACK;
 
     /**
      * This method will cast a given NbtTagBase to NbtTagCompound when a valid parameter is passed in.
@@ -252,6 +264,13 @@ public class NbtFactory {
         return createTagWithValue(NbtType.TAG_INT_ARRAY, value);
     }
 
+    /**
+     * Returns the NBTTagCompound of the given ItemStack
+     * (Note: this is *not* the NBT-representation of the itemstack, it's just it's internal
+     * data)
+     * @param itemStack
+     * @return
+     */
     public static NbtTagCompound readFromItemStack(ItemStack itemStack) {
         Accessor<NbtTagBase<?>> accessor = getItemStackAccessor(itemStack);
 
@@ -265,28 +284,121 @@ public class NbtFactory {
         return toCompound(fromNbtBase(tag));
     }
 
+    /**
+     * Writes the given NbtTagCompound to the given ItemStack
+     * @param itemStack
+     * @param compound
+     */
     public static void writeToItemStack(ItemStack itemStack, NbtTagCompound compound) {
         getItemStackAccessor(itemStack).write(0, compound);
     }
 
-    public static void saveItemStack(NbtTagCompound tagCompound) {
+    /**
+     * Saves an ItemStack into the given NbtTagCompound. Same way as Minecraft
+     * saves the itemstacks to a file.
+     * @param itemStack
+     * @param tagCompound
+     * @return
+     */
+    public static NbtTagCompound saveItemStack(ItemStack itemStack, NbtTagCompound tagCompound) {
+        verifyItemStack(itemStack);
 
+        WrappedNbtTagCompound wrappedNbtTagCompound = (WrappedNbtTagCompound) fromNbtBase(tagCompound);
+        Object nmsHandle = BukkitUnwrapper.getInstance().unwrap(itemStack);
+
+        if (ITEMSTACK_SAVE == null) {
+            // The ItemStack class
+            Class<?> type = MinecraftReflection.getItemStackClass();
+
+            // Just easy access...
+            ClassTemplate template = new Reflection().reflect(type);
+
+            // This *should* give us the NBTTagCompound class
+            Class<?> nbtTagCompound = wrappedNbtTagCompound.getHandle().getClass();
+
+            // A list of all the methods that match our requirements, this should only contain 1 method
+            List<SafeMethod<Object>> candidates = template.getSafeMethods(withReturnType(nbtTagCompound), withArguments(new Class[] {nbtTagCompound}));
+
+            // Victory, the first method in the list should be the one we're looking for
+            if (candidates.size() > 0) {
+                ITEMSTACK_SAVE = candidates.get(0).getAccessor();
+            } else {
+                // Damn, we didn't find it.
+                throw new RuntimeException("Failed to find save method!");
+            }
+        }
+
+        ITEMSTACK_SAVE.invoke(nmsHandle, wrappedNbtTagCompound.getHandle());
+
+        return wrappedNbtTagCompound;
     }
 
+    /**
+     * Loads an ItemStack from the given NbtTagCompound and will return a Bukkit ItemStack.
+     * @param tagCompound
+     * @return
+     */
     public static ItemStack loadItemStack(NbtTagCompound tagCompound) {
-        return null;
+        WrappedNbtTagCompound wrappedNbtTagCompound = (WrappedNbtTagCompound) fromNbtBase(tagCompound);
+
+        if (ITEMSTACK_LOAD == null) {
+            // The NBTTagCompound class
+            Class<?> nbtTagCompound = wrappedNbtTagCompound.getHandle().getClass();
+
+            // Used to easy access the net.minecraft.server.ItemStack class
+            ClassTemplate template = new Reflection().reflect(MinecraftReflection.getItemStackClass());
+
+            // The possible candidates
+            List<SafeMethod<Object>> candidates = template.getSafeMethods(withReturnType(MinecraftReflection.getItemStackClass()), withArguments(new Class[] {nbtTagCompound}));
+
+            if (candidates.size() > 0) {
+                // Go with the first one...
+                ITEMSTACK_LOAD = candidates.get(0).getAccessor();
+            } else {
+                throw new RuntimeException("Failed to find load method!");
+            }
+        }
+
+        if (TO_BUKKIT_ITEMSTACK == null) {
+            // Template again, easy access....
+            ClassTemplate template = new Reflection().reflect(MinecraftReflection.getCraftItemStackClass());
+
+            // Candidates...
+            List<SafeMethod<ItemStack>> candidates = template.getSafeMethods(withReturnType(ItemStack.class), withArguments(new Class[] {MinecraftReflection.getItemStackClass()}));
+
+            // Yay, our method is in the list!
+            if (candidates.size() > 0) {
+                // I guess we've found it!
+                TO_BUKKIT_ITEMSTACK = candidates.get(0).getAccessor();
+            } else {
+                throw new RuntimeException("Failed to find the asBukkitCopy method!");
+            }
+        }
+
+        return TO_BUKKIT_ITEMSTACK.invokeStatic(ITEMSTACK_LOAD.invokeStatic(wrappedNbtTagCompound.getHandle()));
     }
 
+    /**
+     * Internal method used to verify an ItemStack.
+     * This will make sure the given ItemStack has valid Nbt-data.
+     * @param itemStack
+     */
     private static void verifyItemStack(ItemStack itemStack) {
         if (itemStack == null) {
-            throw new IllegalArgumentException("Cannot read the NBT-data of a NULL-itemstack!");
+            throw new IllegalArgumentException("Cannot read/write the NBT-data of/to a NULL-itemstack!");
         } else if (!MinecraftReflection.getCraftItemStackClass().isAssignableFrom(itemStack.getClass())) {
             throw new IllegalArgumentException("Invalid ItemStack: " + itemStack + "!");
         } else if (itemStack.getType().equals(Material.AIR)) {
-            throw new IllegalArgumentException("Cannot read the NBT-data of Air!");
+            throw new IllegalArgumentException("Cannot read/write the NBT-data of/to Air!");
         }
     }
 
+    /**
+     * Returns an Accessor to easily access the fields of an (NMS) ItemStack. This
+     * way we can easily retrieve the NbtTag-field.
+     * @param itemStack
+     * @return
+     */
     private static Accessor<NbtTagBase<?>> getItemStackAccessor(ItemStack itemStack) {
         verifyItemStack(itemStack);
 

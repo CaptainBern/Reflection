@@ -50,10 +50,11 @@ public class Accessor<T> {
             throw new IllegalStateException("Handle is NULL!");
 
         try {
-            FieldAccessor accessor = new Reflection().reflect(this.fields.get(index)).getAccessor();
+            SafeField<T> field = new Reflection().reflect(this.fields.get(index));
+            field.withConverter(this.converter);
+            FieldAccessor accessor = field.getAccessor();
 
-            Object result = accessor.get(this.handle);
-            return needConversion() ? this.converter.getWrapped(result) : (T) result;
+            return (T) accessor.get(this.handle);
         } catch (Exception e) {
             throw new RuntimeException("Failed to read field at index: " + index + " with accessor: " + this, e);
         }
@@ -66,15 +67,14 @@ public class Accessor<T> {
         if (this.handle == null)
             throw new IllegalStateException("Handle is NULL!");
 
-        SafeField safeField = new Reflection().reflect(this.fields.get(index));
-        FieldAccessor accessor = safeField.getAccessor();
-
-        Object object = needConversion() ? this.converter.getUnwrapped(safeField.member().getType(), value) : value;
+        SafeField<T> field = new Reflection().reflect(this.fields.get(index));
+        field.withConverter(this.converter);
+        FieldAccessor accessor = field.getAccessor();
 
         try {
-            accessor.set(this.handle, object);
+            accessor.set(this.handle, value);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to write value: " + object + "to the field at index:" + index + " with accessor: " + this, e);
+            throw new RuntimeException("Failed to write value: " + value + "to the field at index:" + index + " with accessor: " + this, e);
         }
 
         return this;

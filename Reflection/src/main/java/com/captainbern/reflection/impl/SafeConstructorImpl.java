@@ -103,7 +103,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
     }
 
     private boolean needConversion() {
-        return this.constructor != null;
+        return this.converter != null;
     }
 
     @Override

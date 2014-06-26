@@ -11,7 +11,6 @@ import com.captainbern.reflection.accessor.MethodAccessor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 

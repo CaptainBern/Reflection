@@ -298,7 +298,7 @@ public class AbstractAccess<T> implements Access<T> {
     @Override
     public Constructor<T> getConstructor(Class... params) {
         try {
-            return (Constructor<T>) this.clazz.getConstructor(params);
+            return this.clazz.getConstructor(params);
         } catch (NoSuchMethodException e) {
             return null;
         }
@@ -307,7 +307,7 @@ public class AbstractAccess<T> implements Access<T> {
     // TODO: Improve
     @Override
     public SafeConstructor<T> getSafeConstructor(Class... params) {
-        return (SafeConstructor<T>) this.reflection.reflect(getConstructor(params));
+        return this.reflection.reflect(getConstructor(params));
     }
 
     @Override

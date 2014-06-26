@@ -1,11 +1,11 @@
 package com.captainbern.minecraft.conversion;
 
-import com.captainbern.minecraft.collection.WrapperList;
 import com.captainbern.minecraft.reflection.MinecraftReflection;
 import com.captainbern.minecraft.wrapper.WrappedDataWatcher;
 import com.captainbern.minecraft.wrapper.WrappedWatchableObject;
 import com.captainbern.minecraft.wrapper.nbt.NbtFactory;
 import com.captainbern.minecraft.wrapper.nbt.NbtTagBase;
+import com.captainbern.reflection.conversion.Converter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class BukkitConverters {
         public abstract Object getUnWrappedValue(Class<?> type, T wrapperType);
 
         @Override
-        public final Object getUnWrapped(Class<?> type, T wrapperType) {
+        public final Object getUnwrapped(Class<?> type, T wrapperType) {
             if (wrapperType == null) {
                 return null;
             } else {
@@ -116,7 +116,7 @@ public class BukkitConverters {
 
                 // Convert each object
                 for (T position : wrapperType) {
-                    Object converted = converter.getUnWrapped(type, position);
+                    Object converted = converter.getUnwrapped(type, position);
 
                     if (position == null)
                         newContainer.add(null);

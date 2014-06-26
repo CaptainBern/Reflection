@@ -1,10 +1,10 @@
 package com.captainbern.minecraft.reflection.utils;
 
-import com.captainbern.minecraft.conversion.Converter;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeField;
 import com.captainbern.reflection.accessor.FieldAccessor;
+import com.captainbern.reflection.conversion.Converter;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -69,7 +69,7 @@ public class Accessor<T> {
         SafeField safeField = new Reflection().reflect(this.fields.get(index));
         FieldAccessor accessor = safeField.getAccessor();
 
-        Object object = needConversion() ? this.converter.getUnWrapped(safeField.member().getType(), value) : value;
+        Object object = needConversion() ? this.converter.getUnwrapped(safeField.member().getType(), value) : value;
 
         try {
             accessor.set(this.handle, object);

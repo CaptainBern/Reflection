@@ -1,6 +1,5 @@
 package com.captainbern.minecraft.wrapper.nbt;
 
-import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;

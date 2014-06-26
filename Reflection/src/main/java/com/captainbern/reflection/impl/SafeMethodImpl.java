@@ -2,7 +2,6 @@ package com.captainbern.reflection.impl;
 
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
-import com.captainbern.reflection.SafeField;
 import com.captainbern.reflection.SafeMethod;
 import com.captainbern.reflection.accessor.MethodAccessor;
 import com.captainbern.reflection.conversion.Converter;

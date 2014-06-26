@@ -20,6 +20,7 @@
 package com.captainbern.reflection;
 
 import com.captainbern.reflection.accessor.ConstructorAccessor;
+import com.captainbern.reflection.conversion.Converter;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -29,4 +30,8 @@ public interface SafeConstructor<T> extends SafeMember, Serializable {
     public Constructor member();
 
     public ConstructorAccessor<T> getAccessor();
+
+    public SafeConstructor<T> withConverter(Converter<T> converter);
+
+    public Converter<T> getConverter();
 }

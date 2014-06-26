@@ -20,6 +20,7 @@
 package com.captainbern.reflection;
 
 import com.captainbern.reflection.accessor.FieldAccessor;
+import com.captainbern.reflection.conversion.Converter;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -32,4 +33,8 @@ public interface SafeField<T> extends SafeMember, Serializable {
     public Field member();
 
     public FieldAccessor<T> getAccessor();
+
+    public SafeField<T> withConverter(Converter<T> converter);
+
+    public Converter<T> getConverter();
 }

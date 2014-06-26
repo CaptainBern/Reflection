@@ -2,8 +2,10 @@ package com.captainbern.reflection.impl;
 
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.SafeField;
 import com.captainbern.reflection.SafeMethod;
 import com.captainbern.reflection.accessor.MethodAccessor;
+import com.captainbern.reflection.conversion.Converter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,6 +17,8 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
 
     protected final Reflection reflection;
     protected Method method;
+
+    protected Converter<T> converter;
 
     public SafeMethodImpl(final Reflection reflection, final Method method) {
         if(method == null)
@@ -107,7 +111,11 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
                     throw new RuntimeException("Method is NULL!");
 
                 try {
-                    return (T) SafeMethodImpl.this.method.invoke(instance, args);
+                    if (needConversion()) {
+                         return SafeMethodImpl.this.converter.getWrapped(SafeMethodImpl.this.method.invoke(instance, args));
+                    } else {
+                        return (T) SafeMethodImpl.this.method.invoke(instance, args);
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -127,6 +135,21 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
                 return SafeMethodImpl.this;
             }
         };
+    }
+
+    @Override
+    public SafeMethod<T> withConverter(Converter<T> converter) {
+        this.converter = converter;
+        return this;
+    }
+
+    @Override
+    public Converter<T> getConverter() {
+        return this.converter;
+    }
+
+    private boolean needConversion() {
+        return this.converter != null;
     }
 
     @Override

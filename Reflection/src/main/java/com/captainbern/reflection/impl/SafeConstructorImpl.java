@@ -23,6 +23,7 @@ import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeConstructor;
 import com.captainbern.reflection.accessor.ConstructorAccessor;
+import com.captainbern.reflection.conversion.Converter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +35,8 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
 
     protected final Reflection reflection;
     protected Constructor<T> constructor;
+
+    protected Converter<T> converter;
 
     public SafeConstructorImpl(final Reflection reflection, final Constructor<T> constructor) {
         if(constructor == null)
@@ -65,7 +68,11 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
                     throw new RuntimeException("Constructor is NULL!");
 
                 try {
-                    return SafeConstructorImpl.this.constructor.newInstance(args);
+                    if (needConversion()) {
+                        return SafeConstructorImpl.this.converter.getWrapped(SafeConstructorImpl.this.constructor.newInstance(args));
+                    } else {
+                        return SafeConstructorImpl.this.constructor.newInstance(args);
+                    }
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
@@ -82,6 +89,21 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
                 return SafeConstructorImpl.this;
             }
         };
+    }
+
+    @Override
+    public SafeConstructor<T> withConverter(Converter<T> converter) {
+        this.converter = converter;
+        return this;
+    }
+
+    @Override
+    public Converter<T> getConverter() {
+        return this.converter;
+    }
+
+    private boolean needConversion() {
+        return this.constructor != null;
     }
 
     @Override

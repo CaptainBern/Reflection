@@ -20,6 +20,7 @@
 package com.captainbern.reflection;
 
 import com.captainbern.reflection.accessor.MethodAccessor;
+import com.captainbern.reflection.conversion.Converter;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -29,6 +30,10 @@ public interface SafeMethod<T> extends SafeMember, Serializable {
     public Method member();
 
     public MethodAccessor<T> getAccessor();
+
+    public SafeMethod<T> withConverter(Converter<T> converter);
+
+    public Converter<T> getConverter();
 
     public boolean isPackagePrivate();
 

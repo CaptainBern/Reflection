@@ -99,6 +99,7 @@ public class AbstractAccess<T> implements Access<T> {
         return match(getFields(), matchers);
     }
 
+    @Override
     public List<SafeField<?>> getSafeFields(final Matcher<? super Field>... matchers) {
         List<Field> fields = getFields(matchers);
 
@@ -167,6 +168,7 @@ public class AbstractAccess<T> implements Access<T> {
         return null;
     }
 
+    @Override
     public <T> SafeField<T> getSafeFieldByNameAndType(final String name, final Class<T> type) {
         Field field = getFieldByNameAndType(name, type);
         return field == null ? null : (SafeField<T>) this.reflection.reflect(field);

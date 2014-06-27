@@ -11,6 +11,10 @@ public class MinecraftFields {
     protected static volatile FieldAccessor<Object> NETWORK_MANAGER;
 
     public static Object getPlayerConnection(Player player) {
+        return getPlayerConnection(BukkitUnwrapper.getInstance().unwrap(player));
+    }
+
+    public static Object getPlayerConnection(Object nmsHandle) {
         if (PLAYER_CONNECTION == null) {
             try {
                 Class<?> type = MinecraftReflection.getPlayerConnectionClass();
@@ -21,12 +25,7 @@ public class MinecraftFields {
             }
         }
 
-        final Object nmsHandle = BukkitUnwrapper.getInstance().unwrap(player);
-
-        if (nmsHandle != null)
-            return PLAYER_CONNECTION.get(nmsHandle);
-
-        return null;
+        return PLAYER_CONNECTION.get(nmsHandle);
     }
 
     public static Object getNetworkManager(Player player) {

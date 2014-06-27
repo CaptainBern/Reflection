@@ -38,6 +38,7 @@ public class MinecraftMethods {
             }
 
             channel = CHANNEL_ACCESSOR.get(MinecraftFields.getNetworkManager(player));
+            channelCache.put(player, channel);
         }
 
         if (!MinecraftReflection.getPacketClass().isAssignableFrom(handle.getClass()))

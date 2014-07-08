@@ -2,10 +2,12 @@ package com.captainbern.minecraft.wrapper.nbt;
 
 import com.captainbern.minecraft.collection.WrapperList;
 import com.captainbern.minecraft.reflection.utils.Accessor;
+import com.captainbern.minecraft.wrapper.nbt.io.NbtSerializer;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
 import javax.annotation.Nullable;
+import java.io.DataOutput;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -118,6 +120,11 @@ public class WrappedNbtTagList<T> implements WrappedNbtTag<List<NbtTagBase<T>>>,
     @Override
     public Object getHandle() {
         return this.handle.getHandle();
+    }
+
+    @Override
+    public void write(DataOutput dataOutput) {
+        NbtSerializer.write(this.handle, dataOutput);
     }
 
     @Override

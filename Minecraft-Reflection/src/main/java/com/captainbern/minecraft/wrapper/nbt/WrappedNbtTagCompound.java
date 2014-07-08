@@ -1,7 +1,9 @@
 package com.captainbern.minecraft.wrapper.nbt;
 
 import com.captainbern.minecraft.collection.WrapperMap;
+import com.captainbern.minecraft.wrapper.nbt.io.NbtSerializer;
 
+import java.io.DataOutput;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -186,6 +188,11 @@ public class WrappedNbtTagCompound implements WrappedNbtTag<Map<String, NbtTagBa
     @Override
     public Object getHandle() {
         return this.handle.getHandle();
+    }
+
+    @Override
+    public void write(DataOutput dataOutput) {
+        NbtSerializer.write(this.handle, dataOutput);
     }
 
     @Override

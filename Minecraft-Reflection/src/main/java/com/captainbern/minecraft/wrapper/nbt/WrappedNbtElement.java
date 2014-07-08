@@ -1,6 +1,7 @@
 package com.captainbern.minecraft.wrapper.nbt;
 
 import com.captainbern.minecraft.reflection.MinecraftReflection;
+import com.captainbern.minecraft.wrapper.nbt.io.NbtSerializer;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeField;
@@ -8,6 +9,7 @@ import com.captainbern.reflection.SafeMethod;
 import com.captainbern.reflection.accessor.FieldAccessor;
 import com.captainbern.reflection.accessor.MethodAccessor;
 
+import java.io.DataOutput;
 import java.util.List;
 
 import static com.captainbern.reflection.matcher.Matchers.withArgumentCount;
@@ -32,6 +34,11 @@ public class WrappedNbtElement<T> implements WrappedNbtTag<T> {
     @Override
     public Object getHandle() {
         return this.handle;
+    }
+
+    @Override
+    public void write(DataOutput dataOutput) {
+        NbtSerializer.write(this, dataOutput);
     }
 
     protected FieldAccessor<T> getAccessor() {

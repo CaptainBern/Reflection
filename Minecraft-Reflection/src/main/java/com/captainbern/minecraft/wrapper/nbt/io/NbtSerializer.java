@@ -66,7 +66,7 @@ public class NbtSerializer {
 
                 List<SafeMethod> candidates = tagTemplate.getSafeMethods(withArguments(DataInput.class, int.class, readLimiter));
                 if (candidates.size() > 0) {
-                    WRITE = candidates.get(0).getAccessor();
+                    READ = candidates.get(0).getAccessor();
                 } else {
                     throw new RuntimeException("Failed to retrieve the NBT-Load method!");
                 }

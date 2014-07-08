@@ -31,7 +31,7 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
     }
 
     private RemappedReflectionProvider init() {
-        if (Bukkit.getServer() == null || !Bukkit.getServer().getVersion().contains("MCPC-Plus")) {
+        if (Bukkit.getServer() == null || !Bukkit.getServer().getVersion().contains("MCPC-Plus") || !Bukkit.getServer().getVersion().contains("Cauldron")) {
             throw new RemapperException(RemapperException.Reason.MCPC_NOT_PRESENT);
         }
 

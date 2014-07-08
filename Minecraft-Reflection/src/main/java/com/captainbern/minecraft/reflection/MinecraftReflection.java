@@ -444,6 +444,14 @@ public class MinecraftReflection {
             throw new RuntimeException(e);
         }
     }
+
+    public static Class<?> getNbtReadLimiterClass() {
+        try {
+            return getMinecraftClass("NBTReadLimiter");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 /**

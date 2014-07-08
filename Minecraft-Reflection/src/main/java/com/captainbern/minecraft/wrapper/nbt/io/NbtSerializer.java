@@ -58,13 +58,9 @@ public class NbtSerializer {
 
             if (READ == null) {
                 Class<?> readLimiter = MinecraftReflection.getNbtReadLimiterClass();
-                ClassTemplate limiterTemplate = new Reflection().reflect(readLimiter);
-                ClassTemplate tagTemplate = new Reflection().reflect(MinecraftReflection.getNbtBaseClass());
+                ClassTemplate tagTemplate = new Reflection().reflect(MinecraftReflection.getNbtCompressedStreamToolsClass());
 
-                FieldAccessor<Object> instanceField = limiterTemplate.getSafeFieldByType(readLimiter).getAccessor();
-                final Object singletonInstance = instanceField.getStatic();
-
-                List<SafeMethod> candidates = tagTemplate.getSafeMethods(withArguments(DataInput.class, int.class, readLimiter));
+                List<SafeMethod<Object>> candidates = tagTemplate.getSafeMethods(withArguments(DataInput.class, int.class, readLimiter), withReturnType(MinecraftReflection.getNbtBaseClass()));
                 if (candidates.size() > 0) {
                     READ = candidates.get(0).getAccessor();
                 } else {
@@ -72,6 +68,10 @@ public class NbtSerializer {
                 }
 
                 if (LOAD == null) {
+                    ClassTemplate limiterTemplate = new Reflection().reflect(readLimiter);
+                    FieldAccessor<Object> instanceField = limiterTemplate.getSafeFieldByType(readLimiter).getAccessor();
+                    final Object singletonInstance = instanceField.getStatic();
+
                     LOAD = new NbtLoad() {
                         @Override
                         public Object load(DataInput dataInput) {
@@ -81,7 +81,7 @@ public class NbtSerializer {
                 }
             }
 
-            return NbtFactory.fromNmsHandle(LOAD.load(dataInput));
+             return NbtFactory.fromNmsHandle(LOAD.load(dataInput));
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to read tag!", e);
@@ -98,7 +98,7 @@ public class NbtSerializer {
     }
 
     public static <T> NbtTagBase<T> toTag(byte[] bytes) {
-        DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(bytes));
+        DataInputStream inputStream = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(bytes), 8192));
 
         return read(inputStream);
     }

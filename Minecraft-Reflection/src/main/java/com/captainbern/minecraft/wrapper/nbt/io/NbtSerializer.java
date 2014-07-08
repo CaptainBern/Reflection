@@ -58,12 +58,13 @@ public class NbtSerializer {
 
             if (READ == null) {
                 Class<?> readLimiter = MinecraftReflection.getNbtReadLimiterClass();
-                ClassTemplate template = new Reflection().reflect(readLimiter);
+                ClassTemplate limiterTemplate = new Reflection().reflect(readLimiter);
+                ClassTemplate tagTemplate = new Reflection().reflect(MinecraftReflection.getNbtBaseClass());
 
-                FieldAccessor<Object> instanceField = template.getSafeFieldByType(readLimiter).getAccessor();
+                FieldAccessor<Object> instanceField = limiterTemplate.getSafeFieldByType(readLimiter).getAccessor();
                 final Object singletonInstance = instanceField.getStatic();
 
-                List<SafeMethod> candidates = template.getSafeMethods(withArguments(DataInput.class, int.class, readLimiter));
+                List<SafeMethod> candidates = tagTemplate.getSafeMethods(withArguments(DataInput.class, int.class, readLimiter));
                 if (candidates.size() > 0) {
                     WRITE = candidates.get(0).getAccessor();
                 } else {

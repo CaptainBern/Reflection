@@ -436,6 +436,14 @@ public class MinecraftReflection {
             throw new RuntimeException(e);
         }
     }
+
+    public static Class<?> getNbtCompressedStreamToolsClass() {
+        try {
+            return getMinecraftClass("NBTCompressedStreamTools");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 /**

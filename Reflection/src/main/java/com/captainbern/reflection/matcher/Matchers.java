@@ -97,7 +97,7 @@ public class Matchers {
         };
     }
 
-    public static Matcher<Method> withArguments(final Class[] arguments) {
+    public static Matcher<Method> withArguments(final Class... arguments) {
         return new AbstractMatcher<Method>() {
             @Override
             public boolean matches(Method type) {

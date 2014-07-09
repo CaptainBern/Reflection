@@ -8,7 +8,6 @@ import com.captainbern.minecraft.reflection.MinecraftReflection;
 import com.captainbern.minecraft.reflection.utils.Accessor;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
-import com.captainbern.reflection.conversion.Converter;
 
 import java.util.Collection;
 
@@ -162,5 +161,9 @@ public class WrappedPacket {
 
     public Accessor<Collection<WrappedWatchableObject>> getWatchableObjectLists() {
         return this.modifier.withType(Collection.class, BukkitConverters.getListConverter(MinecraftReflection.getWatchableObjectClass(), BukkitConverters.getWatchableObjectConverter()));
+    }
+
+    public Accessor<EnumWrappers.EntityUseAction> getEntityUseActions() {
+        return this.modifier.withType(EnumWrappers.getEntityUseActionClass(), EnumWrappers.getEntityUseActionConverter());
     }
 }

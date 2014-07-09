@@ -409,7 +409,7 @@ public class MinecraftReflection {
         try {
             return getMinecraftClass("PlayerConnection");
         } catch (Exception e) {
-            return null; // TODO: Create fallback
+            throw new RuntimeException(e); // TODO: Create fallback
         }
     }
 
@@ -417,7 +417,7 @@ public class MinecraftReflection {
         try {
             return getMinecraftClass("NetworkManager");
         } catch (Exception e) {
-            return null; // TODO: Create fallback
+            throw new RuntimeException(e); // TODO: Create fallback
         }
     }
 
@@ -425,7 +425,15 @@ public class MinecraftReflection {
         try {
             return getMinecraftClass("AttributeSnapshot");
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Class<?> getAttributeModifierClass() {
+        try {
+            return getMinecraftClass("AttributeModifier");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

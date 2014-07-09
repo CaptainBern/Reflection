@@ -25,6 +25,10 @@ public class WrappedPacket {
         this(packetType, new Reflection().reflect(packetType.getPacketClass()).newInstance());  // Assume that it worked
     }
 
+    public WrappedPacket(Object handle) {
+        this(PacketType.getTypeFrom(handle.getClass()), handle);
+    }
+
     public WrappedPacket(PacketType type, Object packetHandle) {
         this(type, packetHandle, new Reflection().reflect(packetHandle.getClass()));
     }

@@ -25,6 +25,10 @@ public class Accessor<T> {
 
     private Accessor() {}
 
+    public Accessor(Class<T> clazz) {
+        this(null, new Reflection().reflect(clazz));
+    }
+
     public Accessor(Object handle) {
         this(handle, new Reflection().reflect(handle.getClass()));
     }

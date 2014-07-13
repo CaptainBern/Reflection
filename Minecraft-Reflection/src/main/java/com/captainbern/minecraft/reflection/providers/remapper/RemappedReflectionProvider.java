@@ -101,7 +101,7 @@ public class RemappedReflectionProvider extends StandardReflectionProvider {
         for (Map.Entry<String, String> entry : this.methods.entrySet()) {
             if (entry.getKey().startsWith(path)) {
                 try {
-                    type.getDeclaredMethod(name, args);
+                    type.getDeclaredMethod(entry.getValue(), args);
 
                     return entry.getValue();
                 } catch (NoSuchMethodException e) {

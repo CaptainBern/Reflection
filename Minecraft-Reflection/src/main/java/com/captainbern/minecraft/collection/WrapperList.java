@@ -10,7 +10,7 @@ public abstract class WrapperList<VUnwrapped, VWrapped> extends WrapperCollectio
 
     public WrapperList(List<VUnwrapped> vUnwrapped) {
         super(vUnwrapped);
-        this.unwrappedList = unwrappedList;
+        this.unwrappedList = vUnwrapped;
     }
 
     @Override

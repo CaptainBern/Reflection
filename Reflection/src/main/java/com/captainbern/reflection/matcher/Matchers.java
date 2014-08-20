@@ -19,6 +19,7 @@
 
 package com.captainbern.reflection.matcher;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -102,6 +103,24 @@ public class Matchers {
             @Override
             public boolean matches(Method type) {
                 return Arrays.equals(type.getParameterTypes(), arguments);
+            }
+        };
+    }
+
+    public static Matcher<Constructor> constructorWithArguments(final Class... arguments) {
+        return new AbstractMatcher<Constructor>() {
+            @Override
+            public boolean matches(Constructor type) {
+                if (type.getParameterCount() != arguments.length)
+                    return false;
+
+                Class[] args = type.getParameterTypes();
+                for (int i = 0; i < args.length; i++) {
+                    if (!arguments[i].isAssignableFrom(args[i]))
+                        return false;
+                }
+
+                return true;
             }
         };
     }

@@ -116,7 +116,7 @@ public class Matchers {
 
                 Class[] args = type.getParameterTypes();
                 for (int i = 0; i < args.length; i++) {
-                    if (!arguments[i].isAssignableFrom(args[i]))
+                    if (!args[i].isAssignableFrom(arguments[i]))
                         return false;
                 }
 

@@ -129,20 +129,5 @@
                 </configuration>
             </plugin>
         </plugins>
-
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>2.5</version>
-            </extension>
-        </extensions>
     </build>
-
-    <distributionManagement>
-        <repository>
-            <id>dsh105-ftp</id>
-            <url>ftp://repo.dsh105.com/</url>
-        </repository>
-    </distributionManagement>
 </project>

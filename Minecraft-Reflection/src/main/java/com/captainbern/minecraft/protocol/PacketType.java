@@ -86,6 +86,10 @@ public class PacketType implements Serializable {
             public static final PacketType CLIENT_SETTINGS =    new PacketType(PROTOCOL, SENDER, 0x15);
             public static final PacketType CLIENT_COMMAND =     new PacketType(PROTOCOL, SENDER, 0x16);
             public static final PacketType CUSTOM_PAYLOAD =     new PacketType(PROTOCOL, SENDER, 0x17);
+            // 1.8...
+            public static final PacketType SPECTATE =           new PacketType(PROTOCOL, SENDER, 0x18);
+            public static final PacketType RESOURCE_PACK_STATUS =
+                                                                new PacketType(PROTOCOL, SENDER, 0x19);
 
             private static final Client INSTANCE = new Client();
 
@@ -121,27 +125,27 @@ public class PacketType implements Serializable {
             public static final PacketType COLLECT =            new PacketType(PROTOCOL, SENDER, 0x0D);
             public static final PacketType SPAWN_ENTITY =       new PacketType(PROTOCOL, SENDER, 0x0E);
             public static final PacketType SPAWN_ENTITY_LIVING =
-                    new PacketType(PROTOCOL, SENDER, 0x0F);
+                                                                new PacketType(PROTOCOL, SENDER, 0x0F);
             public static final PacketType SPAWN_ENTITY_PAINTING =
-                    new PacketType(PROTOCOL, SENDER, 0x10);
+                                                                new PacketType(PROTOCOL, SENDER, 0x10);
             public static final PacketType SPAWN_ENTITY_EXPERIENCE_ORB =
-                    new PacketType(PROTOCOL, SENDER, 0x11);
+                                                                new PacketType(PROTOCOL, SENDER, 0x11);
             public static final PacketType ENTITY_VELOCITY =    new PacketType(PROTOCOL, SENDER, 0x12);
             public static final PacketType ENTITY_DESTROY =     new PacketType(PROTOCOL, SENDER, 0x13);
             public static final PacketType ENTITY =             new PacketType(PROTOCOL, SENDER, 0x14);
             public static final PacketType REL_ENTITY_MOVE =    new PacketType(PROTOCOL, SENDER, 0x15);
             public static final PacketType REL_ENTITY_LOOK =    new PacketType(PROTOCOL, SENDER, 0x16);
             public static final PacketType REL_ENTITY_MOVE_LOOK =
-                    new PacketType(PROTOCOL, SENDER, 0x17);
+                                                                new PacketType(PROTOCOL, SENDER, 0x17);
             public static final PacketType ENTITY_TELEPORT =    new PacketType(PROTOCOL, SENDER, 0x18);
             public static final PacketType ENTITY_HEAD_ROTATION =
-                    new PacketType(PROTOCOL, SENDER, 0x19);
+                                                                new PacketType(PROTOCOL, SENDER, 0x19);
             public static final PacketType ETITY_STATUS =       new PacketType(PROTOCOL, SENDER, 0x1A);
             public static final PacketType ATTACH_ENTITY =      new PacketType(PROTOCOL, SENDER, 0x1B);
             public static final PacketType ENTITY_METADATA =    new PacketType(PROTOCOL, SENDER, 0x1C);
             public static final PacketType ENTITY_EFFECT =      new PacketType(PROTOCOL, SENDER, 0x1D);
             public static final PacketType REMOVE_ENTITY_EFFECT =
-                    new PacketType(PROTOCOL, SENDER, 0x1E);
+                                                                new PacketType(PROTOCOL, SENDER, 0x1E);
             public static final PacketType SET_EXPERIENCE =     new PacketType(PROTOCOL, SENDER, 0x1F);
             public static final PacketType UPDATE_ATTRIBUTES =  new PacketType(PROTOCOL, SENDER, 0x20);
             public static final PacketType MAP_CHUNK =          new PacketType(PROTOCOL, SENDER, 0x21);
@@ -149,7 +153,7 @@ public class PacketType implements Serializable {
             public static final PacketType BLOCK_CHANGE =       new PacketType(PROTOCOL, SENDER, 0x23);
             public static final PacketType BLOCK_ACTION =       new PacketType(PROTOCOL, SENDER, 0x24);
             public static final PacketType BLOCK_BREAK_ANIMATION =
-                    new PacketType(PROTOCOL, SENDER, 0x25);
+                                                                new PacketType(PROTOCOL, SENDER, 0x25);
             public static final PacketType MAP_CHUNK_BULK =     new PacketType(PROTOCOL, SENDER, 0x26);
             public static final PacketType EXPLOSION =          new PacketType(PROTOCOL, SENDER, 0x27);
             public static final PacketType WORLD_EVENT =        new PacketType(PROTOCOL, SENDER, 0x28);
@@ -157,7 +161,7 @@ public class PacketType implements Serializable {
             public static final PacketType WORLD_PARTICLES =    new PacketType(PROTOCOL, SENDER, 0x2A);
             public static final PacketType CHANGE_GAMESTATE =   new PacketType(PROTOCOL, SENDER, 0x2B);
             public static final PacketType SPAWN_ENTITY_WEATHER =
-                    new PacketType(PROTOCOL, SENDER, 0x2C);
+                                                                new PacketType(PROTOCOL, SENDER, 0x2C);
             public static final PacketType OPEN_WINDOW =        new PacketType(PROTOCOL, SENDER, 0x2D);
             public static final PacketType CLOSE_WINDOW =       new PacketType(PROTOCOL, SENDER, 0x2E);
             public static final PacketType SET_SLOT =           new PacketType(PROTOCOL, SENDER, 0x2F);
@@ -167,20 +171,32 @@ public class PacketType implements Serializable {
             public static final PacketType UPDATE_SIGN =        new PacketType(PROTOCOL, SENDER, 0x33);
             public static final PacketType MAP =                new PacketType(PROTOCOL, SENDER, 0x34);
             public static final PacketType OPEN_TILE_ENTITY_DATA =
-                    new PacketType(PROTOCOL, SENDER, 0x35);
+                                                                new PacketType(PROTOCOL, SENDER, 0x35);
             public static final PacketType OPEN_SIGN_EDITOR =   new PacketType(PROTOCOL, SENDER, 0x36);
             public static final PacketType STATISTIC =          new PacketType(PROTOCOL, SENDER, 0x37);
             public static final PacketType PLAYER_INFO =        new PacketType(PROTOCOL, SENDER, 0x38);
             public static final PacketType PLAYER_ABILITIES =   new PacketType(PROTOCOL, SENDER, 0x39);
             public static final PacketType TAB_COMPLETE =       new PacketType(PROTOCOL, SENDER, 0x3A);
             public static final PacketType SCOREBOARD_OBJECTIVE =
-                    new PacketType(PROTOCOL, SENDER, 0x3B);
+                                                                new PacketType(PROTOCOL, SENDER, 0x3B);
             public static final PacketType SCOREBOARD_SCORE =   new PacketType(PROTOCOL, SENDER, 0x3C);
             public static final PacketType SCOREBOARD_DISPLAY_SCORE =
-                    new PacketType(PROTOCOL, SENDER, 0x3D);
+                                                                new PacketType(PROTOCOL, SENDER, 0x3D);
             public static final PacketType SCOREBOARD_TEAM =    new PacketType(PROTOCOL, SENDER, 0x3E);
             public static final PacketType CUSTOM_PAYLOAD =     new PacketType(PROTOCOL, SENDER, 0x3F);
             public static final PacketType KICK_DISCONNECT =    new PacketType(PROTOCOL, SENDER, 0x40);
+
+            //1.8
+            public static final PacketType SERVER_DIFFICULTY =  new PacketType(PROTOCOL, SENDER, 0x41);
+            public static final PacketType COMBAT_EVENT =       new PacketType(PROTOCOL, SENDER, 0x42);
+            public static final PacketType CAMERA =             new PacketType(PROTOCOL, SENDER, 0x43);
+            public static final PacketType WORLD_BORDER =       new PacketType(PROTOCOL, SENDER, 0x44);
+            public static final PacketType TITLE =              new PacketType(PROTOCOL, SENDER, 0x45);
+            public static final PacketType SET_COMPRESSION =    new PacketType(PROTOCOL, SENDER, 0x46);
+            public static final PacketType PLAYER_LIST_HEADER_FOOTER =
+                                                                new PacketType(PROTOCOL, SENDER, 0x47);
+            public static final PacketType RESOURCE_PACK_SEND = new PacketType(PROTOCOL, SENDER, 0x48);
+            public static final PacketType UPDATE_ENTITY_NBT =  new PacketType(PROTOCOL, SENDER, 0x49);
 
             private static final Server INSTANCE = new Server();
 

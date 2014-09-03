@@ -298,6 +298,7 @@ public class PacketType implements Serializable {
             public static final PacketType DISCONNECT =         new PacketType(PROTOCOL, SENDER, 0x00);
             public static final PacketType ENCRYPTION_BEGIN =   new PacketType(PROTOCOL, SENDER, 0x01);
             public static final PacketType ENCRYPTION_SUCCESS = new PacketType(PROTOCOL, SENDER, 0x02);
+            public static final PacketType SET_COMPRESSION =    new PacketType(PROTOCOL, SENDER, 0x03);
 
             private static final Server INSTANCE = new Server();
 

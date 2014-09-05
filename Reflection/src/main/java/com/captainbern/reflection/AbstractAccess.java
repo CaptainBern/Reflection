@@ -298,7 +298,7 @@ public class AbstractAccess<T> implements Access<T> {
     @Override
     public Constructor<T> getConstructor(Class... params) {
         try {
-            return this.clazz.getConstructor(params);
+            return this.clazz.getDeclaredConstructor(params);
         } catch (NoSuchMethodException e) {
             return null;
         }

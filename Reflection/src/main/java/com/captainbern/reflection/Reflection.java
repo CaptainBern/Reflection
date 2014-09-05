@@ -147,7 +147,7 @@ public class Reflection {
         return safeMethods;
     }
 
-    public List<SafeConstructor<?>> reflectConstructors(final List<Constructor> constructors) {
+    public List<SafeConstructor<?>> reflectConstructors(final List<Constructor<?>> constructors) {
         List<SafeConstructor<?>> safeConstructors = new ArrayList<>();
         for(Constructor constructor : constructors) {
             safeConstructors.add(reflect(constructor));

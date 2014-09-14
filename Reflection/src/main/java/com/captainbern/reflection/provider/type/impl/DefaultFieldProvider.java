@@ -29,6 +29,6 @@ public class DefaultFieldProvider<T> implements FieldProvider<T> {
 
     @Override
     public Field reflectedField() {
-        return null;
+        return this.field;
     }
 }

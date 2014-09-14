@@ -29,6 +29,6 @@ public class DefaultMethodProvider<T> implements MethodProvider<T> {
 
     @Override
     public Method reflectedMethod() {
-        return null;
+        return this.method;
     }
 }

@@ -91,7 +91,7 @@ public class SafeFieldImpl<T> implements SafeField<T> {
                     if(SafeFieldImpl.this.field == null)
                         throw new RuntimeException("Field is NULL!");
 
-                    if(!Modifier.isStatic(getModifiers()) && value == null)
+                    if(!Modifier.isStatic(getModifiers()) && instance == null)
                         throw new IllegalArgumentException("Non-static fields require a valid instance passed-in!");
 
                     if (needConversion()) {

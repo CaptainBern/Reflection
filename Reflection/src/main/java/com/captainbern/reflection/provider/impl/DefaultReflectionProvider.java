@@ -1,6 +1,8 @@
 package com.captainbern.reflection.provider.impl;
 
+import com.captainbern.reflection.EnumModifier;
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.impl.EnumModifierImpl;
 import com.captainbern.reflection.provider.ReflectionProvider;
 import com.captainbern.reflection.provider.type.ClassProvider;
 import com.captainbern.reflection.provider.type.ConstructorProvider;
@@ -70,6 +72,11 @@ public class DefaultReflectionProvider implements ReflectionProvider {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public <T extends Enum<?>> EnumModifier<T> createNewEnumModifier(Reflection reflection, Class<T> enumClass) {
+        return new EnumModifierImpl<>(reflection, enumClass);
     }
 
     @Override

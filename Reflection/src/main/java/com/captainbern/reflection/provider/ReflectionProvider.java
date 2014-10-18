@@ -1,5 +1,6 @@
 package com.captainbern.reflection.provider;
 
+import com.captainbern.reflection.EnumModifier;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.provider.type.ClassProvider;
 import com.captainbern.reflection.provider.type.ConstructorProvider;
@@ -27,6 +28,8 @@ public interface ReflectionProvider {
     public <T> MethodProvider<T> getMethodProvider(final Reflection reflection, final Method method);
 
     public <T> MethodProvider<T> getMethodProvider(final Reflection reflection, final Class<?> clazz, final String methodName, final Class... args);
+
+    public <T extends Enum<?>> EnumModifier<T> createNewEnumModifier(final Reflection reflection, final Class<T> enumClass);
 
     public Class<?> loadClass(final String className);
 }

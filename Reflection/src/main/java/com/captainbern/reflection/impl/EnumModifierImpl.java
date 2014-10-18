@@ -150,7 +150,7 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
     private T bake(String name, int ordinal, Object... args) {
         Object[] params = new Object[2 + args.length];
         params[0] = name;
-        params[1] = Integer.valueOf(ordinal);
+        params[1] = ordinal;
         System.arraycopy(args, 0, params, 2, args.length);
 
         Constructor<T> constructor = getConstructor(args);

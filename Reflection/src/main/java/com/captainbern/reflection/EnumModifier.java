@@ -25,7 +25,7 @@ package com.captainbern.reflection;
  */
 public interface EnumModifier<T extends Enum<T>> {
 
-    public void addEnumValue(String name, Object[] arguments, Class[] parameters);
+    public void addEnumValue(String name, Object... args);
 
     public Reflection getReflection();
 

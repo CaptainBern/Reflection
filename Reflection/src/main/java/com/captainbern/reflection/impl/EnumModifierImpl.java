@@ -22,9 +22,11 @@ package com.captainbern.reflection.impl;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.EnumModifier;
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.SafeConstructor;
 import com.captainbern.reflection.accessor.ConstructorAccessor;
 import com.captainbern.reflection.accessor.FieldAccessor;
 import com.captainbern.reflection.accessor.MethodAccessor;
+import com.captainbern.reflection.matcher.AbstractMatcher;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -93,11 +95,11 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
     }
 
     @Override
-    public void addEnumValue(String name, Object[] arguments, Class[] parameters) {
+    public void addEnumValue(String name, Object... args) {
         T[] oldValues = (T[]) this.valuesField.get(this.enumType);
         List<T> values = new ArrayList<>(Arrays.asList(oldValues));
 
-        T newValue = bake(name, values.size(), parameters, arguments);
+        T newValue = bake(name, values.size(), args);
 
         values.add(newValue);
 
@@ -123,13 +125,51 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
         return new Reflection().reflect(this.enumType).getConstructor(params);
     }
 
-    private T bake(String name, int ordinal, Class[] constructorArgs, Object... args) {
+    private Constructor<T> getConstructor(Object... args) {
+        final Object[] parameters = new Object[2 + args.length];
+        parameters[0] = String.class;
+        parameters[1] = int.class;
+
+        System.arraycopy(args, 0, parameters, 2, args.length);
+
+        List<SafeConstructor<T>> constructors = new Reflection().reflect(this.enumType).getSafeConstructors(new AbstractMatcher<Constructor>() {
+            @Override
+            public boolean matches(Constructor type) {
+                if (type.getParameterTypes().length != parameters.length)
+                    return false;
+
+                Class<?>[] paramTypes = type.getParameterTypes();
+                for (int i = 0; i < parameters.length; i++) {
+                    if (!paramTypes[i].isAssignableFrom(parameters[i] instanceof Class ? (Class<?>) parameters[i] : parameters[i].getClass()))
+                        return false;
+                }
+
+                return true;
+            }
+        });
+
+        if (constructors.size() > 0)
+            return constructors.get(0).member();
+
+        if (args.length > 0) {
+            String argBuilder = args[0].getClass().getCanonicalName();
+            for (int i = 1; i < args.length; i++) {
+                argBuilder += ", " + args[i].getClass().getCanonicalName();
+            }
+
+            throw new IllegalStateException("Failed to find the enum-constructor for: " + argBuilder);
+        } else {
+            throw new IllegalStateException("Failed to find the enum-constructor!");
+        }
+    }
+
+    private T bake(String name, int ordinal, Object... args) {
         Object[] params = new Object[2 + args.length];
         params[0] = name;
         params[1] = Integer.valueOf(ordinal);
         System.arraycopy(args, 0, params, 2, args.length);
 
-        Constructor<T> constructor = getConstructor(constructorArgs);
+        Constructor<T> constructor = getConstructor(args);
         ACQUIRE_CONSTRUCTOR_ACCESSOR.invoke(constructor);
         Object accessorInstance = CONSTRUCTOR_ACCESSOR_ACCESSOR.invoke(constructor);
 

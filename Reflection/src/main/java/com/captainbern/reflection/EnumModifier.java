@@ -25,8 +25,11 @@ package com.captainbern.reflection;
  */
 public interface EnumModifier<T extends Enum<T>> {
 
+    /**
+     * Allows one to dynamically create a new instance of a given enum class
+     * @param name
+     * @param args
+     */
     public void addEnumValue(String name, Object... args);
-
-    public Reflection getReflection();
 
 }

@@ -109,22 +109,6 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
         cleanEnumCache();
     }
 
-    @Override
-    public Reflection getReflection() {
-        return this.reflection;
-    }
-
-    private Constructor<T> getConstructor(Class... arguments) {
-        Class[] params = new Class[2 + arguments.length];
-
-        params[0] = String.class;
-        params[1] = int.class;
-
-        System.arraycopy(arguments, 0, params, 2, arguments.length);
-
-        return new Reflection().reflect(this.enumType).getConstructor(params);
-    }
-
     private Constructor<T> getConstructor(Object... args) {
         final Object[] parameters = new Object[2 + args.length];
         parameters[0] = String.class;

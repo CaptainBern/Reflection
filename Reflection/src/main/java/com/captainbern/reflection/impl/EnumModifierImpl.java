@@ -47,8 +47,6 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
     private FieldAccessor valuesField;
 
     public EnumModifierImpl(Reflection reflection, Class<T> enumType) {
-        if (!Enum.class.isAssignableFrom(enumType))
-            throw new IllegalArgumentException("Given class is not an enum!");
         this.reflection = reflection;
 
         initializeFields();

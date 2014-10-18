@@ -29,7 +29,7 @@ public interface ReflectionProvider {
 
     public <T> MethodProvider<T> getMethodProvider(final Reflection reflection, final Class<?> clazz, final String methodName, final Class... args);
 
-    public <T extends Enum<?>> EnumModifier<T> createNewEnumModifier(final Reflection reflection, final Class<T> enumClass);
+    public <T extends Enum<T>> EnumModifier<T> createNewEnumModifier(final Reflection reflection, final Class<T> enumClass);
 
     public Class<?> loadClass(final String className);
 }

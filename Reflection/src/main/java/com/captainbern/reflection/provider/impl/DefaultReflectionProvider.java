@@ -75,7 +75,7 @@ public class DefaultReflectionProvider implements ReflectionProvider {
     }
 
     @Override
-    public <T extends Enum<?>> EnumModifier<T> createNewEnumModifier(Reflection reflection, Class<T> enumClass) {
+    public <T extends Enum<T>> EnumModifier<T> createNewEnumModifier(Reflection reflection, Class<T> enumClass) {
         return new EnumModifierImpl<>(reflection, enumClass);
     }
 

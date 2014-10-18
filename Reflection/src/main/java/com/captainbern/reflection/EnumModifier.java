@@ -23,7 +23,7 @@ package com.captainbern.reflection;
  * A fairly small utility class which allows one to dynamically add values to an Enum
  * @param <T>
  */
-public interface EnumModifier<T extends Enum<?>> {
+public interface EnumModifier<T extends Enum<T>> {
 
     public void addEnumValue(String name, Object[] arguments, Class[] parameters);
 

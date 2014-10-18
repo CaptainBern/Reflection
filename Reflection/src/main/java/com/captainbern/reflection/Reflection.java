@@ -120,7 +120,7 @@ public class Reflection {
         return getReflectionProvider().getMethodProvider(this, clazz, name, args).asSafeMethod();
     }
 
-    public <T extends Enum<?>> EnumModifier<T> newEnumModifier(final Class<T> enumClass) {
+    public <T extends Enum<T>> EnumModifier<T> newEnumModifier(final Class<T> enumClass) {
         if (enumClass == null) {
             throw new IllegalArgumentException("EnumClass may not be NULL!");
         }

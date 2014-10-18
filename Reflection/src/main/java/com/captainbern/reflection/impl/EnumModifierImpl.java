@@ -28,13 +28,12 @@ import com.captainbern.reflection.accessor.MethodAccessor;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EnumModifierImpl<T> implements EnumModifier {
+public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
 
     private static FieldAccessor ENUM_CONSTANTS_ACCESSOR = null;
     private static FieldAccessor ENUM_CONSTANT_DIRECTORY_ACCESSOR = null;

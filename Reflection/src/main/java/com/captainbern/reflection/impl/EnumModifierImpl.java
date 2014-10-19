@@ -23,7 +23,6 @@ import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.EnumModifier;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeConstructor;
-import com.captainbern.reflection.accessor.ConstructorAccessor;
 import com.captainbern.reflection.accessor.FieldAccessor;
 import com.captainbern.reflection.accessor.MethodAccessor;
 import com.captainbern.reflection.matcher.AbstractMatcher;

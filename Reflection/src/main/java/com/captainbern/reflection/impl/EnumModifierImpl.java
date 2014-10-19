@@ -78,10 +78,10 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
         int mods;
 
         mods = ENUM_CONSTANTS_ACCESSOR.getField().getModifiers();
-        ENUM_CONSTANTS_ACCESSOR.getField().setModifiers(mods & -17);
+        ENUM_CONSTANTS_ACCESSOR.getField().setModifiers(mods & ~Modifier.FINAL);
 
         mods = ENUM_CONSTANT_DIRECTORY_ACCESSOR.getField().getModifiers();
-        ENUM_CONSTANT_DIRECTORY_ACCESSOR.getField().setModifiers(mods & -17);
+        ENUM_CONSTANT_DIRECTORY_ACCESSOR.getField().setModifiers(mods & ~Modifier.FINAL);
     }
 
     private void initializeValuesField() {
@@ -90,7 +90,7 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
 
         this.valuesField = this.reflection.reflect(this.enumType).getSafeFieldByName("$VALUES").getAccessor();
         int mods = this.valuesField.getField().getModifiers();
-        this.valuesField.getField().setModifiers(mods & -17);
+        this.valuesField.getField().setModifiers(mods & ~Modifier.FINAL);
     }
 
     @Override

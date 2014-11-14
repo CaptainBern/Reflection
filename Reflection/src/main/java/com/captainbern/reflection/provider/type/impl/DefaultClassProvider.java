@@ -5,6 +5,7 @@ import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.impl.ClassTemplateImpl;
 import com.captainbern.reflection.provider.type.ClassProvider;
 
+@SuppressWarnings("unchecked")
 public class DefaultClassProvider<T> implements ClassProvider<T> {
 
     private final Reflection reflection;
@@ -23,7 +24,7 @@ public class DefaultClassProvider<T> implements ClassProvider<T> {
     }
 
     @Override
-    public <T> ClassTemplate<T> asClassTemplate() {
+    public ClassTemplate<T> asClassTemplate() {
         return new ClassTemplateImpl<T>(this.reflection, this.clazz, forceAccess);
     }
 

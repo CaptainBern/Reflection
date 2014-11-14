@@ -100,6 +100,7 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
         return Modifier.isStatic(getModifiers());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public MethodAccessor<T> getAccessor() {
         return new MethodAccessor<T>() {
@@ -115,9 +116,7 @@ public class SafeMethodImpl<T> implements SafeMethod<T> {
                     } else {
                         return (T) SafeMethodImpl.this.method.invoke(instance, args);
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

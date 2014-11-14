@@ -22,7 +22,10 @@ package com.captainbern.reflection.impl;
 import com.captainbern.reflection.AbstractAccess;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.SafeConstructor;
+import com.captainbern.reflection.matcher.AbstractMatcher;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,15 +39,43 @@ public class ClassTemplateImpl<T> extends AbstractAccess<T> implements ClassTemp
         super(reflection, clazz, forceAccess);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public T newInstance() {
+    public T newInstance(final Object... args) {
         try {
-            return this.clazz.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+            if (args.length > 0) {
+                List<SafeConstructor<T>> constructors = this.getSafeConstructors(new AbstractMatcher<Constructor>() {
+                    @Override
+                    public boolean matches(Constructor type) {
+                        if (type.getParameterTypes().length != args.length)
+                            return false;
+
+                        Class[] paramTypes = type.getParameterTypes();
+                        for (int i = 0; i < paramTypes.length; i++) {
+                            if (!paramTypes[i].isAssignableFrom(args[i] instanceof Class ? (Class<?>) args[i] : args[i].getClass()))
+                                return false;
+                        }
+
+                        return true;
+                    }
+                });
+
+                if (constructors.size() > 0)
+                    return constructors.get(0).getAccessor().invoke(args);
+
+                String argBuilder = args[0].getClass().getCanonicalName();
+                for (int i = 1; i < args.length; i++) {
+                    argBuilder += ", " + args[i].getClass().getCanonicalName();
+                }
+
+                throw new IllegalStateException("Failed to find a valid constructor for args: " + argBuilder);
+            } else {
+                return this.clazz.newInstance();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 

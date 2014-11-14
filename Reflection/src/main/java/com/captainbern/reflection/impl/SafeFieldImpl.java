@@ -58,6 +58,7 @@ public class SafeFieldImpl<T> implements SafeField<T> {
         return this.field;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public FieldAccessor<T> getAccessor() {
         return new FieldAccessor<T>() {

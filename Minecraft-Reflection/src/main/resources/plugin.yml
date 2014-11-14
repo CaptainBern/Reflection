@@ -1,0 +1,3 @@
+name: CRF
+main: com.captainbern.minecraft.Main
+version: ${project.version}

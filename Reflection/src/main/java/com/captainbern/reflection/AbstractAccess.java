@@ -33,6 +33,7 @@ import java.util.List;
 
 import static com.captainbern.reflection.matcher.Matchers.*;
 
+@SuppressWarnings("unchecked")
 public class AbstractAccess<T> implements Access<T> {
 
     public static boolean INCLUDE_OBJECT = false;

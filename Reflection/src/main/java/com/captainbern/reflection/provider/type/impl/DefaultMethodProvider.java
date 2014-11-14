@@ -7,6 +7,7 @@ import com.captainbern.reflection.provider.type.MethodProvider;
 
 import java.lang.reflect.Method;
 
+@SuppressWarnings("unchecked")
 public class DefaultMethodProvider<T> implements MethodProvider<T> {
 
     private final Reflection reflection;
@@ -23,7 +24,7 @@ public class DefaultMethodProvider<T> implements MethodProvider<T> {
     }
 
     @Override
-    public <T> SafeMethod<T> asSafeMethod() {
+    public SafeMethod<T> asSafeMethod() {
         return new SafeMethodImpl<T>(this.reflection, this.method);
     }
 

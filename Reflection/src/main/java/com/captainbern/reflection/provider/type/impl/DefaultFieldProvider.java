@@ -7,6 +7,7 @@ import com.captainbern.reflection.provider.type.FieldProvider;
 
 import java.lang.reflect.Field;
 
+@SuppressWarnings("unchecked")
 public class DefaultFieldProvider<T> implements FieldProvider<T> {
 
     private final Reflection reflection;
@@ -23,7 +24,7 @@ public class DefaultFieldProvider<T> implements FieldProvider<T> {
     }
 
     @Override
-    public <T> SafeField<T> asSafeField() {
+    public SafeField<T> asSafeField() {
         return new SafeFieldImpl<T>(this.reflection, this.field);
     }
 

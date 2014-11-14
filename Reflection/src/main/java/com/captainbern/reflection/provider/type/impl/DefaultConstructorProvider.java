@@ -7,6 +7,7 @@ import com.captainbern.reflection.provider.type.ConstructorProvider;
 
 import java.lang.reflect.Constructor;
 
+@SuppressWarnings("unchecked")
 public class DefaultConstructorProvider<T> implements ConstructorProvider<T> {
 
     private final Reflection reflection;
@@ -23,7 +24,7 @@ public class DefaultConstructorProvider<T> implements ConstructorProvider<T> {
     }
 
     @Override
-    public <T> SafeConstructor<T> asSafeConstructor() {
+    public SafeConstructor<T> asSafeConstructor() {
         return new SafeConstructorImpl<T>(this.reflection, this.constructor);
     }
 

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
 
     private static FieldAccessor ENUM_CONSTANTS_ACCESSOR = null;

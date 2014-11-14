@@ -59,6 +59,7 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
         return this.constructor;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ConstructorAccessor<T> getAccessor() {
         return new ConstructorAccessor<T>() {
@@ -73,14 +74,9 @@ public class SafeConstructorImpl<T> implements SafeConstructor<T> {
                     } else {
                         return SafeConstructorImpl.this.constructor.newInstance(args);
                     }
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 return null;
             }
 

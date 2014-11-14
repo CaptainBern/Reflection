@@ -14,6 +14,14 @@
     <artifactId>Reflection</artifactId>
     <version>${reflection-version}</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-all</artifactId>
+            <version>5.0.3</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <directory>../target</directory>
         <sourceDirectory>src/main/java/</sourceDirectory>

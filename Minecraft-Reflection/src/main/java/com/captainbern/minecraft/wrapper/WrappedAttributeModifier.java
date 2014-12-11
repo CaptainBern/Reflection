@@ -93,11 +93,11 @@ public class WrappedAttributeModifier extends AbstractWrapper {
         return this.amount;
     }
 
-    public boolean isPendingSynchronization() {
+    public boolean isSaved() {
         return (boolean) ATTRIBUTE_MODIFIER.withType(boolean.class).read(0);
     }
 
-    public void setPendingSynchronization(boolean flag) {
+    public void setSaved(boolean flag) {
         ATTRIBUTE_MODIFIER.withType(boolean.class).write(0, flag);
     }
 
@@ -109,6 +109,11 @@ public class WrappedAttributeModifier extends AbstractWrapper {
     }
 
     @Override
+    public int hashCode() {
+        return this.uuid == null ? 0 : this.uuid.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "{\"uuid\":\"" + this.uuid.toString() + "\"," +
                 "\"name\":\"" + this.name + "\"," +
@@ -116,10 +121,14 @@ public class WrappedAttributeModifier extends AbstractWrapper {
                 "\"operation\":\"" + this.operation.getId() + "\"}";
     }
 
-    public static class Builder {
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    protected static class Builder {
 
         private UUID uuid;
-        private String name = "<Unkown>";
+        private String name = "<Unknown>";
         private Operation operation = Operation.ADD;
         private double amount;
 

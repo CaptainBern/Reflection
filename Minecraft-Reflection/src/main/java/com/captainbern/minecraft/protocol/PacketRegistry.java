@@ -3,7 +3,9 @@ package com.captainbern.minecraft.protocol;
 import com.captainbern.minecraft.reflection.MinecraftReflection;
 import com.captainbern.reflection.ClassTemplate;
 import com.captainbern.reflection.Reflection;
+import com.captainbern.reflection.SafeField;
 import com.captainbern.reflection.SafeMethod;
+import com.captainbern.reflection.accessor.FieldAccessor;
 import com.captainbern.reflection.accessor.MethodAccessor;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -17,6 +19,7 @@ import java.util.Set;
 
 import static com.captainbern.reflection.matcher.Matchers.withArgumentCount;
 import static com.captainbern.reflection.matcher.Matchers.withReturnType;
+import static com.captainbern.reflection.matcher.Matchers.withExactType;
 
 public class PacketRegistry {
 
@@ -51,12 +54,29 @@ public class PacketRegistry {
 
         Reflection reflection = new Reflection();
         ClassTemplate enumProtocol = reflection.reflect(MinecraftReflection.getEnumProtocolClass());
-        MethodAccessor<Map<Integer, Class<?>>> inboundPackets = (MethodAccessor<Map<Integer, Class<?>>>) ((SafeMethod) enumProtocol.getSafeMethods(withReturnType(Map.class), withArgumentCount(0)).get(0)).getAccessor();
-        MethodAccessor<Map<Integer, Class<?>>> outboundPackets = (MethodAccessor<Map<Integer, Class<?>>>) ((SafeMethod) enumProtocol.getSafeMethods(withReturnType(Map.class), withArgumentCount(0)).get(1)).getAccessor();
+        ClassTemplate enumProtocolDirection = reflection.reflect(MinecraftReflection.getMinecraftClass("EnumProtocolDirection"));
 
-        for(Object protocolType : protocolTypes) {
-            clientPackets.add(inboundPackets.invoke(protocolType)); // client packets
-            serverPackets.add(outboundPackets.invoke(protocolType)); // server packets
+        // Check if the direction enum is required for map retrieval (there's probably a better way to do this...)
+        if (enumProtocolDirection != null) {
+            FieldAccessor<Map> packets = ((SafeField<Map>) enumProtocol.getSafeFields(withExactType(Map.class)).get(1)).getAccessor();
+            Object[] protocolDirections = enumProtocolDirection.getReflectedClass().getEnumConstants();
+
+            // EnumProtocolDirection -> Map<Integer, Packet.class>
+            for(Object protocolType : protocolTypes) {
+                Map<?, ?> packetMap = packets.get(protocolType);
+                Map<Integer, Class<?>> inboundPackets =  (Map<Integer, Class<?>>) packetMap.get(protocolDirections[0]);
+                Map<Integer, Class<?>> outboundPackets =  (Map<Integer, Class<?>>) packetMap.get(protocolDirections[1]);
+                clientPackets.add(inboundPackets == null ? (BiMap) HashBiMap.create() : inboundPackets);
+                serverPackets.add(outboundPackets == null ? (BiMap) HashBiMap.create() : outboundPackets);
+            }
+        } else {
+            MethodAccessor<Map<Integer, Class<?>>> inboundPackets = (MethodAccessor<Map<Integer, Class<?>>>) ((SafeMethod) enumProtocol.getSafeMethods(withReturnType(Map.class), withArgumentCount(0)).get(0)).getAccessor();
+            MethodAccessor<Map<Integer, Class<?>>> outboundPackets = (MethodAccessor<Map<Integer, Class<?>>>) ((SafeMethod) enumProtocol.getSafeMethods(withReturnType(Map.class), withArgumentCount(0)).get(1)).getAccessor();
+
+            for(Object protocolType : protocolTypes) {
+                clientPackets.add(inboundPackets.invoke(protocolType)); // client packets
+                serverPackets.add(outboundPackets.invoke(protocolType)); // server packets
+            }
         }
 
         // If there are more client packets than server packets, then we messed up the fields.

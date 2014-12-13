@@ -23,6 +23,11 @@ public class MinecraftVersion implements Serializable, Comparable<MinecraftVersi
     private static final Pattern VERSION_PATTERN = Pattern.compile(".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)");
 
     /**
+     * Bountyfull update
+     */
+    public static final MinecraftVersion BOUNTY_FULL_UPDATE = new MinecraftVersion(1, 8, 0);
+
+    /**
      * Represents the skin-update (aka the day Mojang decided to break NPC's)
      */
     public static final MinecraftVersion SKIN_UPDATE = new MinecraftVersion(1, 7, 8);

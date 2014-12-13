@@ -2,10 +2,7 @@ package com.captainbern.reflection.provider;
 
 import com.captainbern.reflection.EnumModifier;
 import com.captainbern.reflection.Reflection;
-import com.captainbern.reflection.provider.type.ClassProvider;
-import com.captainbern.reflection.provider.type.ConstructorProvider;
-import com.captainbern.reflection.provider.type.FieldProvider;
-import com.captainbern.reflection.provider.type.MethodProvider;
+import com.captainbern.reflection.provider.type.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

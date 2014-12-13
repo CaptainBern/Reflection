@@ -4,14 +4,8 @@ import com.captainbern.reflection.EnumModifier;
 import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.impl.EnumModifierImpl;
 import com.captainbern.reflection.provider.ReflectionProvider;
-import com.captainbern.reflection.provider.type.ClassProvider;
-import com.captainbern.reflection.provider.type.ConstructorProvider;
-import com.captainbern.reflection.provider.type.FieldProvider;
-import com.captainbern.reflection.provider.type.MethodProvider;
-import com.captainbern.reflection.provider.type.impl.DefaultClassProvider;
-import com.captainbern.reflection.provider.type.impl.DefaultConstructorProvider;
-import com.captainbern.reflection.provider.type.impl.DefaultFieldProvider;
-import com.captainbern.reflection.provider.type.impl.DefaultMethodProvider;
+import com.captainbern.reflection.provider.type.*;
+import com.captainbern.reflection.provider.type.impl.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

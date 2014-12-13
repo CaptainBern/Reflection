@@ -95,7 +95,7 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
     }
 
     @Override
-    public void addEnumValue(String name, Object... args) {
+    public T addEnumValue(String name, Object... args) {
         T[] oldValues = (T[]) this.valuesField.get(this.enumType);
         List<T> values = new ArrayList<>(Arrays.asList(oldValues));
 
@@ -107,6 +107,8 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
         this.valuesField.set(this.enumType, values.toArray((T[]) Array.newInstance(this.enumType, 0)));
 
         cleanEnumCache();
+
+        return newValue;
     }
 
     private Constructor<T> getConstructor(Object... args) {

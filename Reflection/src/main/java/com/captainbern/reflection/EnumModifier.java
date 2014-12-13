@@ -30,6 +30,6 @@ public interface EnumModifier<T extends Enum<T>> {
      * @param name
      * @param args
      */
-    public void addEnumValue(String name, Object... args);
+    public T addEnumValue(String name, Object... args);
 
 }

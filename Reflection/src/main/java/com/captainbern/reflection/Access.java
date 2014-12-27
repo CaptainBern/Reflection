@@ -231,7 +231,7 @@ public interface Access<T> extends Serializable {
     public boolean isAssignableFromObject(final Object object);
 
     /**
-     * Returns whether or not the reflected class is an instance of the given object.
+     * Returns whether or not the given object is an instance of the reflected class
      * @param object
      * @return
      */

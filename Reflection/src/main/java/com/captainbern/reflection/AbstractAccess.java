@@ -120,7 +120,7 @@ public class AbstractAccess<T> implements Access<T> {
         List<Field> fields = getFields(withExactName(name));
 
         if (fields.size() > 0) {
-            // It's probably the first field...
+            // The list should only contain 1 item
             return fields.get(0);
         }
 

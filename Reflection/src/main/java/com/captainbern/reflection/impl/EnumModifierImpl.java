@@ -111,6 +111,11 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
         return newValue;
     }
 
+    @Override
+    public Class<T> getType() {
+        return this.enumType;
+    }
+
     private Constructor<T> getConstructor(Object... args) {
         final Object[] parameters = new Object[2 + args.length];
         parameters[0] = String.class;
@@ -167,5 +172,26 @@ public class EnumModifierImpl<T extends Enum<T>> implements EnumModifier {
 
         ENUM_CONSTANTS_ACCESSOR.set(this.enumType, null);
         ENUM_CONSTANT_DIRECTORY_ACCESSOR.set(this.enumType, null);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = 31 * hash + this.enumType.hashCode();
+        hash = 31 * hash + this.reflection.hashCode();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof EnumModifier))
+            return false;
+
+        if (other == this)
+            return true;
+
+        EnumModifier otherModifier = ((EnumModifier) other);
+
+        return otherModifier.getType().equals(this.enumType);
     }
 }

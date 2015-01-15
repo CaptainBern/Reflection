@@ -32,4 +32,10 @@ public interface EnumModifier<T extends Enum<T>> {
      */
     public T addEnumValue(String name, Object... args);
 
+    /**
+     * Returns the enum type
+     * @return
+     */
+    public Class<T> getType();
+
 }

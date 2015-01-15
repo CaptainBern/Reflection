@@ -87,4 +87,25 @@ public class ClassTemplateImpl<T> extends AbstractAccess<T> implements ClassTemp
         }
         return classes;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = 31 * hash + this.reflection.hashCode();
+        hash = 31 * hash + this.clazz.hashCode();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof ClassTemplate))
+            return false;
+
+        if (other == this)
+            return true;
+
+        ClassTemplate otherTemplate = ((ClassTemplate) other);
+
+        return otherTemplate.getReflectedClass().equals(this.clazz);
+    }
 }

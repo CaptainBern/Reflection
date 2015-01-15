@@ -54,7 +54,14 @@ public class PacketRegistry {
 
         Reflection reflection = new Reflection();
         ClassTemplate enumProtocol = reflection.reflect(MinecraftReflection.getEnumProtocolClass());
-        ClassTemplate enumProtocolDirection = reflection.reflect(MinecraftReflection.getMinecraftClass("EnumProtocolDirection"));
+        ClassTemplate enumProtocolDirection = null;
+        try {
+            enumProtocolDirection = reflection.reflect(MinecraftReflection.getMinecraftClass("EnumProtocolDirection"));
+        } catch (RuntimeException e) {
+            if (!ClassNotFoundException.class.isAssignableFrom(e.getCause().getClass())) {
+                throw e;
+            } // else: running an older server version in which this class is not present
+        }
 
         // Check if the direction enum is required for map retrieval (there's probably a better way to do this...)
         if (enumProtocolDirection != null) {

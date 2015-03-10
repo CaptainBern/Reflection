@@ -39,8 +39,14 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
             current = current.getSuperclass();
         }
 
-        injectGet(classWriter, targetClassType, fields);
-        injectSet(classWriter, targetClassType, fields);
+        injectGetByIndex(classWriter, targetClassType, fields);
+        injectSetByIndex(classWriter, targetClassType, fields);
+
+        injectGetByName(classWriter);
+        injectSetByName(classWriter);
+
+         injectGetFieldTable(classWriter);
+         injectGetIndex(classWriter);
 
         classWriter.visitEnd();
 
@@ -100,8 +106,8 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         methodVisitor.visitFrame(Opcodes.F_APPEND, 3, new Object[]{"[Ljava/lang/reflect/Field;", Opcodes.INTEGER, Opcodes.INTEGER}, 0, null);
         methodVisitor.visitVarInsn(ILOAD, 5);
         methodVisitor.visitVarInsn(ILOAD, 4);
-        Label fieldsAddLabel = new Label(); // handles the looping of the fields
-        methodVisitor.visitJumpInsn(IF_ICMPGE, fieldsAddLabel);
+        Label cachingForLoopIncrementLabel = new Label(); // handles the looping of the fields
+        methodVisitor.visitJumpInsn(IF_ICMPGE, cachingForLoopIncrementLabel);
         methodVisitor.visitVarInsn(ALOAD, 3);
         methodVisitor.visitVarInsn(ILOAD, 5);
         methodVisitor.visitInsn(AALOAD);
@@ -112,7 +118,7 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         methodVisitor.visitInsn(POP);
         methodVisitor.visitIincInsn(5, 1);
         methodVisitor.visitJumpInsn(GOTO, cachingForLoop);
-        methodVisitor.visitLabel(fieldsAddLabel);
+        methodVisitor.visitLabel(cachingForLoopIncrementLabel);
         methodVisitor.visitFrame(Opcodes.F_CHOP, 3, null, 0, null);
         methodVisitor.visitVarInsn(ALOAD, 2);
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getSuperclass", "()Ljava/lang/Class;", false);
@@ -153,7 +159,7 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         methodVisitor.visitEnd();
     }
 
-    protected void injectGet(ClassWriter classWriter, String targetClassName, List<Field> fields) {
+    protected void injectGetByIndex(ClassWriter classWriter, String targetClassName, List<Field> fields) {
         MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "get", "(Ljava/lang/Object;I)Ljava/lang/Object;", null, new String[] { getInternalName(ILLEGAL_ACCESS_EXCEPTION.getCanonicalName()) });
 
         Boxer boxer = new Boxer(methodVisitor);
@@ -224,7 +230,21 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         methodVisitor.visitInsn(ARETURN);
     }
 
-    protected void injectSet(ClassWriter classWriter, String targetClassName, List<Field> fields) {
+    protected void injectGetByName(ClassWriter classWriter) {
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "get", "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;", null, new String[]{ "java/lang/IllegalAccessException" });
+        methodVisitor.visitCode();
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitVarInsn(ALOAD, 1);
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitVarInsn(ALOAD, 2);
+        methodVisitor.visitMethodInsn(INVOKESPECIAL, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "getIndex", "(Ljava/lang/String;)I", false);
+        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "get", "(Ljava/lang/Object;I)Ljava/lang/Object;", false);
+        methodVisitor.visitInsn(ARETURN);
+        methodVisitor.visitMaxs(4, 3);
+        methodVisitor.visitEnd();
+    }
+
+    protected void injectSetByIndex(ClassWriter classWriter, String targetClassName, List<Field> fields) {
         MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "set", "(Ljava/lang/Object;ILjava/lang/Object;)V", null, new String[] { getInternalName(ILLEGAL_ACCESS_EXCEPTION.getCanonicalName()) });
 
         Boxer boxer = new Boxer(methodVisitor);
@@ -304,6 +324,21 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         methodVisitor.visitInsn(RETURN);
     }
 
+    protected void injectSetByName(ClassWriter classWriter) {
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "set", "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)V", null, new String[]{ "java/lang/IllegalAccessException" });
+        methodVisitor.visitCode();
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitVarInsn(ALOAD, 1);
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitVarInsn(ALOAD, 2);
+        methodVisitor.visitMethodInsn(INVOKESPECIAL, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "getIndex", "(Ljava/lang/String;)I", false);
+        methodVisitor.visitVarInsn(ALOAD, 3);
+        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "set", "(Ljava/lang/Object;ILjava/lang/Object;)V", false);
+        methodVisitor.visitInsn(RETURN);
+        methodVisitor.visitMaxs(4, 4);
+        methodVisitor.visitEnd();
+    }
+
     protected void injectException(MethodVisitor methodVisitor, Class<? extends Throwable> throwable) {
         methodVisitor.visitTypeInsn(NEW, getInternalName(throwable.getCanonicalName()));
         methodVisitor.visitInsn(DUP);
@@ -316,5 +351,52 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;");
         methodVisitor.visitMethodInsn(INVOKESPECIAL, getInternalName(throwable.getCanonicalName()), "<init>", "(Ljava/lang/String;)V");
         methodVisitor.visitInsn(ATHROW);
+    }
+
+    protected void injectGetFieldTable(ClassWriter classWriter) {
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "getFieldTable", "()[Ljava/lang/reflect/Field;", null, null);
+        methodVisitor.visitCode();
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitFieldInsn(GETFIELD, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "fieldTable", "[Ljava/lang/reflect/Field;");
+        methodVisitor.visitInsn(ARETURN);
+        methodVisitor.visitMaxs(1, 1);
+        methodVisitor.visitEnd();
+    }
+
+    protected void injectGetIndex(ClassWriter classWriter) {
+        MethodVisitor mv = classWriter.visitMethod(ACC_PRIVATE, "getIndex", "(Ljava/lang/String;)I", null, null);
+        mv.visitCode();
+        mv.visitInsn(ICONST_0);
+        mv.visitVarInsn(ISTORE, 2);
+        Label forLoopLabel = new Label();
+        mv.visitLabel(forLoopLabel);
+        mv.visitFrame(Opcodes.F_APPEND, 1, new Object[]{Opcodes.INTEGER}, 0, null);
+        mv.visitVarInsn(ILOAD, 2);
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitFieldInsn(GETFIELD, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "fieldTable", "[Ljava/lang/reflect/Field;");
+        mv.visitInsn(ARRAYLENGTH);
+        Label forLoopIncrementLabel = new Label();
+        mv.visitJumpInsn(IF_ICMPGE, forLoopIncrementLabel);
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitFieldInsn(GETFIELD, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "fieldTable", "[Ljava/lang/reflect/Field;");
+        mv.visitVarInsn(ILOAD, 2);
+        mv.visitInsn(AALOAD);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Field", "getName", "()Ljava/lang/String;", false);
+        mv.visitVarInsn(ALOAD, 1);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/String", "equals", "(Ljava/lang/Object;)Z", false);
+        Label equalsLabel = new Label();
+        mv.visitJumpInsn(IFEQ, equalsLabel);
+        mv.visitVarInsn(ILOAD, 2);
+        mv.visitInsn(IRETURN);
+        mv.visitLabel(equalsLabel);
+        mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+        mv.visitIincInsn(2, 1);
+        mv.visitJumpInsn(GOTO, forLoopLabel);
+        mv.visitLabel(forLoopIncrementLabel);
+        mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
+        mv.visitInsn(ICONST_M1);
+        mv.visitInsn(IRETURN);
+        mv.visitMaxs(2, 3);
+        mv.visitEnd();
     }
 }

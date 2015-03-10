@@ -10,7 +10,7 @@ public class MethodAccessorBuilder extends AccessorBuilder<MethodAccessor> {
 
     @Override
     public MethodAccessor build(ClassLoader classLoader) {
-        injectConstructor(this.getClassWriter());
+        injectEmptyConstructor(this.getClassWriter());
         return null;
     }
 

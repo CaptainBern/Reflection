@@ -2,22 +2,19 @@ package com.captainbern.reflection.asm.accessor;
 
 import com.captainbern.reflection.asm.Boxer;
 import com.captainbern.reflection.asm.CompilerService;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.objectweb.asm.Opcodes.*;
 
 public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
 
-    protected static final String NO_SUCH_FIELD_EXCEPTION = getInternalName(NoSuchFieldException.class.getName());
-    protected static final String ILLEGAL_ACCESS_EXCEPTION = getInternalName(IllegalAccessException.class.getName());
+    protected static final Class ILLEGAL_ACCESS_EXCEPTION = IllegalAccessException.class;
 
     protected FieldAccessorBuilder(Class<?> target) {
         super(target, AccessorType.FIELD);
@@ -27,14 +24,35 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
     public FieldAccessor build(ClassLoader classLoader) {
         String targetClassType = getInternalName(this.getTarget().getName());
 
-        injectConstructor(this.getClassWriter());
-        injectGetTargetClass(this.getClassWriter(), this.getTarget());
+        ClassWriter classWriter = this.getClassWriter();
 
-        List<Field> fields = Arrays.asList(this.getTarget().getDeclaredFields());
-        injectGet(this.getClassWriter(), targetClassType, fields);
-        injectSet(this.getClassWriter(), targetClassType, fields);
+        injectFieldTable(classWriter);
+        injectConstructor(classWriter);
+        injectGetTargetClass(classWriter, this.getTarget());
 
-        this.getClassWriter().visitEnd();
+        List<Field> fields = new ArrayList<>();
+        Class<?> current = this.getTarget();
+        while (current != Object.class) {
+            for (Field field : current.getDeclaredFields()) {
+                fields.add(field);
+            }
+            current = current.getSuperclass();
+        }
+
+        injectGet(classWriter, targetClassType, fields);
+        injectSet(classWriter, targetClassType, fields);
+
+        classWriter.visitEnd();
+
+        byte[] data = getClassWriter().toByteArray();
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(new File(".", "accessor.class"));
+            fos.write(data);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Class<?> result = CompilerService.create(classLoader).defineClass(
                 getExternalName(getAccessorNameInternal(this.getTarget(), this.getAccessorType())), // this is somewhat redundant but maybe in the future the class-name-format changes
@@ -43,16 +61,100 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         return (FieldAccessor) instantiate(result);
     }
 
-    protected boolean isPublic(Field field) {
-        return Modifier.isPublic(field.getModifiers());
+    protected void injectFieldTable(ClassWriter classWriter) {
+        FieldVisitor fieldVisitor = classWriter.visitField(ACC_PRIVATE + ACC_FINAL, "fieldTable", "[Ljava/lang/reflect/Field;", null, null);
+        fieldVisitor.visitEnd();
     }
 
-    protected boolean isFinal(Field field) {
-        return Modifier.isFinal(field.getModifiers());
+    protected void injectConstructor(ClassWriter classWriter) {
+        String resultName = getAccessorNameInternal(this.getTarget(), this.getAccessorType());
+
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+        methodVisitor.visitCode();
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);;
+        methodVisitor.visitTypeInsn(NEW, "java/util/ArrayList");
+        methodVisitor.visitInsn(DUP);
+        methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/util/ArrayList", "<init>", "()V", false);
+        methodVisitor.visitVarInsn(ASTORE, 1);
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, resultName, "getTargetClass", "()Ljava/lang/Class;", false);
+        methodVisitor.visitVarInsn(ASTORE, 2);
+        Label whileLoop = new Label(); // enter the "while (currentClass != Object.class)" loop
+        methodVisitor.visitLabel(whileLoop);
+        methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[]{resultName, "java/util/List", "java/lang/Class"}, 0, new Object[]{});
+        methodVisitor.visitVarInsn(ALOAD, 2);
+        methodVisitor.visitLdcInsn(Type.getType("Ljava/lang/Object;"));
+        Label classNotObjectComparer = new Label(); // compares the current class to Object.class aka currentClass != Object.class
+        methodVisitor.visitJumpInsn(IF_ACMPEQ, classNotObjectComparer);
+        methodVisitor.visitVarInsn(ALOAD, 2);
+        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredFields", "()[Ljava/lang/reflect/Field;", false);
+        methodVisitor.visitVarInsn(ASTORE, 3);
+        methodVisitor.visitVarInsn(ALOAD, 3);
+        methodVisitor.visitInsn(ARRAYLENGTH);
+        methodVisitor.visitVarInsn(ISTORE, 4);
+        methodVisitor.visitInsn(ICONST_0);
+        methodVisitor.visitVarInsn(ISTORE, 5);
+        Label cachingForLoop = new Label(); // this loop handles the storing of the fields (to the list)
+        methodVisitor.visitLabel(cachingForLoop);
+        methodVisitor.visitFrame(Opcodes.F_APPEND, 3, new Object[]{"[Ljava/lang/reflect/Field;", Opcodes.INTEGER, Opcodes.INTEGER}, 0, null);
+        methodVisitor.visitVarInsn(ILOAD, 5);
+        methodVisitor.visitVarInsn(ILOAD, 4);
+        Label fieldsAddLabel = new Label(); // handles the looping of the fields
+        methodVisitor.visitJumpInsn(IF_ICMPGE, fieldsAddLabel);
+        methodVisitor.visitVarInsn(ALOAD, 3);
+        methodVisitor.visitVarInsn(ILOAD, 5);
+        methodVisitor.visitInsn(AALOAD);
+        methodVisitor.visitVarInsn(ASTORE, 6);
+        methodVisitor.visitVarInsn(ALOAD, 1);
+        methodVisitor.visitVarInsn(ALOAD, 6);
+        methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
+        methodVisitor.visitInsn(POP);
+        methodVisitor.visitIincInsn(5, 1);
+        methodVisitor.visitJumpInsn(GOTO, cachingForLoop);
+        methodVisitor.visitLabel(fieldsAddLabel);
+        methodVisitor.visitFrame(Opcodes.F_CHOP, 3, null, 0, null);
+        methodVisitor.visitVarInsn(ALOAD, 2);
+        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getSuperclass", "()Ljava/lang/Class;", false);
+        methodVisitor.visitVarInsn(ASTORE, 2);
+        methodVisitor.visitJumpInsn(GOTO, whileLoop);
+        methodVisitor.visitLabel(classNotObjectComparer);
+        methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitVarInsn(ALOAD, 1);
+        methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "size", "()I", true);
+        methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/reflect/Field");
+        methodVisitor.visitFieldInsn(PUTFIELD, resultName, "fieldTable", "[Ljava/lang/reflect/Field;");
+        methodVisitor.visitInsn(ICONST_0);
+        methodVisitor.visitVarInsn(ISTORE, 3);
+        Label storingForLoop = new Label(); // this for loop goes about storing the fields in the array defined in the class
+        methodVisitor.visitLabel(storingForLoop);
+        methodVisitor.visitFrame(Opcodes.F_APPEND, 1, new Object[]{Opcodes.INTEGER}, 0, null);
+        methodVisitor.visitVarInsn(ILOAD, 3);
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitFieldInsn(GETFIELD, resultName, "fieldTable", "[Ljava/lang/reflect/Field;");
+        methodVisitor.visitInsn(ARRAYLENGTH);
+        Label storage = new Label(); // gets the field at position x and stores it in the cache (fieldTable)
+        methodVisitor.visitJumpInsn(IF_ICMPGE, storage);
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitFieldInsn(GETFIELD, resultName, "fieldTable", "[Ljava/lang/reflect/Field;");
+        methodVisitor.visitVarInsn(ILOAD, 3);
+        methodVisitor.visitVarInsn(ALOAD, 1);
+        methodVisitor.visitVarInsn(ILOAD, 3);
+        methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "get", "(I)Ljava/lang/Object;", true);
+        methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/reflect/Field");
+        methodVisitor.visitInsn(AASTORE);
+        methodVisitor.visitIincInsn(3, 1);
+        methodVisitor.visitJumpInsn(GOTO, storingForLoop);
+        methodVisitor.visitLabel(storage);
+        methodVisitor.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
+        methodVisitor.visitInsn(RETURN);
+        methodVisitor.visitMaxs(4, 7);
+        methodVisitor.visitEnd();
     }
 
     protected void injectGet(ClassWriter classWriter, String targetClassName, List<Field> fields) {
-        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "get", "(Ljava/lang/Object;I)Ljava/lang/Object;", null, new String[] { NO_SUCH_FIELD_EXCEPTION });
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "get", "(Ljava/lang/Object;I)Ljava/lang/Object;", null, new String[] { getInternalName(ILLEGAL_ACCESS_EXCEPTION.getCanonicalName()) });
 
         Boxer boxer = new Boxer(methodVisitor);
 
@@ -102,31 +204,28 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
             methodVisitor.visitFrame(F_SAME, 0, null, 0, null);
         }
 
-        injectInvalidFieldIndexException(methodVisitor);
+        injectException(methodVisitor, IllegalAccessException.class);
         methodVisitor.visitMaxs(maxStack, 3);
         methodVisitor.visitEnd();
     }
 
     protected void injectReflectiveGetter(MethodVisitor methodVisitor) {
         methodVisitor.visitVarInsn(ALOAD, 0);
-        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "getTargetClass", "()Ljava/lang/Class;", false);
-        methodVisitor.visitVarInsn(ASTORE, 3);
-        methodVisitor.visitVarInsn(ALOAD, 3);
-        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredFields", "()[Ljava/lang/reflect/Field;", false);
+        methodVisitor.visitFieldInsn(GETFIELD, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "fieldTable", "[Ljava/lang/reflect/Field;");
         methodVisitor.visitVarInsn(ILOAD, 2);
         methodVisitor.visitInsn(AALOAD);
-        methodVisitor.visitVarInsn(ASTORE, 4);
-        methodVisitor.visitVarInsn(ALOAD, 4);
+        methodVisitor.visitVarInsn(ASTORE, 3);
+        methodVisitor.visitVarInsn(ALOAD, 3);
         methodVisitor.visitInsn(ICONST_1);
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Field", "setAccessible", "(Z)V", false);
-        methodVisitor.visitVarInsn(ALOAD, 4);
+        methodVisitor.visitVarInsn(ALOAD, 3);
         methodVisitor.visitVarInsn(ALOAD, 1);
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Field", "get", "(Ljava/lang/Object;)Ljava/lang/Object;", false);
         methodVisitor.visitInsn(ARETURN);
     }
 
     protected void injectSet(ClassWriter classWriter, String targetClassName, List<Field> fields) {
-        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "set", "(Ljava/lang/Object;ILjava/lang/Object;)V", null, new String[] { ILLEGAL_ACCESS_EXCEPTION });
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "set", "(Ljava/lang/Object;ILjava/lang/Object;)V", null, new String[] { getInternalName(ILLEGAL_ACCESS_EXCEPTION.getCanonicalName()) });
 
         Boxer boxer = new Boxer(methodVisitor);
 
@@ -152,7 +251,7 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
                 Class<?> type = field.getType();
                 Class<?> inputType = Boxer.wrap(type);
                 String fieldDescriptor = Type.getDescriptor(type);
-                String inputPath = inputType.getName().replace('.', '/');
+                String inputPath = getInternalName(inputType.getName());
 
                 methodVisitor.visitLabel(labels[i]);
 
@@ -184,32 +283,29 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
             methodVisitor.visitFrame(F_SAME, 0, null, 0, null);
         }
 
-        injectInvalidFieldIndexException(methodVisitor);
+        injectException(methodVisitor, IllegalAccessException.class);
         methodVisitor.visitMaxs(maxStack, 4);
         methodVisitor.visitEnd();
     }
 
     protected void injectReflectiveSetter(MethodVisitor methodVisitor) {
         methodVisitor.visitVarInsn(ALOAD, 0);
-        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "getTargetClass", "()Ljava/lang/Class;", false);
-        methodVisitor.visitVarInsn(ASTORE, 4);
-        methodVisitor.visitVarInsn(ALOAD, 4);
-        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredFields", "()[Ljava/lang/reflect/Field;", false);
+        methodVisitor.visitFieldInsn(GETFIELD, getAccessorNameInternal(this.getTarget(), this.getAccessorType()), "fieldTable", "[Ljava/lang/reflect/Field;");
         methodVisitor.visitVarInsn(ILOAD, 2);
         methodVisitor.visitInsn(AALOAD);
-        methodVisitor.visitVarInsn(ASTORE, 5);
-        methodVisitor.visitVarInsn(ALOAD, 5);
+        methodVisitor.visitVarInsn(ASTORE, 4);
+        methodVisitor.visitVarInsn(ALOAD, 4);
         methodVisitor.visitInsn(ICONST_1);
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Field", "setAccessible", "(Z)V", false);
-        methodVisitor.visitVarInsn(ALOAD, 5);
+        methodVisitor.visitVarInsn(ALOAD, 4);
         methodVisitor.visitVarInsn(ALOAD, 1);
         methodVisitor.visitVarInsn(ALOAD, 3);
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Field", "set", "(Ljava/lang/Object;Ljava/lang/Object;)V", false);
         methodVisitor.visitInsn(RETURN);
     }
 
-    protected void injectInvalidFieldIndexException(MethodVisitor methodVisitor) {
-        methodVisitor.visitTypeInsn(NEW, ILLEGAL_ACCESS_EXCEPTION);
+    protected void injectException(MethodVisitor methodVisitor, Class<? extends Throwable> throwable) {
+        methodVisitor.visitTypeInsn(NEW, getInternalName(throwable.getCanonicalName()));
         methodVisitor.visitInsn(DUP);
         methodVisitor.visitTypeInsn(NEW, "java/lang/StringBuilder");
         methodVisitor.visitInsn(DUP);
@@ -218,7 +314,7 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         methodVisitor.visitVarInsn(ILOAD, 2);
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(I)Ljava/lang/StringBuilder;");
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;");
-        methodVisitor.visitMethodInsn(INVOKESPECIAL, ILLEGAL_ACCESS_EXCEPTION, "<init>", "(Ljava/lang/String;)V");
+        methodVisitor.visitMethodInsn(INVOKESPECIAL, getInternalName(throwable.getCanonicalName()), "<init>", "(Ljava/lang/String;)V");
         methodVisitor.visitInsn(ATHROW);
     }
 }

@@ -10,7 +10,7 @@ public class ConstructorAccessorBuilder extends AccessorBuilder<ConstructorAcces
 
     @Override
     public ConstructorAccessor build(ClassLoader classLoader) {
-        injectConstructor(this.getClassWriter());
+        injectEmptyConstructor(this.getClassWriter());
         return null;
     }
 

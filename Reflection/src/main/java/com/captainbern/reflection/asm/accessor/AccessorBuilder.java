@@ -4,6 +4,9 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
+
 import static org.objectweb.asm.Opcodes.*;
 
 public abstract class AccessorBuilder<T> {
@@ -53,6 +56,14 @@ public abstract class AccessorBuilder<T> {
      * Utility methods
      */
 
+    protected static boolean isPublic(Member member) {
+        return Modifier.isPublic(member.getModifiers());
+    }
+
+    protected static boolean isFinal(Member member) {
+        return Modifier.isFinal(member.getModifiers());
+    }
+
     protected static Object instantiate(Class<?> type) {
         Object returnValue;
 
@@ -72,7 +83,7 @@ public abstract class AccessorBuilder<T> {
         return classWriter;
     }
 
-    protected static void injectConstructor(ClassWriter classWriter) {
+    protected static void injectEmptyConstructor(ClassWriter classWriter) {
         MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         methodVisitor.visitCode();
         methodVisitor.visitVarInsn(ALOAD, 0);

@@ -45,20 +45,10 @@ public class FieldAccessorBuilder extends AccessorBuilder<FieldAccessor> {
         injectGetByName(classWriter);
         injectSetByName(classWriter);
 
-         injectGetFieldTable(classWriter);
-         injectGetIndex(classWriter);
+        injectGetFieldTable(classWriter);
+        injectGetIndex(classWriter);
 
         classWriter.visitEnd();
-
-        byte[] data = getClassWriter().toByteArray();
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(new File(".", "accessor.class"));
-            fos.write(data);
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         Class<?> result = CompilerService.create(classLoader).defineClass(
                 getExternalName(getAccessorNameInternal(this.getTarget(), this.getAccessorType())), // this is somewhat redundant but maybe in the future the class-name-format changes

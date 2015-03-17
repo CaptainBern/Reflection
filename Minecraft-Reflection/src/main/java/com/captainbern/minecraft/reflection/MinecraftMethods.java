@@ -7,6 +7,7 @@ import com.google.common.collect.MapMaker;
 import net.minecraft.util.io.netty.channel.Channel;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
 public class MinecraftMethods {

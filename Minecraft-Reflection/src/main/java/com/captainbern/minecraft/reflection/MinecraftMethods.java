@@ -13,10 +13,10 @@ public class MinecraftMethods {
 
     private static FieldAccessor<Channel> CHANNEL_ACCESSOR;
 
-    protected static volatile ConcurrentMap<Player, Channel> channelCache = new MapMaker().weakKeys().makeMap();
+    protected static volatile ConcurrentMap<UUID, Channel> channelCache = new MapMaker().weakKeys().makeMap();
 
     public static void sendPacket(Player player, Object handle) {
-        Channel channel = channelCache.get(player);
+        Channel channel = channelCache.get(player.getUniqueId());
 
         if (channel == null) {
             if (CHANNEL_ACCESSOR == null) {
@@ -25,7 +25,6 @@ public class MinecraftMethods {
                 try {
 
                     SafeField<Channel> candidate = new Reflection().reflect(networkManager).getSafeFieldByType(Channel.class);
-
                     if (candidate == null)
                         throw new RuntimeException("Failed to find the Channel field!");
 
@@ -37,7 +36,7 @@ public class MinecraftMethods {
             }
 
             channel = CHANNEL_ACCESSOR.get(MinecraftFields.getNetworkManager(player));
-            channelCache.put(player, channel);
+            channelCache.put(player.getUniqueId(), channel);
         }
 
         if (!MinecraftReflection.getPacketClass().isAssignableFrom(handle.getClass()))

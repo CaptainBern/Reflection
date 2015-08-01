@@ -111,7 +111,7 @@ public class Matchers {
         return new AbstractMatcher<Constructor>() {
             @Override
             public boolean matches(Constructor type) {
-                if (type.getParameterCount() != arguments.length)
+                if (type.getParameterTypes().length != arguments.length)
                     return false;
 
                 Class[] args = type.getParameterTypes();

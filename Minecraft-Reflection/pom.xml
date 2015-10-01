@@ -19,6 +19,12 @@
     </properties>
 
     <repositories>
+        <!-- Spigot -->
+        <repository>
+            <id>bukkit-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        
         <!-- Bukkit -->
         <repository>
             <id>bukkit-repo</id>

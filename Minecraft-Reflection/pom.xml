@@ -28,7 +28,7 @@
         <!-- Bukkit -->
         <repository>
             <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public/</url>
+            <url>http://maven.elmakers.com/repository/</url>
         </repository>
     </repositories>
 

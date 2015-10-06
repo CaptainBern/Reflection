@@ -4,7 +4,7 @@ import com.captainbern.reflection.Reflection;
 import com.captainbern.reflection.SafeField;
 import com.captainbern.reflection.accessor.FieldAccessor;
 import com.google.common.collect.MapMaker;
-import net.minecraft.util.io.netty.channel.Channel;
+import io.netty.channel.Channel;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
